@@ -3,14 +3,10 @@ import { TelegrafModule } from 'nestjs-telegraf';
 import { sessionMiddleware } from './middleware/session.middleware';
 import { BaseModule } from './base/base.module';
 import { botName, telegramApi } from './common/dotenv';
+import { OrderModule } from './order/order.module';
 
 @Module({
     imports: [
-        // TelegrafModule.forRoot({
-        //     token: process.env.TELEGRAM_API,
-        //     middlewares: [sessionMiddleware],
-        //     include: [],
-        // }),
         TelegrafModule.forRootAsync({
             botName: botName,
             useFactory: () => ({
@@ -20,6 +16,7 @@ import { botName, telegramApi } from './common/dotenv';
             }),
         }),
         BaseModule,
+        OrderModule,
     ],
 })
 export class AppModule {}
