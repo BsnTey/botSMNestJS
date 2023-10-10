@@ -4,14 +4,24 @@ import { ApiSMService } from 'src/apiSM/apiSM.service';
 import { AdminGuard } from 'src/common/guards/admin.guard';
 import { MyContext } from 'src/common/interfaces/context.interface';
 import { Context } from 'telegraf';
+import { BaseService } from './base.service';
 
 @Update()
 export class BaseUpdate {
+    constructor(private baseService: BaseService) {}
+
     @Start()
-    async onStart(@Ctx() ctx: Context, @Sender('first_name') firstName: string) {
+    async onStart(@Ctx() ctx: Context, @Sender() telegramUser: any) {
+        const { first_name: telegramName, id: telegramId } = telegramUser;
+
+        await this.baseService.onStart({
+            telegramName,
+            telegramId: String(telegramId),
+        });
+
         await ctx.replyWithPhoto(
             'https://cstor.nn2.ru/forum/data/forum/images/2018-04/203019686-3f3b88013d6894fa103d7e79121a346a.jpg',
-            { caption: `Добро пожаловать в меню, ${firstName}!\n\nЧто вас интересует?` },
+            { caption: `Добро пожаловать в меню, ${telegramName}!\n\nЧто вас интересует?` },
         );
     }
 
@@ -27,26 +37,5 @@ export class BaseUpdate {
     @Command('test')
     async onTest(@Ctx() ctx: MyContext) {
         await ctx.reply(`Seen ${ctx.session.messageCount} messages.`);
-    }
-
-    @Command('testadd')
-    async onTestAdd(@Ctx() ctx: MyContext) {
-        ctx.session.messageCount++;
-        await ctx.reply(`Seen ${ctx.session.messageCount} messages.`);
-    }
-    @Command('testclear')
-    async onTestClear(@Ctx() ctx: MyContext) {
-        ctx.session.messageCount = 0;
-        await ctx.reply(`Seen ${ctx.session.messageCount} messages.`);
-    }
-
-    @Command('testinput')
-    async onTestInput(@Ctx() ctx: MyContext) {
-        ctx.session.test = 228;
-    }
-
-    @Command('testoutput')
-    async onTestOut(@Ctx() ctx: MyContext) {
-        await ctx.reply(`Seen ${ctx.session.test} messages.`);
     }
 }

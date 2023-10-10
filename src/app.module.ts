@@ -5,6 +5,7 @@ import { BaseModule } from './base/base.module';
 import { botName, telegramApi } from './common/dotenv';
 import { OrderModule } from './order/order.module';
 import { DatabaseModule } from './database/database.module';
+import { UserModule } from './users/user.module';
 
 @Module({
     imports: [
@@ -19,6 +20,7 @@ import { DatabaseModule } from './database/database.module';
         BaseModule,
         OrderModule,
         DatabaseModule,
+        UserModule,
     ],
 })
 export class AppModule {}
