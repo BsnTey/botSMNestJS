@@ -45,25 +45,21 @@ CREATE TABLE "CitySM" (
 );
 
 -- CreateTable
-CREATE TABLE "_CitySMToUser" (
-    "A" TEXT NOT NULL,
-    "B" TEXT NOT NULL
+CREATE TABLE "UserCitySM" (
+    "cityId" TEXT NOT NULL,
+    "userId" TEXT NOT NULL,
+
+    CONSTRAINT "UserCitySM_pkey" PRIMARY KEY ("cityId","userId")
 );
 
 -- CreateIndex
 CREATE UNIQUE INDEX "User_telegramId_key" ON "User"("telegramId");
 
--- CreateIndex
-CREATE UNIQUE INDEX "_CitySMToUser_AB_unique" ON "_CitySMToUser"("A", "B");
-
--- CreateIndex
-CREATE INDEX "_CitySMToUser_B_index" ON "_CitySMToUser"("B");
-
 -- AddForeignKey
 ALTER TABLE "Account" ADD CONSTRAINT "Account_userOwnerId_fkey" FOREIGN KEY ("userOwnerId") REFERENCES "User"("telegramId") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "_CitySMToUser" ADD CONSTRAINT "_CitySMToUser_A_fkey" FOREIGN KEY ("A") REFERENCES "CitySM"("cityId") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "UserCitySM" ADD CONSTRAINT "UserCitySM_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("telegramId") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "_CitySMToUser" ADD CONSTRAINT "_CitySMToUser_B_fkey" FOREIGN KEY ("B") REFERENCES "User"("telegramId") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "UserCitySM" ADD CONSTRAINT "UserCitySM_cityId_fkey" FOREIGN KEY ("cityId") REFERENCES "CitySM"("cityId") ON DELETE RESTRICT ON UPDATE CASCADE;

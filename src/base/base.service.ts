@@ -7,11 +7,16 @@ import { UserRepository } from 'src/users/repository/user.repository';
 export class BaseService {
     constructor(private userRep: UserRepository) {}
 
-    async onStart({ telegramId, telegramName}: ICreateUser) {
+    async GetOrCreateUser({ telegramId, telegramName }: ICreateUser) {
         let user = await this.userRep.getUser(telegramId);
         if (!user) {
             user = await this.userRep.createUser({ telegramId, telegramName });
         }
+        return user;
+    }
+
+    async GetUserWithCitys(telegramId: string) {
+        const user = await this.userRep.getUserWithCitys(telegramId);
         return user;
     }
 }

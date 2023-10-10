@@ -5,7 +5,8 @@ import { UserRepository } from 'src/users/repository/user.repository';
 export class OrderService {
     constructor(private userRep: UserRepository) {}
 
-    async onStartOrder(telegramId: string) {
-        const user = await this.userRep.getUser(telegramId);
-    }
+    // async onStartOrder(telegramId: string) {
+    //     const user = await this.userRep.getUserWithCitys(telegramId);
+    //     return user;
+    // }
 }

@@ -2,9 +2,11 @@ import { UseGuards } from '@nestjs/common';
 import { Command, Ctx, Hears, Start, Update, Sender, Message, On } from 'nestjs-telegraf';
 import { ApiSMService } from 'src/apiSM/apiSM.service';
 import { AdminGuard } from 'src/common/guards/admin.guard';
-import { MyContext } from 'src/common/interfaces/context.interface';
-import { Context } from 'telegraf';
+import { Context } from 'src/common/interfaces/context.interface';
 import { BaseService } from './base.service';
+import { getMainMenu } from '../common/keyboards/reply.keyboard';
+import { ORDER_WIZARD } from 'src/states/states';
+import { WizardContext } from 'telegraf/typings/scenes';
 
 @Update()
 export class BaseUpdate {
@@ -14,7 +16,7 @@ export class BaseUpdate {
     async onStart(@Ctx() ctx: Context, @Sender() telegramUser: any) {
         const { first_name: telegramName, id: telegramId } = telegramUser;
 
-        await this.baseService.onStart({
+        await this.baseService.GetOrCreateUser({
             telegramName,
             telegramId: String(telegramId),
         });
@@ -34,8 +36,8 @@ export class BaseUpdate {
         // await ctx.reply('admin');
     }
 
-    @Command('test')
-    async onTest(@Ctx() ctx: MyContext) {
-        await ctx.reply(`Seen ${ctx.session.messageCount} messages.`);
+    @Hears(['🛒 Сделать заказ'])
+    async onStartOrder(@Ctx() ctx: WizardContext, @Sender() telegramUser: any) {
+        await ctx.scene.enter(ORDER_WIZARD);
     }
 }

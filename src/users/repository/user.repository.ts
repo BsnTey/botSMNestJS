@@ -9,18 +9,44 @@ export class UserRepository {
     async getUser(telegramId: string) {
         return await this.prisma.user.findUnique({
             where: { telegramId: telegramId },
+            select: {
+                telegramName: true,
+                countBonuses: true,
+                isBan: true,
+            },
         });
     }
 
     async createUser(user: ICreateUser) {
         return await this.prisma.user.create({
-            data: user,
+            data: {
+                telegramId: user.telegramId,
+                telegramName: user.telegramName,
+            },
+            include: {
+                userCities: true,
+            },
         });
     }
 
     async getUserWithCitys(telegramId: string) {
         return await this.prisma.user.findUnique({
             where: { telegramId: telegramId },
+            select: {
+                telegramName: true,
+                countBonuses: true,
+                isBan: true,
+                userCities: {
+                    select: {
+                        cityId: true,
+                        city: {
+                            select: {
+                                name: true,
+                            },
+                        },
+                    },
+                },
+            },
         });
     }
 }
