@@ -17,4 +17,10 @@ export class UserRepository {
             data: user,
         });
     }
+
+    async getUserWithCitys(telegramId: string) {
+        return await this.prisma.user.findUnique({
+            where: { telegramId: telegramId },
+        });
+    }
 }
