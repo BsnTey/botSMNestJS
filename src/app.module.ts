@@ -4,6 +4,7 @@ import { sessionMiddleware } from './middleware/session.middleware';
 import { BaseModule } from './base/base.module';
 import { botName, telegramApi } from './common/dotenv';
 import { OrderModule } from './order/order.module';
+import { DatabaseModule } from './database/database.module';
 
 @Module({
     imports: [
@@ -17,6 +18,7 @@ import { OrderModule } from './order/order.module';
         }),
         BaseModule,
         OrderModule,
+        DatabaseModule,
     ],
 })
 export class AppModule {}
