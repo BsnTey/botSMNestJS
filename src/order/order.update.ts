@@ -13,15 +13,21 @@ import {
     WizardStep,
 } from 'nestjs-telegraf';
 import { WizardContext } from 'telegraf/typings/scenes';
-import { Context } from 'src/common/interfaces/context.interface';
 import { getMainMenu } from '../common/keyboards/reply.keyboard';
-import { OrderService } from './order.service';
 import { ORDER_WIZARD } from 'src/states/states';
 import { BaseService } from 'src/base/base.service';
+import { isValidUUID } from 'src/common/utils/isValidText';
+import { ApiSM } from 'src/apiSM/apiSM.service';
+import { AccountService } from 'src/accounts/account.service';
+import { ProxyService } from 'src/proxy/proxy.service';
 
 @Wizard(ORDER_WIZARD)
 export class OrderUpdate {
-    constructor(private orderService: OrderService, private baseService: BaseService) {}
+    constructor(
+        private baseService: BaseService,
+        private accountService: AccountService,
+        private proxyService: ProxyService,
+    ) {}
 
     @WizardStep(1)
     async onSceneEnter(@Ctx() ctx: WizardContext, @Sender() telegramUser: any) {
@@ -32,10 +38,35 @@ export class OrderUpdate {
         await ctx.wizard.next();
         await ctx.reply('🔑 Введите номер вашего аккаунта:', getMainMenu());
     }
-
+    // @Text() msg: { text: string }
     @WizardStep(2)
-    async onSceneEnter2(@Ctx() ctx: WizardContext) {
+    async findAccount(@Ctx() ctx: WizardContext) {
+        const accountId = ctx.message['text'];
+
+        const isValidAccount = isValidUUID(accountId);
+        if (!isValidAccount)
+            return await ctx.reply(
+                '❌ Не верно введен ключ. Проверьте правильность написания и повторите попытку ввода заново',
+                getMainMenu(),
+            );
+
+        const account = await this.accountService.findAccount(accountId);
+        if (!account) return await ctx.reply('❌ Аккаунт не найден', getMainMenu());
+
+        const readyAccount = {
+            accessToken: account.accessToken,
+            refreshToken: account.refreshToken,
+            xUserId: account.xUserId,
+            deviceId: account.deviceId,
+            installationId: account.installationId,
+            expiresIn: account.expiresIn,
+        };
+
+        const proxy = this.proxyService.getRandomProxy();
+
+        const api = new ApiSM(proxy, readyAccount);
+        ctx.wizard.state['api'] = api;
+
         const user = ctx.wizard.state['userInfo'];
-        console.log(user);
     }
 }

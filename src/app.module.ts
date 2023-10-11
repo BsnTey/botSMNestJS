@@ -6,6 +6,8 @@ import { botName, telegramApi } from './common/dotenv';
 import { OrderModule } from './order/order.module';
 import { DatabaseModule } from './database/database.module';
 import { UserModule } from './users/user.module';
+// import { AccountsModule } from './accounts/account.module';
+import { ProxyModule } from './proxy/proxy.module';
 
 @Module({
     imports: [
@@ -21,6 +23,8 @@ import { UserModule } from './users/user.module';
         OrderModule,
         DatabaseModule,
         UserModule,
+        // AccountsModule,
+        ProxyModule,
     ],
 })
 export class AppModule {}

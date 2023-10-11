@@ -1,12 +1,13 @@
 import { Injectable } from '@nestjs/common';
-import { UserRepository } from 'src/users/repository/user.repository';
+import { ApiSM } from 'src/apiSM/apiSM.service';
 
 @Injectable()
 export class OrderService {
-    constructor(private userRep: UserRepository) {}
+    // constructor(private accountService: AccountService) {}
 
-    // async onStartOrder(telegramId: string) {
-    //     const user = await this.userRep.getUserWithCitys(telegramId);
-    //     return user;
-    // }
+    async findAccount(api: ApiSM, telegramId: string) {
+        // const account = await this.accountService.findAccount(telegramId)
+        // if (!account) return null;
+        // return account
+    }
 }

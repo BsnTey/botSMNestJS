@@ -1,16 +1,20 @@
 import { UseGuards } from '@nestjs/common';
 import { Command, Ctx, Hears, Start, Update, Sender, Message, On } from 'nestjs-telegraf';
-import { ApiSMService } from 'src/apiSM/apiSM.service';
+// import { ApiSMService } from 'src/apiSM/apiSM.service';
 import { AdminGuard } from 'src/common/guards/admin.guard';
 import { Context } from 'src/common/interfaces/context.interface';
 import { BaseService } from './base.service';
 import { getMainMenu } from '../common/keyboards/reply.keyboard';
 import { ORDER_WIZARD } from 'src/states/states';
 import { WizardContext } from 'telegraf/typings/scenes';
+import { ProxyService } from 'src/proxy/proxy.service';
 
 @Update()
 export class BaseUpdate {
-    constructor(private baseService: BaseService) {}
+    constructor(
+        private baseService: BaseService,
+        private proxyService: ProxyService
+        ) {}
 
     @Start()
     async onStart(@Ctx() ctx: Context, @Sender() telegramUser: any) {
@@ -30,10 +34,7 @@ export class BaseUpdate {
     @Command('admin')
     @UseGuards(AdminGuard)
     async onAdminCommand(@Ctx() ctx: Context) {
-        const api = new ApiSMService();
-        const test = await api.shortInfo();
-
-        // await ctx.reply('admin');
+        await ctx.reply('admin');
     }
 
     @Hears(['🛒 Сделать заказ'])

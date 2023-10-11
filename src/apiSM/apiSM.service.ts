@@ -1,8 +1,10 @@
 import axios from 'axios';
 import { SocksProxyAgent } from 'socks-proxy-agent';
-import { IRefreshOutput, SMHeaders } from 'src/common/interfaces/apiSM/apiSM.interface';
+import { IAccountInputApi, IRefreshOutput, SMHeaders } from 'src/common/interfaces/apiSM/apiSM.interface';
 
-export class ApiSMService {
+export class ApiSM {
+    private httpsAgent = null
+    private proxy: string | null = null
     private cityId = '1720920299';
     private cityName = 'Москва';
     private accessToken: string | null = null;
@@ -29,17 +31,19 @@ export class ApiSMService {
 
     private amountThreeDays: number | null = null;
     private promocodes: Array<string> | null = null;
-
-    // constructor(readonly proxy: string) {}
-
-    setAccountValues({ accessToken, refreshToken, xUserId, deviceId, installationId, expiresIn }): void {
-        this.accessToken = accessToken;
-        this.refreshToken = refreshToken;
-        this.xUserId = xUserId;
-        this.deviceId = deviceId;
-        this.installationId = installationId;
-        this.expiresIn = expiresIn;
+    
+    constructor(proxy: string, account: IAccountInputApi) {
+        this.accessToken = account.accessToken
+        this.refreshToken = account.refreshToken
+        this.xUserId = account.xUserId
+        this.deviceId = account.deviceId
+        this.installationId = account.installationId
+        this.expiresIn = account.expiresIn
+        this.proxy = proxy
+        this.httpsAgent = new SocksProxyAgent(this.proxy);
     }
+
+
 
     // setHeaders():
     // this.headers: Headers = {
@@ -92,7 +96,7 @@ export class ApiSMService {
     // }
 
     async shortInfo(): Promise<any> {
-        const httpsAgent = new SocksProxyAgent('socks5://MEwluo:Ljeic0GMlo@212.115.49.112:5501');
+
 
         const url = 'https://mp4x-api.sportmaster.ru/api/v2/bonus/shortInfo';
 
@@ -115,7 +119,7 @@ export class ApiSMService {
 
         const response = await axios.get(url, {
             headers: headers,
-            httpsAgent: httpsAgent,
+            httpsAgent: this.httpsAgent,
         });
 
         if (response.status === 200) {

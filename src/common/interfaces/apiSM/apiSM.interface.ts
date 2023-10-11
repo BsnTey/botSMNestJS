@@ -1,5 +1,16 @@
 import { AxiosRequestHeaders } from 'axios';
 
+export interface IAccountInputApi {
+    accessToken: string;
+    refreshToken: string;
+    xUserId: string;
+    deviceId: string;
+    installationId: string;
+    expiresIn: number;
+}
+
+
+
 export interface IRefreshOutput {
     accessToken: string;
     refreshToken: string;
