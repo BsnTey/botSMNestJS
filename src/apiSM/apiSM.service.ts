@@ -22,7 +22,7 @@ export class ApiSM {
 
     private headers;
 
-    private bonusCount: number | null = null;
+    public bonusCount: number | null = null;
     private qrCode: string | null = null;
     //где используется?? цвет карты
     private privatePersonType: string | null = null;
@@ -77,7 +77,7 @@ export class ApiSM {
 
     isRefreshDate(): boolean {
         if (!this.expiresIn) {
-            return false;
+            return true;
         }
         const currentTimeTimestamp = getCurrentTimestamp();
         const timeDifference = this.expiresIn - currentTimeTimestamp;

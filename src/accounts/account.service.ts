@@ -29,10 +29,9 @@ export class AccountService {
                 }
 
                 const accountId = api.accountId;
-                let isRefresh = false;
+                let isRefresh = true;
                 const isRefreshDate = api.isRefreshDate();
-
-                if (isRefreshDate) isRefresh = await api.isRefresh();
+                if (!isRefreshDate) isRefresh = await api.isRefresh();
 
                 if (isRefresh) {
                     const dataAccount = await api.refresh();

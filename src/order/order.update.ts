@@ -68,10 +68,9 @@ export class OrderUpdate {
             const res = await this.accountService.refresh(api);
             if (!res) return await ctx.reply('❌ Аккаунт Бан (изменить)', getMainMenu());
 
-            console.log('order up', res);
-
             ctx.wizard.state['api'] = api;
             const user = ctx.wizard.state['userInfo'];
+            await ctx.reply(`бонусов на акке ${api.bonusCount}`, getMainMenu());
         } catch (error) {
             //дописать вывод ошибки юзеру из апи
         }
