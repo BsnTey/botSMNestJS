@@ -25,7 +25,7 @@ export class ProxyService {
                     isBan: false,
                     timeBlock: new Date(),
                 };
-            })
+            });
         });
     }
 
@@ -34,24 +34,29 @@ export class ProxyService {
         let proxyListCopy = [...this.proxyList];
 
         while (proxyListCopy.length > 0) {
-          const randomIndex = Math.floor(Math.random() * proxyListCopy.length);
-          const randomProxy = proxyListCopy[randomIndex];
+            const randomIndex = Math.floor(Math.random() * proxyListCopy.length);
+            const randomProxy = proxyListCopy[randomIndex];
 
-          const proxyData = this.proxyDict[randomProxy];
+            const proxyData = this.proxyDict[randomProxy];
 
-          if (!proxyData.isBan) {
+            if (!proxyData.isBan) {
+                proxyListCopy.splice(randomIndex, 1);
+                return randomProxy;
+            } else if (proxyData.isBan && currentTime.getTime() - proxyData.timeBlock.getTime() > 10 * 60 * 1000) {
+                proxyData.isBan = false;
+                proxyData.timeBlock = new Date();
+                proxyListCopy.splice(randomIndex, 1);
+                return randomProxy;
+            }
+
             proxyListCopy.splice(randomIndex, 1);
-            return randomProxy;
-          } else if (proxyData.isBan && currentTime.getTime() - proxyData.timeBlock.getTime() > 10 * 60 * 1000) {
-            proxyData.isBan = false;
-            proxyData.timeBlock = new Date();
-            proxyListCopy.splice(randomIndex, 1);
-            return randomProxy;
-          }
-
-          proxyListCopy.splice(randomIndex, 1);
         }
 
         throw new Error('No available proxy found');
-      }
+    }
+
+    setProxyBan(proxy: string) {
+        this.proxyDict[proxy].isBan = true;
+        this.proxyDict[proxy].timeBlock = new Date();
+    }
 }

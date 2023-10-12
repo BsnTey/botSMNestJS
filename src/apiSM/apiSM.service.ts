@@ -1,10 +1,12 @@
 import axios from 'axios';
 import { SocksProxyAgent } from 'socks-proxy-agent';
-import { IAccountInputApi, IRefreshOutput, SMHeaders } from 'src/common/interfaces/apiSM/apiSM.interface';
+import { IAccountInputApi, IRefreshAccount } from 'src/common/interfaces/apiSM/apiSM.interface';
+import { getCurrentTimestamp } from 'src/common/utils/date';
 
 export class ApiSM {
-    private httpsAgent = null
-    private proxy: string | null = null
+    public accountId: string | null = null;
+    private httpsAgent = null;
+    private proxy: string | null = null;
     private cityId = '1720920299';
     private cityName = 'Москва';
     private accessToken: string | null = null;
@@ -18,7 +20,7 @@ export class ApiSM {
     private xRequestIdCode: string | null = null;
     private tokenCode: string | null = null;
 
-    private headers: SMHeaders;
+    private headers;
 
     private bonusCount: number | null = null;
     private qrCode: string | null = null;
@@ -31,103 +33,114 @@ export class ApiSM {
 
     private amountThreeDays: number | null = null;
     private promocodes: Array<string> | null = null;
-    
-    constructor(proxy: string, account: IAccountInputApi) {
-        this.accessToken = account.accessToken
-        this.refreshToken = account.refreshToken
-        this.xUserId = account.xUserId
-        this.deviceId = account.deviceId
-        this.installationId = account.installationId
-        this.expiresIn = account.expiresIn
-        this.proxy = proxy
-        this.httpsAgent = new SocksProxyAgent(this.proxy);
+
+    constructor(account: IAccountInputApi) {
+        this.accountId = account.accountId;
+        this.accessToken = account.accessToken;
+        this.refreshToken = account.refreshToken;
+        this.xUserId = account.xUserId;
+        this.deviceId = account.deviceId;
+        this.installationId = account.installationId;
+        this.expiresIn = account.expiresIn;
+
+        this.setHeaders();
     }
 
-
-
-    // setHeaders():
-    // this.headers: Headers = {
-    //     "User-Agent": "android-4.17.0-google(33755)",
-    //     "Locale": "ru",
-    //     "Country": "RU",
-    //     "Device-Id": self.device_id,
-    //     "Installation-Id": self.installation_id,
-    //     "City-Id": f"{self.city_id}",
-    //     "Eutc": "UTC+3",
-    //     "x-user-id": f"{self.x_user_id}",
-    //     "Authorization": self.access_token,
-    //     "Host": "mp4x-api.sportmaster.ru",
-    //     "Connection": "Keep-Alive",
-    //     "Accept-Encoding": "gzip, deflate",
-    //     "Content-Type": "application/json; charset=utf-8"
-    // }
-
-    setCity({ cityId, cityName }): void {
-        this.cityId = cityId;
-        this.cityName = cityName;
-        // self.set_headers()
+    setProxy(proxy: string) {
+        this.proxy = proxy;
+        this.httpsAgent = new SocksProxyAgent(proxy);
     }
 
-    isRefreshDate(): boolean {
-        if (!!this.expiresIn) {
-            return false;
-        }
-        const currentTimeTimestamp = new Date().getTime();
-        const timeDifference = currentTimeTimestamp - this.expiresIn;
-        if (timeDifference > 1800) {
-            return true;
-        }
-        return false;
-    }
-
-    // async refresh(): IRefreshOutput {
-    //     const httpsAgent = new SocksProxyAgent('socks5://MEwluo:Ljeic0GMlo@212.115.49.112:5501');
-
-    //     const url = 'https://mp4x-api.sportmaster.ru/api/v1/auth/refresh';
-    //     const payload = {
-    //         refreshToken: this.refreshToken,
-    //         deviceId: this.deviceId,
-    //     };
-
-    //     const response = await axios.post(url, payload, {
-    //         headers: this.headers,
-    //         httpsAgent: httpsAgent,
-    //     });
-    // }
-
-    async shortInfo(): Promise<any> {
-
-
-        const url = 'https://mp4x-api.sportmaster.ru/api/v2/bonus/shortInfo';
-
-        const headers = {
+    setHeaders(): void {
+        this.headers = {
             'User-Agent': 'android-4.17.0-google(33755)',
             Locale: 'ru',
             Country: 'RU',
-            'Device-Id': '34ca3891-5ab9-4741-a715-7b9e675029a5',
-            'Installation-Id': '798D6E4E-DFC9-4F00-A552-D41A402C5349',
-            'City-Id': '1720920299',
+            'Device-Id': this.deviceId,
+            'Installation-Id': this.deviceId,
+            'City-Id': this.cityId,
             Eutc: 'UTC+3',
-            'x-user-id': '100000008122942110',
-            Authorization:
-                'eyJ0eXAiOiJKV1QiLCJlbmMiOiJBMTI4R0NNIiwiYWxnIjoiUlNBLU9BRVAtMjU2In0.GQiNnxP-Lyl9y5W7iieGyf27jMD0vDDuCvTLXbvt3m2poih9Tn_dlvHr2QBtKaN2Gt99DrOboWJAdheeUDgcp79pCBqXSjEqNlwqCi4DGoeFGxTwESkFsmkf7SfcfVDo_-rA4FGmO0X40QJC9KJSDI5vHxGa1bbm0KHtSUt8CuDIQ_xkOcXOkrV90yysPKbt5W6vKRx0bwSmFArhXx4-a0lj88c2bkWlVA2WUpZnjAT4L80s2BlscMjrno9Hrbi15kg1LhBMwoJKMjKLmIqrrUi9qCN8RuE4W48Cc89caQK0hInTZ5FgE96_tr2MExKcLSG8uvZ2c_JN2YT-AbBlGw.4PrSyHjabIzVzMfO.UaGiNfaM5Hn2d5LR_fs22ZtDHBu2oGi8Af4V-akHqArym3-SE9fWNBEp5LevIILWOg8tksS9wAHhf-m6x8V39uoB8fDdUrUab7S7ZHguqjlaJicXw1BHT530qbW32I8mw_NS9P5jV6-q2TOmVGqXmJx9uwUCcD6E5_1Zd6Z5RCbRZ-15N3wLXyI9BH6XxhsJ9nYUYdPcH24UHxYoxngrh1kvqKJqBY2Xy4c-zA4g_VnRLv8LgyxEkOIcA7WC48oT7IJiESbHx6qKRbpCO_biy4SR7kmaOhOjrh-MchCt46_L9zc3lXqkwtcQ229HMrdrlfnEAO5jd9NHy2Ukdg__mKMCkUJm69XHx53xY5HmXk4LzREtDn1TkBwzTso_Z2_l8eUq_28Nkz-s_RHqtThTUtqKaqdvodlmwA.q03jMxXFk5WTAW6CBl3sbA',
+            'x-user-id': this.xUserId,
+            Authorization: this.accessToken,
             Host: 'mp4x-api.sportmaster.ru',
             Connection: 'Keep-Alive',
             'Accept-Encoding': 'gzip, deflate',
             'Content-Type': 'application/json; charset=utf-8',
         };
+    }
 
-        const response = await axios.get(url, {
-            headers: headers,
-            httpsAgent: this.httpsAgent,
-        });
+    setCity({ cityId, cityName }): void {
+        this.cityId = cityId;
+        this.cityName = cityName;
+        this.setHeaders();
+    }
 
-        if (response.status === 200) {
-            this.bonusCount = response.data.info.totalAmount;
-            this.qrCode = response.data.info.clubCard.qrCode;
-            this.privatePersonType = response.data.info.privatePersonType.value;
+    isRefreshDate(): boolean {
+        if (!this.expiresIn) {
+            return false;
         }
+        const currentTimeTimestamp = getCurrentTimestamp();
+        const timeDifference = this.expiresIn - currentTimeTimestamp;
+        if (timeDifference < 1800) {
+            return true;
+        }
+        return false;
+    }
 
-        return response.status;
+    async refresh(): Promise<IRefreshAccount> | null {
+        const url = 'https://mp4x-api.sportmaster.ru/api/v1/auth/refresh';
+
+        const payload = {
+            refreshToken: this.refreshToken,
+            deviceId: this.deviceId,
+        };
+
+        try {
+            const response = await axios.post(url, payload, {
+                headers: this.headers,
+                httpsAgent: this.httpsAgent,
+            });
+
+            this.accessToken = response.data.data.token.accessToken;
+            this.refreshToken = response.data.data.token.refreshToken;
+            const expires = response.data.data.token.expiresIn;
+
+            const currentTimeTimestamp = getCurrentTimestamp();
+            this.expiresIn = expires + currentTimeTimestamp;
+
+            this.setHeaders();
+
+            return {
+                accessToken: this.accessToken,
+                refreshToken: this.refreshToken,
+                expiresIn: this.expiresIn,
+            };
+        } catch {
+            return null;
+        }
+    }
+
+    async shortInfo(): Promise<boolean> {
+        const url = 'https://mp4x-api.sportmaster.ru/api/v2/bonus/shortInfo';
+
+        try {
+            const response = await axios.get(url, {
+                headers: this.headers,
+                httpsAgent: this.httpsAgent,
+            });
+
+            this.bonusCount = response.data.data.info.totalAmount;
+            this.qrCode = response.data.data.info.clubCard.qrCode;
+            this.privatePersonType = response.data.data.info.privatePersonType.value;
+
+            return false;
+        } catch {
+            return true;
+        }
+    }
+
+    async isRefresh(): Promise<boolean> {
+        const isRefresh = await this.shortInfo();
+        return isRefresh;
     }
 }

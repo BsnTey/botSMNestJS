@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/database/prisma.service';
 import { ICreateUser } from 'src/common/interfaces/user/user.interface';
+import { IRefreshAccount } from 'src/common/interfaces/apiSM/apiSM.interface';
 
 @Injectable()
 export class AccountRepository {
@@ -20,5 +21,27 @@ export class AccountRepository {
         });
     }
 
+    async updateTokensAccount(accountId: string, { accessToken, refreshToken, expiresIn }: IRefreshAccount) {
+        return await this.prisma.account.update({
+            where: {
+                accountId: accountId,
+            },
+            data: {
+                accessToken: accessToken,
+                refreshToken: refreshToken,
+                expiresIn: expiresIn,
+            },
+        });
+    }
 
+    async setBanMp(accountId: string) {
+        return await this.prisma.account.update({
+            where: {
+                accountId: accountId,
+            },
+            data: {
+                isAccessMp: false,
+            },
+        });
+    }
 }

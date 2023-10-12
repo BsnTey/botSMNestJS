@@ -54,6 +54,7 @@ export class OrderUpdate {
         if (!account) return await ctx.reply('❌ Аккаунт не найден', getMainMenu());
 
         const readyAccount = {
+            accountId: accountId,
             accessToken: account.accessToken,
             refreshToken: account.refreshToken,
             xUserId: account.xUserId,
@@ -62,11 +63,17 @@ export class OrderUpdate {
             expiresIn: account.expiresIn,
         };
 
-        const proxy = this.proxyService.getRandomProxy();
+        try {
+            const api = new ApiSM(readyAccount);
+            const res = await this.accountService.refresh(api);
+            if (!res) return await ctx.reply('❌ Аккаунт Бан (изменить)', getMainMenu());
 
-        const api = new ApiSM(proxy, readyAccount);
-        ctx.wizard.state['api'] = api;
+            console.log('order up', res);
 
-        const user = ctx.wizard.state['userInfo'];
+            ctx.wizard.state['api'] = api;
+            const user = ctx.wizard.state['userInfo'];
+        } catch (error) {
+            //дописать вывод ошибки юзеру из апи
+        }
     }
 }

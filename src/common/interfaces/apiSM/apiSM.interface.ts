@@ -1,6 +1,5 @@
-import { AxiosRequestHeaders } from 'axios';
-
 export interface IAccountInputApi {
+    accountId: string;
     accessToken: string;
     refreshToken: string;
     xUserId: string;
@@ -9,29 +8,12 @@ export interface IAccountInputApi {
     expiresIn: number;
 }
 
-
-
-export interface IRefreshOutput {
+export interface IRefreshAccount {
     accessToken: string;
     refreshToken: string;
     expiresIn: number;
 }
 
-export interface Headers extends AxiosRequestHeaders {
-    'User-Agent': string;
-    Locale: string;
-    Country: string;
-    'Device-Id': string;
-    'Installation-Id': string;
-    'City-Id': string;
-    Eutc: string;
-    'x-user-id': string;
-    Authorization: string;
-    Host: string;
-    Connection: string;
-    'Accept-Encoding': string;
-    'Content-Type': string;
-}
 type NonUndefined<T, E = undefined> = Pick<
     T,
     {
