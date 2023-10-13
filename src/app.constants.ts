@@ -1,13 +1,53 @@
-export const CHANGE_NUMBER = '📱 Смена номера';
-export const MAKE_ORDER = '🛒 Сделать заказ';
-export const GET_COOKIE = '🔑 Выдать Cookie';
-export const CHECK = '♻️ Чекер';
-export const GET_QR = '🪪 Выдать QR_Code';
-export const GET_CASH_RECEIPT = '✉️ Выдать Кассовый чек';
-export const PROFILE = '🏠️ Личный кабинет';
-export const HELP = '📞 Поддержка';
+import {
+    CHANGE_NUMBER_SCENE,
+    CHECKER_SCENE,
+    GET_CASH_RECEIPT_SCENE,
+    GET_COOKIE_SCENE,
+    GET_QR_CODE_SCENE,
+    HELP_SCENE,
+    ORDER_SCENE,
+    PROFILE_SCENE,
+} from './states/states';
 
+export const CHANGE_NUMBER = {
+    name: '📱 Смена номера',
+    scene: CHANGE_NUMBER_SCENE,
+};
 
+export const MAKE_ORDER = {
+    name: '🛒 Сделать заказ',
+    scene: ORDER_SCENE,
+};
+
+export const GET_COOKIE = {
+    name: '🔑 Выдать Cookie',
+    scene: GET_COOKIE_SCENE,
+};
+
+export const CHECK = {
+    name: '♻️ Чекер',
+    scene: CHECKER_SCENE,
+};
+
+export const GET_QR = {
+    name: '🪪 Выдать QR_Code',
+    scene: GET_QR_CODE_SCENE,
+};
+
+export const GET_CASH_RECEIPT = {
+    name: '✉️ Выдать Кассовый чек',
+    scene: GET_CASH_RECEIPT_SCENE,
+};
+
+export const PROFILE = {
+    name: '🏠️ Личный кабинет',
+    scene: PROFILE_SCENE,
+};
+
+export const HELP = {
+    name: '📞 Поддержка',
+    scene: HELP_SCENE,
+};
 
 export const UNKNOWN_ERROR = '❌ Неизвестная ошибка. Обратитесь к Администратору';
 export const INCORRECT_ENTERED_KEY =
@@ -18,6 +58,23 @@ export const ERROR_CONNECT_ACCOUNT = '❌ Проблемы с подключен
 export const NO_FREE_PROXIES = '❌ Нет свободных прокси. Подождите 5-10мин. Сообщите Администратору';
 export const ERROR_GET_CART = '❌ Ошибка получения корзины. Попробуйте еще раз';
 
+export const ALL_KEYS_MENU_BUTTON = [
+    CHANGE_NUMBER,
+    MAKE_ORDER,
+    GET_COOKIE,
+    CHECK,
+    GET_QR,
+    GET_CASH_RECEIPT,
+    PROFILE,
+    HELP,
+];
 
-export const ALL_KEYS = [CHANGE_NUMBER, MAKE_ORDER, GET_COOKIE, CHECK, GET_QR, GET_CASH_RECEIPT, PROFILE, HELP];
-export const KNOWN_ERROR = [INCORRECT_ENTERED_KEY, ACCOUNT_NOT_FOUND , ACCOUNT_BANNED, ERROR_CONNECT_ACCOUNT, NO_FREE_PROXIES ]
+export const ALL_KEYS_MENU_BUTTON_NAME = ALL_KEYS_MENU_BUTTON.map((item) => item.name);
+
+export const KNOWN_ERROR = [
+    INCORRECT_ENTERED_KEY,
+    ACCOUNT_NOT_FOUND,
+    ACCOUNT_BANNED,
+    ERROR_CONNECT_ACCOUNT,
+    NO_FREE_PROXIES,
+];

@@ -5,16 +5,13 @@ import { AdminGuard } from 'src/common/guards/admin.guard';
 import { Context } from 'src/common/interfaces/context.interface';
 import { BaseService } from './base.service';
 import { getMainMenu } from '../common/keyboards/reply.keyboard';
-import { ORDER_WIZARD } from 'src/states/states';
 import { WizardContext } from 'telegraf/typings/scenes';
 import { ProxyService } from 'src/proxy/proxy.service';
+import { MAKE_ORDER } from 'src/app.constants';
 
 @Update()
 export class BaseUpdate {
-    constructor(
-        private baseService: BaseService,
-        private proxyService: ProxyService
-        ) {}
+    constructor(private baseService: BaseService, private proxyService: ProxyService) {}
 
     @Start()
     async onStart(@Ctx() ctx: Context, @Sender() telegramUser: any) {
@@ -39,6 +36,6 @@ export class BaseUpdate {
 
     @Hears(['🛒 Сделать заказ'])
     async onStartOrder(@Ctx() ctx: WizardContext, @Sender() telegramUser: any) {
-        await ctx.scene.enter(ORDER_WIZARD);
+        await ctx.scene.enter(MAKE_ORDER.scene);
     }
 }

@@ -29,4 +29,22 @@ export class OrderService {
             keyboard: keyboard,
         };
     }
+
+    async searchAndAddinputArticle(api: ApiSM, article: string) {
+        const searchProduct = await api.searchProduct(article);
+
+        if (searchProduct) {
+            const productId = searchProduct.id;
+            const skus = searchProduct.skus;
+            let sku: string;
+            for (let sku_in of skus) {
+                const code = sku_in.code;
+                if (article.toLowerCase() == code.toLowerCase()) {
+                    sku = sku_in.id;
+                    break;
+                }
+            }
+            const resultAdding = await api.addItemCart(productId, sku);
+        }
+    }
 }

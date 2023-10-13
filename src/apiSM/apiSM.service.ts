@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { SocksProxyAgent } from 'socks-proxy-agent';
 import { IAccountInputApi, IItemListCart, IRefreshAccount } from 'src/common/interfaces/apiSM/apiSM.interface';
-import { getCurrentTimestamp } from 'src/common/utils/date';
+import { getCurrentTimestamp } from 'src/common/utils/some.utils';
 import { parsingListCart } from 'src/common/utils/transformRespBody';
 
 export class ApiSM {
@@ -163,4 +163,24 @@ export class ApiSM {
             return false;
         }
     }
+
+    async searchProduct(article: string): Promise<any> | null {
+        const url = 'https://mp4x-api.sportmaster.ru/api/v2/products/search?limit=50&offset=0';
+
+        const payload = { queryText: article, persGateTags: ['A_search', 'auth_login_call'] };
+
+        try {
+            const response = await axios.post(url, payload, {
+                headers: this.headers,
+                httpsAgent: this.httpsAgent,
+            });
+
+            const data = response.data.data.list[0];
+            return data;
+        } catch {
+            return null;
+        }
+    }
+
+    async addItemCart(productId: string, sku: string): Promise<any> {}
 }
