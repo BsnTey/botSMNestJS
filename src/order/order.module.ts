@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { OrderUpdate } from './order.update';
+import { OrderInputArticle, OrderUpdate } from './order.update';
 import { OrderService } from './order.service';
 import { AccountService } from 'src/accounts/account.service';
 import { ProxyService } from 'src/proxy/proxy.service';
@@ -13,9 +13,6 @@ import { BaseModule } from 'src/base/base.module';
 
 @Module({
     imports: [BaseModule, AccountModule, ProxyModule, UserModule],
-    providers: [
-        OrderUpdate,
-        OrderService
-    ],
+    providers: [OrderUpdate, OrderService, OrderInputArticle],
 })
 export class OrderModule {}

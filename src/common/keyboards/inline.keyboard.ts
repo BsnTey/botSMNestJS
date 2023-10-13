@@ -30,7 +30,7 @@ export const cartItemsOrderKeyboard = (cartItems: Array<IItemListCart>) => {
         [Markup.button.callback('Вернуться в меню', 'go_to_menu')],
     );
 
-    return keyboard;
+    return  Markup.inlineKeyboard(keyboard);
 };
 
 export const emptyCartKeyboard = Markup.inlineKeyboard([
@@ -42,4 +42,8 @@ export const emptyCartKeyboard = Markup.inlineKeyboard([
         Markup.button.callback('Доб. Б.Пакет', 'id_add_23748410299_41707130299'),
     ],
     [Markup.button.callback('Вернуться в меню', 'go_to_menu')],
+]);
+
+export const comebackCartkeyboard = Markup.inlineKeyboard([
+    [Markup.button.callback('Вернуться в корзину', 'go_to_cart')]
 ]);
