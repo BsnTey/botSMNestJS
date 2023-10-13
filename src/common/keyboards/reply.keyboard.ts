@@ -1,10 +1,11 @@
+import { CHANGE_NUMBER, CHECK, GET_COOKIE, MAKE_ORDER, GET_QR, GET_CASH_RECEIPT, PROFILE, HELP } from 'src/app.constants';
 import { Markup } from 'telegraf';
 
 export function getMainMenu() {
     return Markup.keyboard([
-        ['📱 Смена номера', '🛒 Сделать заказ'],
-        ['🔑 Выдать Cookie', '♻️ Чекер'],
-        ['🪪 Выдать QR_Code', '✉️ Выдать Кассовый чек'],
-        ['🏠️ Личный кабинет', '📞 Поддержка'],
+        [CHANGE_NUMBER, MAKE_ORDER],
+        [GET_COOKIE, CHECK],
+        [GET_QR, GET_CASH_RECEIPT],
+        [PROFILE, HELP],
     ]).resize();
 }

@@ -11,6 +11,9 @@ import {
     SceneEnter,
     Wizard,
     WizardStep,
+    SceneLeave,
+    TelegrafException,
+    Action,
 } from 'nestjs-telegraf';
 import { WizardContext } from 'telegraf/typings/scenes';
 import { getMainMenu } from '../common/keyboards/reply.keyboard';
@@ -20,59 +23,91 @@ import { isValidUUID } from 'src/common/utils/isValidText';
 import { ApiSM } from 'src/apiSM/apiSM.service';
 import { AccountService } from 'src/accounts/account.service';
 import { ProxyService } from 'src/proxy/proxy.service';
+import { ACCOUNT_BANNED, ACCOUNT_NOT_FOUND, ALL_KEYS, INCORRECT_ENTERED_KEY, KNOWN_ERROR, UNKNOWN_ERROR } from 'src/app.constants';
+import {mainMenuOrderKeyboard} from '../common/keyboards/inline.keyboard'
+import { OrderService } from './order.service';
 
-@Wizard(ORDER_WIZARD)
+// @Wizard(ORDER_WIZARD)
+@Scene(ORDER_WIZARD)
 export class OrderUpdate {
     constructor(
         private baseService: BaseService,
         private accountService: AccountService,
         private proxyService: ProxyService,
+        private orderService: OrderService,
     ) {}
 
-    @WizardStep(1)
+    // @WizardStep(1)
+    @SceneEnter()
     async onSceneEnter(@Ctx() ctx: WizardContext, @Sender() telegramUser: any) {
         const { id: telegramId } = telegramUser;
         const user = await this.baseService.GetUserWithCitys(String(telegramId));
-        ctx.wizard.state['userInfo'] = user;
-        ctx.wizard.state['api'] = null;
-        await ctx.wizard.next();
+        ctx.session['userInfo'] = user;
+        ctx.session['api'] = null;
+        // ctx.wizard.state['userInfo'] = user;
+        // ctx.wizard.state['api'] = null;
+        // await ctx.wizard.next();
         await ctx.reply('🔑 Введите номер вашего аккаунта:', getMainMenu());
     }
-    // @Text() msg: { text: string }
-    @WizardStep(2)
+
+    @Hears(ALL_KEYS)
+    async exit(@Ctx() ctx: WizardContext) {
+        await ctx.scene.leave();
+    }
+
+
+    // @WizardStep(2)
+    @On('text')
     async findAccount(@Ctx() ctx: WizardContext) {
-        const accountId = ctx.message['text'];
+            const accountId = ctx.message['text'];
 
-        const isValidAccount = isValidUUID(accountId);
-        if (!isValidAccount)
-            return await ctx.reply(
-                '❌ Не верно введен ключ. Проверьте правильность написания и повторите попытку ввода заново',
-                getMainMenu(),
-            );
+            const isValidAccount = isValidUUID(accountId);
+            if (!isValidAccount)  throw new TelegrafException(INCORRECT_ENTERED_KEY);
 
-        const account = await this.accountService.findAccount(accountId);
-        if (!account) return await ctx.reply('❌ Аккаунт не найден', getMainMenu());
+            const account = await this.accountService.findAccount(accountId);
+            if (!account) throw new TelegrafException(ACCOUNT_NOT_FOUND);
 
-        const readyAccount = {
-            accountId: accountId,
-            accessToken: account.accessToken,
-            refreshToken: account.refreshToken,
-            xUserId: account.xUserId,
-            deviceId: account.deviceId,
-            installationId: account.installationId,
-            expiresIn: account.expiresIn,
-        };
+            const readyAccount = {
+                accountId: accountId,
+                accessToken: account.accessToken,
+                refreshToken: account.refreshToken,
+                xUserId: account.xUserId,
+                deviceId: account.deviceId,
+                installationId: account.installationId,
+                expiresIn: account.expiresIn,
+            };
 
-        try {
-            const api = new ApiSM(readyAccount);
-            const res = await this.accountService.refresh(api);
-            if (!res) return await ctx.reply('❌ Аккаунт Бан (изменить)', getMainMenu());
+            try {
+                const api = new ApiSM(readyAccount);
+                const res = await this.accountService.refresh(api);
+                if (!res) throw new TelegrafException(ACCOUNT_BANNED);
 
-            ctx.wizard.state['api'] = api;
-            const user = ctx.wizard.state['userInfo'];
-            await ctx.reply(`бонусов на акке ${api.bonusCount}`, getMainMenu());
-        } catch (error) {
-            //дописать вывод ошибки юзеру из апи
-        }
+                ctx.session['api'] = api;
+                const city = api.cityName
+                // const user = ctx.wizard.state['userInfo'];
+                await ctx.reply(`📱 Аккаунт найден. Баланс: ${api.bonusCount}`, mainMenuOrderKeyboard(city));
+            } catch (error) {
+                if (KNOWN_ERROR.includes(error.message))  throw new TelegrafException(error.message);
+                throw new TelegrafException(error);
+            }
+    }
+
+    @Action("go_to_cart")
+    async choosingWayCart(@Ctx() ctx: WizardContext) {
+        const api = ctx.session['api'];
+        const {text, keyboard} = await this.orderService.choosingWayCart(api)
+
+        await ctx.reply(text, keyboard);
+    }
+
+
+    @Action("go_to_orders")
+    async choosingWayOrder(@Ctx() ctx: WizardContext) {
+        await ctx.reply('Вошел 2');
+    }
+
+    @SceneLeave()
+    async onSceneLeave(@Ctx() ctx: WizardContext) {
+        await ctx.scene.enter(ORDER_WIZARD)
     }
 }

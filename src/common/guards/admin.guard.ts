@@ -9,15 +9,11 @@ export class AdminGuard implements CanActivate {
 
     async canActivate(context: ExecutionContext): Promise<boolean> {
         const ctx = TelegrafExecutionContext.create(context);
-        const { from, reply } = ctx.getContext<Context>();
+        const { from } = ctx.getContext<Context>();
 
         const isAdmin = this.ADMIN_IDS.includes(from.id);
         if (!isAdmin) {
-            // падает с ошибкой Unhandled error
-
-            await reply('You are not admin 😡');
-            return false;
-            // throw new TelegrafException('You are not admin 😡');
+            throw new TelegrafException('You are not admin 😡');
         }
 
         return true;

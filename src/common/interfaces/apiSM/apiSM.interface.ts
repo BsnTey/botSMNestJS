@@ -14,11 +14,18 @@ export interface IRefreshAccount {
     expiresIn: number;
 }
 
-type NonUndefined<T, E = undefined> = Pick<
-    T,
-    {
-        [Prop in keyof T]: T[Prop] extends E ? never : Prop;
-    }[keyof T]
->;
+export interface RawListCart {
+    data: {
+        cartFull: {
+            unallocatedItems: any[];
+            obtainPoints?: any[];
+            soldOutLines?: any[];
+        };
+    };
+}
 
-export type SMHeaders = NonUndefined<Headers>;
+export interface IItemListCart {
+    productId: string;
+    sku: string;
+    name: string;
+}

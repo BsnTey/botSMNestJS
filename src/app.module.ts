@@ -8,6 +8,8 @@ import { DatabaseModule } from './database/database.module';
 import { UserModule } from './users/user.module';
 // import { AccountsModule } from './accounts/account.module';
 import { ProxyModule } from './proxy/proxy.module';
+import { TelegrafExceptionFilter } from './common/filters/telegraf-exception.filter';
+import { APP_FILTER } from '@nestjs/core';
 
 @Module({
     imports: [
@@ -25,6 +27,12 @@ import { ProxyModule } from './proxy/proxy.module';
         UserModule,
         // AccountsModule,
         ProxyModule,
+    ],
+    providers: [
+        {
+            provide: APP_FILTER,
+            useClass: TelegrafExceptionFilter,
+        },
     ],
 })
 export class AppModule {}

@@ -3,6 +3,7 @@ import { AccountRepository } from './repository/account.repository';
 import { ApiSM } from 'src/apiSM/apiSM.service';
 import { ProxyService } from 'src/proxy/proxy.service';
 import { TelegrafException } from 'nestjs-telegraf';
+import { ERROR_CONNECT_ACCOUNT, NO_FREE_PROXIES } from 'src/app.constants';
 
 @Injectable()
 export class AccountService {
@@ -17,15 +18,13 @@ export class AccountService {
         let proxy: string;
         for (let attempt = 0; attempt < 4; attempt++) {
             try {
-                if (attempt === 3) {
-                    throw new TelegrafException('❌ Проблемы с подключением аккаунта. Подождите 5-10мин');
-                }
+                if (attempt === 3) throw new TelegrafException(ERROR_CONNECT_ACCOUNT);
 
                 try {
                     proxy = this.proxyService.getRandomProxy();
                     api.setProxy(proxy);
                 } catch {
-                    throw new TelegrafException('❌ Нет свободных прокси. Подождите 5-10мин. Сообщите Администратору');
+                    throw new TelegrafException(NO_FREE_PROXIES);
                 }
 
                 const accountId = api.accountId;
@@ -56,8 +55,6 @@ export class AccountService {
                     //дописать ошибку прокси соединения
                     this.proxyService.setProxyBan(proxy);
                     continue;
-                } else if (error == '') {
-                    // дописать ошибку, если нет свободных прокси
                 }
             }
         }

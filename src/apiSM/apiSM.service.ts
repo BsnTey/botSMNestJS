@@ -1,14 +1,15 @@
 import axios from 'axios';
 import { SocksProxyAgent } from 'socks-proxy-agent';
-import { IAccountInputApi, IRefreshAccount } from 'src/common/interfaces/apiSM/apiSM.interface';
+import { IAccountInputApi, IItemListCart, IRefreshAccount } from 'src/common/interfaces/apiSM/apiSM.interface';
 import { getCurrentTimestamp } from 'src/common/utils/date';
+import { parsingListCart } from 'src/common/utils/transformRespBody';
 
 export class ApiSM {
     public accountId: string | null = null;
     private httpsAgent = null;
     private proxy: string | null = null;
     private cityId = '1720920299';
-    private cityName = 'Москва';
+    public cityName = 'Москва';
     private accessToken: string | null = null;
     private refreshToken: string | null = null;
     private xUserId: string | null = null;
@@ -28,11 +29,11 @@ export class ApiSM {
     private privatePersonType: string | null = null;
 
     private emailOwner: string | null = null;
-    private itemsCart: Array<any> | null = null;
-    private rawItemsCart: Array<any> | null = null;
+    public itemsCart: Array<IItemListCart> | null = null;
+    public rawItemsCart: Array<any> | null = null;
 
-    private amountThreeDays: number | null = null;
-    private promocodes: Array<string> | null = null;
+    public amountThreeDays: number | null = null;
+    public promocodes: Array<string> | null = null;
 
     constructor(account: IAccountInputApi) {
         this.accountId = account.accountId;
@@ -142,5 +143,24 @@ export class ApiSM {
     async isRefresh(): Promise<boolean> {
         const isRefresh = await this.shortInfo();
         return isRefresh;
+    }
+
+    async getListCart(): Promise<boolean> {
+        const url = 'https://mp4x-api.sportmaster.ru/api/v1/cart';
+        const params = { clearDeletedLines: true, cartResponse: 'FULL' };
+        try {
+            const response = await axios.get(url, {
+                headers: this.headers,
+                params: params,
+                httpsAgent: this.httpsAgent,
+            });
+
+            this.itemsCart = parsingListCart(response.data);
+            this.rawItemsCart = response.data;
+
+            return true;
+        } catch {
+            return false;
+        }
     }
 }
