@@ -1,35 +1,23 @@
-import {
-    Command,
-    Ctx,
-    Hears,
-    Start,
-    Update,
-    Sender,
-    Message,
-    On,
-    Scene,
-    SceneEnter,
-    Wizard,
-    WizardStep,
-    SceneLeave,
-    TelegrafException,
-    Action,
-} from 'nestjs-telegraf';
+import { Ctx, Hears, Sender, On, Scene, SceneEnter, TelegrafException, Action } from 'nestjs-telegraf';
 import { WizardContext } from 'telegraf/typings/scenes';
 import { getMainMenu } from '../common/keyboards/reply.keyboard';
 import { ApiSM } from 'src/apiSM/apiSM.service';
 import { AccountService } from 'src/accounts/account.service';
-import { ProxyService } from 'src/proxy/proxy.service';
 import {
     ACCOUNT_BANNED,
     ACCOUNT_NOT_FOUND,
     ALL_KEYS_MENU_BUTTON_NAME,
+    CITY_NOT_VALID,
     INCORRECT_ENTERED_KEY,
     KNOWN_ERROR,
     MAKE_ORDER,
-    UNKNOWN_ERROR,
 } from 'src/app.constants';
-import { comebackCartkeyboard, getCitiesKeyboard, getFavouriteCitiesBtns, mainMenuOrderKeyboard } from '../common/keyboards/inline.keyboard';
+import {
+    comebackCartkeyboard,
+    getCitiesKeyboard,
+    getFavouriteCitiesBtns,
+    mainMenuOrderKeyboard,
+} from '../common/keyboards/inline.keyboard';
 import { OrderService } from './order.service';
 import {
     ORDER_CITY_SCENE,
@@ -38,7 +26,7 @@ import {
     ORDER_MENU_ACCOUNT_SCENE,
     ORDER_MENU_CART_SCENE,
 } from 'src/states/states';
-import { getValueKeysMenu, isValidUUID, refactorCitiesAfterGetInBD } from 'src/common/utils/some.utils';
+import { getValueKeysMenu, isValidInputCity, isValidUUID } from 'src/common/utils/some.utils';
 import { UserService } from 'src/users/user.service';
 
 @Scene(MAKE_ORDER.scene)
@@ -140,20 +128,25 @@ export class OrderMenuAccount {
 
 @Scene(ORDER_CITY_SCENE)
 export class OrderCity {
-    constructor(private userService: UserService) {}
+    constructor(private orderService: OrderService) {}
 
     @SceneEnter()
     async onSceneEnter(@Ctx() ctx: WizardContext, @Sender() telegramUser: any) {
         const { id: telegramId } = telegramUser;
-        const user = await this.userService.GetUserWithCitys(String(telegramId));
-        const rawFavouriteCities = user.userCities;
-        const favouriteCities = refactorCitiesAfterGetInBD(rawFavouriteCities)
+        const favouriteCities = await this.orderService.getFavouriteCities(String(telegramId));
 
         ctx.session['favouriteCities'] = favouriteCities;
 
-        const favouriteCitiesBtns = getFavouriteCitiesBtns(favouriteCities)
-        const citiesKeyboard = getCitiesKeyboard(favouriteCitiesBtns)
-        await ctx.reply("Введите название города для его изменения. Либо выберете из Ваших избранных", citiesKeyboard);
+        let favouriteCitiesBtns = [];
+        if (favouriteCities.length != 0) {
+            favouriteCitiesBtns = getFavouriteCitiesBtns(favouriteCities);
+        }
+
+        const citiesKeyboard = getCitiesKeyboard(favouriteCitiesBtns);
+        await ctx.editMessageText(
+            'Введите название города для его изменения. Либо выберете из Ваших избранных',
+            citiesKeyboard,
+        );
     }
 
     @Hears(ALL_KEYS_MENU_BUTTON_NAME)
@@ -165,8 +158,14 @@ export class OrderCity {
 
     @On('text')
     async inputCity(@Ctx() ctx: WizardContext) {
-        console.log("inputCity");
+        const api = ctx.session['api'];
+        const city = ctx.message['text'];
 
+        const isValidCity = isValidInputCity(city);
+        if (!isValidCity) throw new TelegrafException(CITY_NOT_VALID);
+
+        const { text, keyboard } = await this.orderService.findCity(api, city);
+        await ctx.reply(text, keyboard);
     }
 
     // @Action('')

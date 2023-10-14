@@ -1,4 +1,5 @@
 import axios from 'axios';
+import qs from 'qs';
 import { SocksProxyAgent } from 'socks-proxy-agent';
 import { IAccountInputApi, IItemListCart, IRefreshAccount } from 'src/common/interfaces/apiSM/apiSM.interface';
 import { getCurrentTimestamp } from 'src/common/utils/some.utils';
@@ -204,5 +205,23 @@ export class ApiSM {
         } catch {
             return false;
         }
+    }
+
+    async findCity(city: string): Promise<any> {
+        const url = `https://mp4x-api.sportmaster.ru/api/v1/city?query=${city}`;
+        const encodedUrl = encodeURI(url);
+
+        let foundCities = [];
+        try {
+            const response = await axios.get(encodedUrl, {
+                headers: this.headers,
+                httpsAgent: this.httpsAgent,
+            });
+
+            foundCities = response.data.data.list;
+        } catch {
+            // skip
+        }
+        return foundCities;
     }
 }

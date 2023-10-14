@@ -1,7 +1,6 @@
 import { Markup } from 'telegraf';
 import { IItemListCart } from '../interfaces/apiSM/apiSM.interface';
 import { IFavouriteCities } from '../interfaces/some.interface';
-import { InlineKeyboardButton } from 'telegraf/typings/core/types/typegram';
 
 export const mainMenuOrderKeyboard = (city: string) => {
     return Markup.inlineKeyboard([
@@ -61,9 +60,17 @@ export const getFavouriteCitiesBtns = (favouriteCities: IFavouriteCities[]) => {
 export const getCitiesKeyboard = (favouriteCities: any = []) => {
     return Markup.inlineKeyboard(
         [
-            [Markup.button.callback('Добавить город', 'add_new_favourite_city')],
+            [Markup.button.callback('Добавить город в избранное', 'add_new_favourite_city')],
             [Markup.button.callback('Удалить город', 'add_order_link')],
             [Markup.button.callback('Вернуться в меню', 'go_to_menu')],
         ].concat(favouriteCities),
+    );
+};
+
+export const getSelectCitiesKeyboard = (cities: any[]) => {
+    return Markup.inlineKeyboard(
+        cities.map((city) => {
+            return [Markup.button.callback(`${city.fullName}`, `id_city_${city.id}`)];
+        }),
     );
 };

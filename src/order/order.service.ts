@@ -1,13 +1,21 @@
 import { Injectable } from '@nestjs/common';
 import { ApiSM } from 'src/apiSM/apiSM.service';
-import { cartItemsOrderKeyboard, emptyCartKeyboard } from '../common/keyboards/inline.keyboard';
+import {
+    cartItemsOrderKeyboard,
+    emptyCartKeyboard,
+    getSelectCitiesKeyboard,
+} from '../common/keyboards/inline.keyboard';
 import { prepareListOutput } from 'src/common/utils/transformRespBody';
 import { TelegrafException } from 'nestjs-telegraf';
 import { ERROR_GET_CART } from 'src/app.constants';
+import { UserService } from 'src/users/user.service';
+import { refactorCitiesAfterGetInBD } from 'src/common/utils/some.utils';
+import { InlineKeyboardMarkup } from 'telegraf/typings/core/types/typegram';
+import { Markup } from 'telegraf/typings/telegram-types';
 
 @Injectable()
 export class OrderService {
-    // constructor(private accountService: AccountService) {}
+    constructor(private userService: UserService) {}
 
     async choosingWayCart(api: ApiSM) {
         const isItemsCart = await api.getListCart();
@@ -60,5 +68,28 @@ export class OrderService {
             answer = `${article.toUpperCase()} Не найден\n`;
         }
         return answer;
+    }
+
+    async getFavouriteCities(telegramId: string) {
+        const user = await this.userService.GetUserWithCitys(telegramId);
+        const rawFavouriteCities = user.userCities;
+        const favouriteCities = refactorCitiesAfterGetInBD(rawFavouriteCities);
+        return favouriteCities;
+    }
+
+    async findCity(api: ApiSM, city: string) {
+        const foundCities = await api.findCity(city);
+
+        let text: string;
+        let keyboard: Markup<InlineKeyboardMarkup>;
+
+        if (foundCities.length != 0) {
+            text = 'Выберете город из доступного списка';
+            keyboard = getSelectCitiesKeyboard(foundCities);
+        } else {
+            text = 'Город не найден. Попробуйте ввести еще раз';
+        }
+
+        return { text, keyboard };
     }
 }

@@ -57,6 +57,8 @@ export const ACCOUNT_BANNED = '❌ Аккаунт более не доступе
 export const ERROR_CONNECT_ACCOUNT = '❌ Проблемы с подключением аккаунта. Подождите 5-10мин';
 export const NO_FREE_PROXIES = '❌ Нет свободных прокси. Подождите 5-10мин. Сообщите Администратору';
 export const ERROR_GET_CART = '❌ Ошибка получения корзины. Попробуйте еще раз';
+export const CITY_NOT_VALID =
+    '❌ Не верно введено название города. Название должно содержать только кириллицу. Введите еще раз';
 
 export const ALL_KEYS_MENU_BUTTON = [
     CHANGE_NUMBER,
