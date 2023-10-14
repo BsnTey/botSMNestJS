@@ -5,6 +5,6 @@ import { UserRepository } from './repository/user.repository';
 
 @Module({
     providers: [UserService, PrismaService, UserRepository],
-    exports: [UserRepository],
+    exports: [UserService],
 })
 export class UserModule {}

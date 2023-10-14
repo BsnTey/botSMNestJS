@@ -1,5 +1,11 @@
 export const ORDER_SCENE = 'orderScene';
+export const ORDER_GET_ORDERS_SCENE = 'orderGetOrdersScene';
+
 export const ORDER_INPUT_ARTICLE_SCENE = 'orderInputArticleScene';
+export const ORDER_MENU_ACCOUNT_SCENE = 'orderMenuAccountScene';
+export const ORDER_MENU_CART_SCENE = 'orderMenuCartScene';
+
+export const ORDER_CITY_SCENE = 'orderCityScene';
 
 export const CHANGE_NUMBER_SCENE = 'changeNumberScene';
 export const GET_COOKIE_SCENE = 'getCookieScene';
@@ -8,5 +14,3 @@ export const GET_QR_CODE_SCENE = 'getQrCodeScene';
 export const GET_CASH_RECEIPT_SCENE = 'getCashReceiptScene';
 export const PROFILE_SCENE = 'profileScene';
 export const HELP_SCENE = 'helpScene';
-
-// export const ALL_SCENE = [ORDER_WIZARD, ORDER_INPUT_ARTICLE];

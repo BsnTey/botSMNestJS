@@ -17,7 +17,6 @@ import {
 } from 'nestjs-telegraf';
 import { WizardContext } from 'telegraf/typings/scenes';
 import { getMainMenu } from '../common/keyboards/reply.keyboard';
-import { BaseService } from 'src/base/base.service';
 import { ApiSM } from 'src/apiSM/apiSM.service';
 import { AccountService } from 'src/accounts/account.service';
 import { ProxyService } from 'src/proxy/proxy.service';
@@ -30,24 +29,26 @@ import {
     MAKE_ORDER,
     UNKNOWN_ERROR,
 } from 'src/app.constants';
-import { comebackCartkeyboard, mainMenuOrderKeyboard } from '../common/keyboards/inline.keyboard';
+import { comebackCartkeyboard, getCitiesKeyboard, getFavouriteCitiesBtns, mainMenuOrderKeyboard } from '../common/keyboards/inline.keyboard';
 import { OrderService } from './order.service';
-import { ORDER_INPUT_ARTICLE_SCENE } from 'src/states/states';
-import { getValueKeysMenu, isValidUUID } from 'src/common/utils/some.utils';
+import {
+    ORDER_CITY_SCENE,
+    ORDER_GET_ORDERS_SCENE,
+    ORDER_INPUT_ARTICLE_SCENE,
+    ORDER_MENU_ACCOUNT_SCENE,
+    ORDER_MENU_CART_SCENE,
+} from 'src/states/states';
+import { getValueKeysMenu, isValidUUID, refactorCitiesAfterGetInBD } from 'src/common/utils/some.utils';
+import { UserService } from 'src/users/user.service';
 
 @Scene(MAKE_ORDER.scene)
 export class OrderUpdate {
-    constructor(
-        private baseService: BaseService,
-        private accountService: AccountService,
-        private proxyService: ProxyService,
-        private orderService: OrderService,
-    ) {}
+    constructor(private userService: UserService, private accountService: AccountService) {}
 
     @SceneEnter()
     async onSceneEnter(@Ctx() ctx: WizardContext, @Sender() telegramUser: any) {
-        const { id: telegramId } = telegramUser;
-        const user = await this.baseService.GetUserWithCitys(String(telegramId));
+        const { first_name: telegramName, id: telegramId } = telegramUser;
+        const user = await this.userService.GetOrCreateUser({ telegramId: String(telegramId), telegramName });
         ctx.session['userInfo'] = user;
         ctx.session['api'] = null;
 
@@ -87,25 +88,143 @@ export class OrderUpdate {
             if (!res) throw new TelegrafException(ACCOUNT_BANNED);
 
             ctx.session['api'] = api;
-            const city = api.cityName;
-            await ctx.reply(`📱 Аккаунт найден. Баланс: ${api.bonusCount}`, mainMenuOrderKeyboard(city));
+            await ctx.scene.enter(ORDER_MENU_ACCOUNT_SCENE);
         } catch (error) {
             if (KNOWN_ERROR.includes(error.message)) throw new TelegrafException(error.message);
             throw new TelegrafException(error);
         }
     }
+}
+
+@Scene(ORDER_MENU_ACCOUNT_SCENE)
+export class OrderMenuAccount {
+    constructor() {}
+
+    @SceneEnter()
+    async onSceneEnter(@Ctx() ctx: WizardContext) {
+        const api = ctx.session['api'];
+        const city = api.cityName;
+
+        const text = `📱 Аккаунт найден. Баланс: ${api.bonusCount}`;
+        const keyboard = mainMenuOrderKeyboard(city);
+
+        if (ctx.updateType === 'callback_query') {
+            await ctx.editMessageText(text, keyboard);
+        } else {
+            await ctx.reply(text, keyboard);
+        }
+    }
+
+    @Hears(ALL_KEYS_MENU_BUTTON_NAME)
+    async exit(@Ctx() ctx: WizardContext) {
+        await ctx.scene.leave();
+        const text = ctx.message['text'];
+        await ctx.scene.enter(getValueKeysMenu(text));
+    }
+
+    @Action('go_to_city')
+    async choosingWayCity(@Ctx() ctx: WizardContext) {
+        await ctx.scene.enter(ORDER_CITY_SCENE);
+    }
 
     @Action('go_to_cart')
     async choosingWayCart(@Ctx() ctx: WizardContext) {
-        const api = ctx.session['api'];
-        const { text, keyboard } = await this.orderService.choosingWayCart(api);
-
-        await ctx.editMessageText(text, keyboard);
+        await ctx.scene.enter(ORDER_MENU_CART_SCENE);
     }
 
     @Action('go_to_orders')
     async choosingWayOrder(@Ctx() ctx: WizardContext) {
-        await ctx.reply('Вошел 2');
+        await ctx.scene.enter(ORDER_GET_ORDERS_SCENE);
+    }
+}
+
+@Scene(ORDER_CITY_SCENE)
+export class OrderCity {
+    constructor(private userService: UserService) {}
+
+    @SceneEnter()
+    async onSceneEnter(@Ctx() ctx: WizardContext, @Sender() telegramUser: any) {
+        const { id: telegramId } = telegramUser;
+        const user = await this.userService.GetUserWithCitys(String(telegramId));
+        const rawFavouriteCities = user.userCities;
+        const favouriteCities = refactorCitiesAfterGetInBD(rawFavouriteCities)
+
+        ctx.session['favouriteCities'] = favouriteCities;
+
+        const favouriteCitiesBtns = getFavouriteCitiesBtns(favouriteCities)
+        const citiesKeyboard = getCitiesKeyboard(favouriteCitiesBtns)
+        await ctx.reply("Введите название города для его изменения. Либо выберете из Ваших избранных", citiesKeyboard);
+    }
+
+    @Hears(ALL_KEYS_MENU_BUTTON_NAME)
+    async exit(@Ctx() ctx: WizardContext) {
+        await ctx.scene.leave();
+        const text = ctx.message['text'];
+        await ctx.scene.enter(getValueKeysMenu(text));
+    }
+
+    @On('text')
+    async inputCity(@Ctx() ctx: WizardContext) {
+        console.log("inputCity");
+
+    }
+
+    // @Action('')
+    // async some(@Ctx() ctx: WizardContext) {}
+
+    @Action('go_to_menu')
+    async goToMenu(@Ctx() ctx: WizardContext) {
+        await ctx.scene.enter(ORDER_MENU_ACCOUNT_SCENE);
+    }
+}
+
+@Scene(ORDER_GET_ORDERS_SCENE)
+export class OrderGetOrders {
+    constructor() {}
+
+    @SceneEnter()
+    async onSceneEnter(@Ctx() ctx: WizardContext) {
+        const api = ctx.session['api'];
+        await ctx.reply('Вошел в сущестующие заказы');
+    }
+
+    @Hears(ALL_KEYS_MENU_BUTTON_NAME)
+    async exit(@Ctx() ctx: WizardContext) {
+        await ctx.scene.leave();
+        const text = ctx.message['text'];
+        await ctx.scene.enter(getValueKeysMenu(text));
+    }
+
+    @Action('')
+    async some(@Ctx() ctx: WizardContext) {}
+
+    @Action('go_to_menu')
+    async goToMenu(@Ctx() ctx: WizardContext) {
+        await ctx.scene.enter(ORDER_MENU_ACCOUNT_SCENE);
+    }
+}
+
+@Scene(ORDER_MENU_CART_SCENE)
+export class OrderMenuCart {
+    constructor(private orderService: OrderService) {}
+
+    @SceneEnter()
+    async onSceneEnter(@Ctx() ctx: WizardContext) {
+        const api = ctx.session['api'];
+        const { text, keyboard } = await this.orderService.choosingWayCart(api);
+
+        if (ctx.updateType === 'callback_query') {
+            await ctx.editMessageText(text, keyboard);
+        } else {
+            await ctx.reply(text, keyboard);
+        }
+    }
+
+    @Hears(ALL_KEYS_MENU_BUTTON_NAME)
+    async exit(@Ctx() ctx: WizardContext) {
+        await ctx.scene.leave();
+        const text = ctx.message['text'];
+        await ctx.scene.enter(getValueKeysMenu(text));
     }
 
     @Action('add_item_cart')
@@ -113,26 +232,18 @@ export class OrderUpdate {
         await ctx.scene.enter(ORDER_INPUT_ARTICLE_SCENE);
     }
 
-    // @SceneLeave()
-    // async onSceneLeave(@Ctx() ctx: WizardContext) {
-    //     console.log('onSceneLeave MAKE_ORDER');
-    //     const text = ctx.message['text'];
-    //     const isMenu = ALL_KEYS_MENU_BUTTON_NAME.includes(text);
-    //     if (isMenu) await ctx.scene.enter(getValueKeysMenu(text));
-    // }
+    @Action('go_to_menu')
+    async goToMenu(@Ctx() ctx: WizardContext) {
+        await ctx.scene.enter(ORDER_MENU_ACCOUNT_SCENE);
+    }
 }
 
 @Scene(ORDER_INPUT_ARTICLE_SCENE)
 export class OrderInputArticle {
-    constructor(
-        private baseService: BaseService,
-        private accountService: AccountService,
-        private proxyService: ProxyService,
-        private orderService: OrderService,
-    ) {}
+    constructor(private orderService: OrderService) {}
 
     @SceneEnter()
-    async onSceneEnter(@Ctx() ctx: WizardContext, @Sender() telegramUser: any) {
+    async onSceneEnter(@Ctx() ctx: WizardContext) {
         await ctx.editMessageText(
             'Введите артикул или артикулы (через нижнее подчеркивание "_" - является разделителем для разных артикулов)',
             comebackCartkeyboard,
@@ -152,7 +263,9 @@ export class OrderInputArticle {
         const text: string = ctx.message['text'];
         const articles = text.split('_');
         for (let article of articles) {
-            await this.orderService.searchAndAddinputArticle(api, article);
+            const resultAdding = await this.orderService.searchAndAddinputArticle(api, article);
+            await ctx.reply(resultAdding);
         }
+        await ctx.scene.enter(ORDER_MENU_CART_SCENE);
     }
 }

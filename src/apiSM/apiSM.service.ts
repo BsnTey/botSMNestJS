@@ -182,5 +182,27 @@ export class ApiSM {
         }
     }
 
-    async addItemCart(productId: string, sku: string): Promise<any> {}
+    async addItemCart(productId: string, sku: string): Promise<any> {
+        const url = 'https://mp4x-api.sportmaster.ru/api/v1/cart/add';
+
+        const payload = {
+            id: {
+                productId: productId,
+                sku: sku,
+            },
+            quantity: 1,
+            cartFormat: 'LITE',
+        };
+
+        try {
+            const response = await axios.post(url, payload, {
+                headers: this.headers,
+                httpsAgent: this.httpsAgent,
+            });
+
+            return response.data;
+        } catch {
+            return false;
+        }
+    }
 }

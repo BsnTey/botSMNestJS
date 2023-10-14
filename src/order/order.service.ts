@@ -32,6 +32,7 @@ export class OrderService {
 
     async searchAndAddinputArticle(api: ApiSM, article: string) {
         const searchProduct = await api.searchProduct(article);
+        let answer: string;
 
         if (searchProduct) {
             const productId = searchProduct.id;
@@ -45,6 +46,19 @@ export class OrderService {
                 }
             }
             const resultAdding = await api.addItemCart(productId, sku);
+
+            if ('cartLite' in resultAdding.data) {
+                answer = `${article.toUpperCase()} Добавлен в корзину\n`;
+            } else if ('PRODUCT_IS_NOT_AVAILABLE' in resultAdding) {
+                answer = `${article.toUpperCase()} Интересующий вас товар недоступен для покупки\n`;
+            } else if ('PRODUCT_IS_NOT_ACTIVE' in resultAdding) {
+                answer = `${article.toUpperCase()} Интересующий вас товар неактивен\n`;
+            } else {
+                answer = `${article.toUpperCase()} Ошибка добавления в корзину\n`;
+            }
+        } else {
+            answer = `${article.toUpperCase()} Не найден\n`;
         }
+        return answer;
     }
 }
