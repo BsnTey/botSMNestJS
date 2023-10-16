@@ -11,10 +11,12 @@ export interface IFavouriteCitiesGetBD {
     cityId: string;
     city: {
         name: string;
+        fullName: string;
     };
 }
 
 export interface IFavouriteCities {
     id: string;
     name: string;
+    fullName: string;
 }

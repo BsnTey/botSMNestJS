@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { UserRepository } from './repository/user.repository';
 import { ICreateUser } from 'src/common/interfaces/user/user.interface';
+import { IFavouriteCities } from 'src/common/interfaces/some.interface';
 
 @Injectable()
 export class UserService {
@@ -17,5 +18,11 @@ export class UserService {
     async GetUserWithCitys(telegramId: string) {
         const user = await this.userRep.getUserWithCitys(telegramId);
         return user;
+    }
+
+    async createUserCity(telegramId: string, city: IFavouriteCities) {
+        const newCity = await this.userRep.createCity(city);
+        const link = await this.userRep.linkCityUser(telegramId, city.id);
+        console.log(link);
     }
 }

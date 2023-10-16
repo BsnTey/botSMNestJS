@@ -49,6 +49,10 @@ export const comebackCartkeyboard = Markup.inlineKeyboard([
     [Markup.button.callback('Вернуться в корзину', 'go_to_cart')],
 ]);
 
+export const comebackOrderMenuKeyboard = Markup.inlineKeyboard([
+    [Markup.button.callback('Вернуться в меню', 'go_to_menu')],
+]);
+
 export const getFavouriteCitiesBtns = (favouriteCities: IFavouriteCities[]) => {
     const favouriteCitiesBtns = favouriteCities.map((city) => {
         return [Markup.button.callback(`${city.name}`, `id_city_${city.id}`)];
@@ -67,10 +71,15 @@ export const getCitiesKeyboard = (favouriteCities: any = []) => {
     );
 };
 
-export const getSelectCitiesKeyboard = (cities: any[]) => {
+export const getSelectCitiesKeyboard = (cities: any[], typeCity = 'common') => {
     return Markup.inlineKeyboard(
         cities.map((city) => {
-            return [Markup.button.callback(`${city.fullName}`, `id_city_${city.id}`)];
+            return [
+                Markup.button.callback(
+                    `${city.fullName}`,
+                    typeCity === 'common' ? `id_city_${city.id}` : `add_favourite_city_${city.id}`,
+                ),
+            ];
         }),
     );
 };

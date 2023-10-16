@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { ApiSM } from 'src/apiSM/apiSM.service';
 import {
     cartItemsOrderKeyboard,
+    comebackOrderMenuKeyboard,
     emptyCartKeyboard,
     getSelectCitiesKeyboard,
 } from '../common/keyboards/inline.keyboard';
@@ -77,7 +78,7 @@ export class OrderService {
         return favouriteCities;
     }
 
-    async findCity(api: ApiSM, city: string) {
+    async findCity(api: ApiSM, city: string, typeCity="common") {
         const foundCities = await api.findCity(city);
 
         let text: string;
@@ -85,9 +86,10 @@ export class OrderService {
 
         if (foundCities.length != 0) {
             text = 'Выберете город из доступного списка';
-            keyboard = getSelectCitiesKeyboard(foundCities);
+            keyboard = getSelectCitiesKeyboard(foundCities, typeCity);
         } else {
             text = 'Город не найден. Попробуйте ввести еще раз';
+            keyboard = comebackOrderMenuKeyboard
         }
 
         return { text, keyboard, cities: foundCities };

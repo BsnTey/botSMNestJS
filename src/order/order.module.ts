@@ -1,5 +1,12 @@
 import { Module } from '@nestjs/common';
-import { OrderCity, OrderInputArticle, OrderMenuAccount, OrderMenuCart, OrderUpdate } from './order.update';
+import {
+    OrderCity,
+    OrderFavouriteCity,
+    OrderInputArticle,
+    OrderMenuAccount,
+    OrderMenuCart,
+    OrderUpdate,
+} from './order.update';
 import { OrderService } from './order.service';
 import { AccountModule } from 'src/accounts/account.module';
 import { ProxyModule } from 'src/proxy/proxy.module';
@@ -8,6 +15,14 @@ import { BaseModule } from 'src/base/base.module';
 
 @Module({
     imports: [BaseModule, AccountModule, ProxyModule, UserModule],
-    providers: [OrderUpdate, OrderService, OrderInputArticle, OrderMenuCart, OrderMenuAccount, OrderCity],
+    providers: [
+        OrderUpdate,
+        OrderService,
+        OrderInputArticle,
+        OrderMenuCart,
+        OrderMenuAccount,
+        OrderCity,
+        OrderFavouriteCity,
+    ],
 })
 export class OrderModule {}

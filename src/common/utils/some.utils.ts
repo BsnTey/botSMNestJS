@@ -18,8 +18,9 @@ export const refactorCitiesAfterGetInBD = (cities: IFavouriteCitiesGetBD[]) => {
     for (let city of cities) {
         const id = city.cityId;
         const name = city.city.name;
+        const fullName = city.city.fullName;
 
-        refactorCities.push({ id, name });
+        refactorCities.push({ id, name, fullName });
     }
     return refactorCities;
 };
@@ -29,9 +30,20 @@ export const isValidInputCity = (city: string): boolean => {
     return regex.test(city);
 };
 
-
 export const findCityName = (cityId, cities) => {
     for (let city of cities) {
-        if (cityId === city.id) return city.name
+        if (cityId === city.id) return city.name;
     }
-}
+};
+
+export const findFavouriteCityName = (cityId, cities): IFavouriteCities => {
+    for (let city of cities) {
+        if (cityId === city.id) {
+            return {
+                id: cityId,
+                name: city.name,
+                fullName: city.fullName,
+            };
+        }
+    }
+};
