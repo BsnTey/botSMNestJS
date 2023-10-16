@@ -16,7 +16,8 @@ import {
     comebackCartkeyboard,
     comebackOrderMenuKeyboard,
     getCitiesKeyboard,
-    getFavouriteCitiesBtns,
+    getFavouriteCitiesKeyboard,
+    getSelectCitiesKeyboard,
     mainMenuOrderKeyboard,
 } from '../common/keyboards/inline.keyboard';
 import { OrderService } from './order.service';
@@ -30,13 +31,11 @@ import {
 } from 'src/states/states';
 import {
     findCityName,
-    findFavouriteCityName,
     getValueKeysMenu,
     isValidInputCity,
     isValidUUID,
 } from 'src/common/utils/some.utils';
 import { UserService } from 'src/users/user.service';
-import { Context } from 'telegraf';
 
 @Scene(MAKE_ORDER.scene)
 export class OrderUpdate {
@@ -146,12 +145,9 @@ export class OrderCity {
 
         ctx.session['favouriteCities'] = favouriteCities;
 
-        let favouriteCitiesBtns = [];
-        if (favouriteCities.length != 0) {
-            favouriteCitiesBtns = getFavouriteCitiesBtns(favouriteCities);
-        }
+        const citiesKeyboard =
+            favouriteCities.length != 0 ? getFavouriteCitiesKeyboard(favouriteCities) : getCitiesKeyboard;
 
-        const citiesKeyboard = getCitiesKeyboard(favouriteCitiesBtns);
         await ctx.editMessageText(
             'Введите название города для его изменения. Либо выберете из Ваших избранных',
             citiesKeyboard,
@@ -197,6 +193,24 @@ export class OrderCity {
     @Action('add_new_favourite_city')
     async addFavouriteCity(@Ctx() ctx: WizardContext) {
         await ctx.scene.enter(ORDER_FAVOURITE_CITY_SCENE);
+    }
+
+    @Action('del_favourite_city')
+    async selectDelFavouriteCity(@Ctx() ctx: WizardContext) {
+        const favouriteCities = ctx.session['favouriteCities'];
+        const keyboard = getSelectCitiesKeyboard(favouriteCities, 'deleteFavouriteCity');
+        await ctx.editMessageText('Выберете город для удаления', keyboard);
+    }
+
+    @Action(/^del_favourite_city_\d+$/)
+    async delFavouriteCity(@Ctx() ctx: WizardContext, @Sender() telegramUser: any) {
+        const { id: telegramId } = telegramUser;
+        //@ts-ignore
+        const cityId = ctx.match[0].split('_')[3];
+
+        const text = await this.orderService.delFavouriteCity(telegramId, cityId);
+        await ctx.reply(text);
+        await ctx.scene.enter(ORDER_MENU_ACCOUNT_SCENE);
     }
 
     @Action('go_to_menu')

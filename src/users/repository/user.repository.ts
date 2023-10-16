@@ -72,4 +72,15 @@ export class UserRepository {
             },
         });
     }
+
+    async delCityUser(telegramId: string, cityId: string) {
+        return await this.prisma.userCitySM.delete({
+            where: {
+                cityId_userId: {
+                  cityId: cityId,
+                  userId: telegramId,
+                },
+              },
+        });
+    }
 }

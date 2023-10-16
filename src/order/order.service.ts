@@ -95,7 +95,7 @@ export class OrderService {
         return { text, keyboard, cities: foundCities };
     }
 
-    async addFavouriteCity(telegramId: string, addFavouriteCities, favouriteCities, cityId) {
+    async addFavouriteCity(telegramId: string, addFavouriteCities, favouriteCities, cityId: string) {
         const isFoundCity = favouriteCities.find((city) => city.id === cityId);
         let text: string;
 
@@ -112,5 +112,10 @@ export class OrderService {
         }
 
         return text;
+    }
+
+    async delFavouriteCity(telegramId: string, cityId: string) {
+        const isDel = await this.userService.delUserCity(String(telegramId), cityId);
+        return isDel ? 'Город удален из избранного' : 'Город не удален';
     }
 }

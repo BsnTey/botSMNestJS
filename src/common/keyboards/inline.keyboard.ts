@@ -53,23 +53,22 @@ export const comebackOrderMenuKeyboard = Markup.inlineKeyboard([
     [Markup.button.callback('Вернуться в меню', 'go_to_menu')],
 ]);
 
-export const getFavouriteCitiesBtns = (favouriteCities: IFavouriteCities[]) => {
+export const getFavouriteCitiesKeyboard = (favouriteCities: any) => {
+    const btns = [
+        [Markup.button.callback('Добавить город в избранное', 'add_new_favourite_city')],
+        [Markup.button.callback('Удалить город', 'del_favourite_city')],
+        [Markup.button.callback('Вернуться в меню', 'go_to_menu')],
+    ];
     const favouriteCitiesBtns = favouriteCities.map((city) => {
         return [Markup.button.callback(`${city.name}`, `id_city_${city.id}`)];
     });
-
-    return favouriteCitiesBtns;
+    return Markup.inlineKeyboard(btns.concat(favouriteCitiesBtns));
 };
 
-export const getCitiesKeyboard = (favouriteCities: any = []) => {
-    return Markup.inlineKeyboard(
-        [
-            [Markup.button.callback('Добавить город в избранное', 'add_new_favourite_city')],
-            [Markup.button.callback('Удалить город', 'add_order_link')],
-            [Markup.button.callback('Вернуться в меню', 'go_to_menu')],
-        ].concat(favouriteCities),
-    );
-};
+export const getCitiesKeyboard = Markup.inlineKeyboard([
+    [Markup.button.callback('Добавить город в избранное', 'add_new_favourite_city')],
+    [Markup.button.callback('Вернуться в меню', 'go_to_menu')],
+]);
 
 export const getSelectCitiesKeyboard = (cities: any[], typeCity = 'common') => {
     return Markup.inlineKeyboard(
@@ -77,7 +76,11 @@ export const getSelectCitiesKeyboard = (cities: any[], typeCity = 'common') => {
             return [
                 Markup.button.callback(
                     `${city.fullName}`,
-                    typeCity === 'common' ? `id_city_${city.id}` : `add_favourite_city_${city.id}`,
+                    typeCity === 'common'
+                        ? `id_city_${city.id}`
+                        : typeCity === 'favourite'
+                        ? `add_favourite_city_${city.id}`
+                        : `del_favourite_city_${city.id}`,
                 ),
             ];
         }),

@@ -23,6 +23,11 @@ export class UserService {
     async createUserCity(telegramId: string, city: IFavouriteCities) {
         const newCity = await this.userRep.createCity(city);
         const link = await this.userRep.linkCityUser(telegramId, city.id);
-        return "cityId" in link? true: false;
+        return 'cityId' in link ? true : false;
+    }
+
+    async delUserCity(telegramId: string, cityId: string) {
+        const delCity = await this.userRep.delCityUser(telegramId, cityId);
+        return 'cityId' in delCity ? true : false;
     }
 }
