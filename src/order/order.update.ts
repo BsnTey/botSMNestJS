@@ -207,7 +207,7 @@ export class OrderCity {
 
 @Scene(ORDER_FAVOURITE_CITY_SCENE)
 export class OrderFavouriteCity {
-    constructor(private orderService: OrderService, private userService: UserService) {}
+    constructor(private orderService: OrderService) {}
 
     @SceneEnter()
     async onSceneEnter(@Ctx() ctx: WizardContext) {
@@ -237,14 +237,13 @@ export class OrderFavouriteCity {
     @Action(/^add_favourite_city_\d+$/)
     async selectCity(@Ctx() ctx: WizardContext, @Sender() telegramUser: any) {
         const { id: telegramId } = telegramUser;
-        const api = ctx.session['api'];
         const addFavouriteCities = ctx.session['addFavouriteCities'];
+        const favouriteCities = ctx.session['favouriteCities'];
         //@ts-ignore
         const cityId = ctx.match[0].split('_')[3];
 
-        const selectedFavouriteCity = findFavouriteCityName(cityId, addFavouriteCities);
-        await this.userService.createUserCity(String(telegramId), selectedFavouriteCity);
-
+        const text = await this.orderService.addFavouriteCity(telegramId, addFavouriteCities, favouriteCities, cityId);
+        await ctx.reply(text);
         await ctx.scene.enter(ORDER_MENU_ACCOUNT_SCENE);
     }
 

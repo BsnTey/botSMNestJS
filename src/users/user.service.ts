@@ -23,6 +23,6 @@ export class UserService {
     async createUserCity(telegramId: string, city: IFavouriteCities) {
         const newCity = await this.userRep.createCity(city);
         const link = await this.userRep.linkCityUser(telegramId, city.id);
-        console.log(link);
+        return "cityId" in link? true: false;
     }
 }

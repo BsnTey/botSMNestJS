@@ -10,7 +10,7 @@ import { prepareListOutput } from 'src/common/utils/transformRespBody';
 import { TelegrafException } from 'nestjs-telegraf';
 import { ERROR_GET_CART } from 'src/app.constants';
 import { UserService } from 'src/users/user.service';
-import { refactorCitiesAfterGetInBD } from 'src/common/utils/some.utils';
+import { findFavouriteCityName, refactorCitiesAfterGetInBD } from 'src/common/utils/some.utils';
 import { InlineKeyboardMarkup } from 'telegraf/typings/core/types/typegram';
 import { Markup } from 'telegraf/typings/telegram-types';
 
@@ -78,7 +78,7 @@ export class OrderService {
         return favouriteCities;
     }
 
-    async findCity(api: ApiSM, city: string, typeCity="common") {
+    async findCity(api: ApiSM, city: string, typeCity = 'common') {
         const foundCities = await api.findCity(city);
 
         let text: string;
@@ -89,9 +89,28 @@ export class OrderService {
             keyboard = getSelectCitiesKeyboard(foundCities, typeCity);
         } else {
             text = 'Город не найден. Попробуйте ввести еще раз';
-            keyboard = comebackOrderMenuKeyboard
+            keyboard = comebackOrderMenuKeyboard;
         }
 
         return { text, keyboard, cities: foundCities };
+    }
+
+    async addFavouriteCity(telegramId: string, addFavouriteCities, favouriteCities, cityId) {
+        const isFoundCity = favouriteCities.find((city) => city.id === cityId);
+        let text: string;
+
+        if (!isFoundCity) {
+            const selectedFavouriteCity = findFavouriteCityName(cityId, addFavouriteCities);
+            const isCreate = await this.userService.createUserCity(String(telegramId), selectedFavouriteCity);
+            if (isCreate) {
+                text = 'Город добавлен в избранное';
+            } else {
+                text = 'Город не добавлен';
+            }
+        } else {
+            text = 'Выбранный город уже есть в списке избранного';
+        }
+
+        return text;
     }
 }
