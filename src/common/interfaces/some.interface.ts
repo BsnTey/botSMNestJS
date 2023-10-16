@@ -15,6 +15,6 @@ export interface IFavouriteCitiesGetBD {
 }
 
 export interface IFavouriteCities {
-    cityId: string;
+    id: string;
     name: string;
 }

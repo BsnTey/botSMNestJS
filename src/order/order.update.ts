@@ -26,8 +26,9 @@ import {
     ORDER_MENU_ACCOUNT_SCENE,
     ORDER_MENU_CART_SCENE,
 } from 'src/states/states';
-import { getValueKeysMenu, isValidInputCity, isValidUUID } from 'src/common/utils/some.utils';
+import { findCityName, getValueKeysMenu, isValidInputCity, isValidUUID } from 'src/common/utils/some.utils';
 import { UserService } from 'src/users/user.service';
+import { Context } from 'telegraf';
 
 @Scene(MAKE_ORDER.scene)
 export class OrderUpdate {
@@ -164,12 +165,28 @@ export class OrderCity {
         const isValidCity = isValidInputCity(city);
         if (!isValidCity) throw new TelegrafException(CITY_NOT_VALID);
 
-        const { text, keyboard } = await this.orderService.findCity(api, city);
+        const { text, keyboard, cities } = await this.orderService.findCity(api, city);
+        ctx.session['cities'] = cities;
         await ctx.reply(text, keyboard);
     }
 
-    // @Action('')
-    // async some(@Ctx() ctx: WizardContext) {}
+
+    @Action(/^id_city_\d+$/)
+    async selectCity(@Ctx() ctx: WizardContext) {
+        const api = ctx.session['api'];
+        let cities = ctx.session['cities'] || [];
+        const favouriteCities = ctx.session['favouriteCities'] || [];
+
+        cities = cities.concat(favouriteCities)
+
+        //@ts-ignore
+        const cityId = ctx.match[0].split("_")[2];
+        const cityName = findCityName(cityId, cities);
+
+        api.setCity(cityId, cityName)
+        await ctx.scene.enter(ORDER_MENU_ACCOUNT_SCENE);
+    }
+
 
     @Action('go_to_menu')
     async goToMenu(@Ctx() ctx: WizardContext) {

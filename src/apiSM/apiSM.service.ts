@@ -71,7 +71,7 @@ export class ApiSM {
         };
     }
 
-    setCity({ cityId, cityName }): void {
+    setCity(cityId, cityName): void {
         this.cityId = cityId;
         this.cityName = cityName;
         this.setHeaders();

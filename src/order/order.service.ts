@@ -90,6 +90,6 @@ export class OrderService {
             text = 'Город не найден. Попробуйте ввести еще раз';
         }
 
-        return { text, keyboard };
+        return { text, keyboard, cities: foundCities };
     }
 }

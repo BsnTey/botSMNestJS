@@ -16,10 +16,10 @@ export const getValueKeysMenu = (key: string) => ALL_KEYS_MENU_BUTTON.find((btnO
 export const refactorCitiesAfterGetInBD = (cities: IFavouriteCitiesGetBD[]) => {
     const refactorCities: IFavouriteCities[] = [];
     for (let city of cities) {
-        const cityId = city.cityId;
+        const id = city.cityId;
         const name = city.city.name;
 
-        refactorCities.push({ cityId, name });
+        refactorCities.push({ id, name });
     }
     return refactorCities;
 };
@@ -28,3 +28,10 @@ export const isValidInputCity = (city: string): boolean => {
     const regex = /[а-яёА-ЯЁ\s-]+$/;
     return regex.test(city);
 };
+
+
+export const findCityName = (cityId, cities) => {
+    for (let city of cities) {
+        if (cityId === city.id) return city.name
+    }
+}

@@ -51,7 +51,7 @@ export const comebackCartkeyboard = Markup.inlineKeyboard([
 
 export const getFavouriteCitiesBtns = (favouriteCities: IFavouriteCities[]) => {
     const favouriteCitiesBtns = favouriteCities.map((city) => {
-        return [Markup.button.callback(`${city.name}`, `id_city_${city.cityId}`)];
+        return [Markup.button.callback(`${city.name}`, `id_city_${city.id}`)];
     });
 
     return favouriteCitiesBtns;
