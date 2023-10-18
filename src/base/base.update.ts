@@ -3,7 +3,7 @@ import { Command, Ctx, Hears, Start, Update, Sender, Message, On } from 'nestjs-
 import { AdminGuard } from 'src/common/guards/admin.guard';
 import { Context } from 'src/common/interfaces/context.interface';
 import { WizardContext } from 'telegraf/typings/scenes';
-import { MAKE_ORDER } from 'src/app.constants';
+import { CHECK, MAKE_ORDER } from 'src/app.constants';
 import { UserService } from 'src/users/user.service';
 
 @Update()
@@ -34,5 +34,10 @@ export class BaseUpdate {
     @Hears(['🛒 Сделать заказ'])
     async onStartOrder(@Ctx() ctx: WizardContext, @Sender() telegramUser: any) {
         await ctx.scene.enter(MAKE_ORDER.scene);
+    }
+
+    @Hears(['♻️ Чекер'])
+    async onStartChecking(@Ctx() ctx: WizardContext) {
+        await ctx.scene.enter(CHECK.scene);
     }
 }

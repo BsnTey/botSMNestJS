@@ -10,6 +10,7 @@ import { UserModule } from './users/user.module';
 import { ProxyModule } from './proxy/proxy.module';
 import { TelegrafExceptionFilter } from './common/filters/telegraf-exception.filter';
 import { APP_FILTER } from '@nestjs/core';
+import { CheckingModule } from './checking/checking.module';
 
 @Module({
     imports: [
@@ -27,6 +28,7 @@ import { APP_FILTER } from '@nestjs/core';
         UserModule,
         // AccountsModule,
         ProxyModule,
+        CheckingModule,
     ],
     providers: [
         {
