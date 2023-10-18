@@ -259,4 +259,30 @@ export class ApiSM {
         }
     }
 
+    async removeItemFromCart(removeList: IItemListCart[]): Promise<boolean> {
+        const url = 'https://mp4x-api.sportmaster.ru/api/v1/cart/remove';
+        const ids = removeList.map((item: IItemListCart) => {
+            return {
+                productId: item.productId,
+                sku: item.sku
+            }
+        })
+
+        const payload = {
+            ids: ids,
+            cartFormat: "FULL"
+        };
+
+        try {
+            const response = await axios.post(url, payload, {
+                headers: this.headers,
+                httpsAgent: this.httpsAgent,
+            });
+
+            return true;
+        } catch {
+            return false;
+        }
+    }
+
 }

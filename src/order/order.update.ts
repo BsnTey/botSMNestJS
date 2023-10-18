@@ -32,13 +32,7 @@ import {
     ORDER_MENU_ACCOUNT_SCENE,
     ORDER_MENU_CART_SCENE,
 } from 'src/states/states';
-import {
-    findCityName,
-    getValueKeysMenu,
-    isValidInputCity,
-    isValidUUID,
-    isValidUrl,
-} from 'src/common/utils/some.utils';
+import { findCityName, getValueKeysMenu, isValidInputCity, isValidUUID, isValidUrl } from 'src/common/utils/some.utils';
 import { UserService } from 'src/users/user.service';
 
 @Scene(MAKE_ORDER.scene)
@@ -328,16 +322,46 @@ export class OrderMenuCart {
     @Action('share_cart')
     async shareCartLink(@Ctx() ctx: WizardContext) {
         const api = ctx.session['api'];
-        const url = await api.createSnapshot()
-        if (!url) return await ctx.reply(ERROR_CREATE_LINK_CART);
+        const url = await api.createSnapshot();
 
-        await ctx.reply(url);
-        await ctx.scene.enter(ORDER_MENU_ACCOUNT_SCENE);
+        await ctx.reply(url || ERROR_CREATE_LINK_CART);
+        await ctx.scene.enter(ORDER_MENU_CART_SCENE);
     }
 
     @Action('add_item_cart')
     async addProduct(@Ctx() ctx: WizardContext) {
         await ctx.scene.enter(ORDER_INPUT_ARTICLE_SCENE);
+    }
+
+    @Action('clear_cart')
+    async clearCart(@Ctx() ctx: WizardContext) {
+        const api = ctx.session['api'];
+        const status = await this.orderService.clearCart(api);
+        const text = status ? 'Вещи удалены из списка' : 'Вещи не удалены из списка';
+        await ctx.reply(text);
+        await ctx.scene.enter(ORDER_MENU_CART_SCENE);
+    }
+
+    @Action(/id_remove_\d+_\d+/)
+    async removeItemCart(@Ctx() ctx: WizardContext) {
+        //@ts-ignore
+        const productId = ctx.match[0].split('_')[2];
+        //@ts-ignore
+        const sku = ctx.match[0].split('_')[3];
+        const api = ctx.session['api'];
+        await this.orderService.removeItemFromCart(api, { productId: productId, sku: sku });
+        await ctx.scene.enter(ORDER_MENU_CART_SCENE);
+    }
+
+    @Action(/id_add_\d+_\d+/)
+    async addItemCart(@Ctx() ctx: WizardContext) {
+        //@ts-ignore
+        const productId = ctx.match[0].split('_')[2];
+        //@ts-ignore
+        const sku = ctx.match[0].split('_')[3];
+        const api = ctx.session['api'];
+        await api.addItemCart(productId, sku)
+        await ctx.scene.enter(ORDER_MENU_CART_SCENE);
     }
 
     @Action('go_to_menu')
@@ -378,7 +402,6 @@ export class OrderInputArticle {
     }
 }
 
-
 @Scene(ORDER_INPUT_LINK_SCENE)
 export class OrderInputLink {
     constructor(private orderService: OrderService) {}
@@ -403,10 +426,10 @@ export class OrderInputLink {
         const api = ctx.session['api'];
         const text: string = ctx.message['text'];
 
-        const isValid = isValidUrl(text)
+        const isValid = isValidUrl(text);
         if (!isValid) throw new TelegrafException(ERROR_ORDER_LINK);
 
-        const resultAdding = await this.orderService.addItemsLink(api, text)
+        const resultAdding = await this.orderService.addItemsLink(api, text);
         await ctx.reply(resultAdding);
         await ctx.scene.enter(ORDER_MENU_CART_SCENE);
     }

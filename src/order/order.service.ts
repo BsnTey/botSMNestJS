@@ -102,11 +102,7 @@ export class OrderService {
         if (!isFoundCity) {
             const selectedFavouriteCity = findFavouriteCityName(cityId, addFavouriteCities);
             const isCreate = await this.userService.createUserCity(String(telegramId), selectedFavouriteCity);
-            if (isCreate) {
-                text = 'Город добавлен в избранное';
-            } else {
-                text = 'Город не добавлен';
-            }
+            text = isCreate ? 'Город добавлен в избранное' : 'Город не добавлен';
         } else {
             text = 'Выбранный город уже есть в списке избранного';
         }
@@ -124,5 +120,21 @@ export class OrderService {
         const specificationId = url.searchParams.get('specificationId');
         const status = await api.applySnapshot(specificationId);
         return status ? 'Товары были добавлены в корзину' : 'Товары не добавлены';
+    }
+
+    async clearCart(api: ApiSM) {
+        const itemsCart = api.itemsCart;
+        const status = await api.removeItemFromCart(itemsCart);
+        return status;
+    }
+
+    async removeItemFromCart(api: ApiSM, removeitem: { productId: string; sku: string }) {
+        const status = await api.removeItemFromCart([
+            {
+                productId: removeitem.productId,
+                sku: removeitem.sku,
+            },
+        ]);
+        return status;
     }
 }

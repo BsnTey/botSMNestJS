@@ -27,5 +27,5 @@ export interface RawListCart {
 export interface IItemListCart {
     productId: string;
     sku: string;
-    name: string;
+    name?: string;
 }
