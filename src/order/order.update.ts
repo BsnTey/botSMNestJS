@@ -8,6 +8,8 @@ import {
     ACCOUNT_NOT_FOUND,
     ALL_KEYS_MENU_BUTTON_NAME,
     CITY_NOT_VALID,
+    ERROR_CREATE_LINK_CART,
+    ERROR_ORDER_LINK,
     INCORRECT_ENTERED_KEY,
     KNOWN_ERROR,
     MAKE_ORDER,
@@ -26,6 +28,7 @@ import {
     ORDER_FAVOURITE_CITY_SCENE,
     ORDER_GET_ORDERS_SCENE,
     ORDER_INPUT_ARTICLE_SCENE,
+    ORDER_INPUT_LINK_SCENE,
     ORDER_MENU_ACCOUNT_SCENE,
     ORDER_MENU_CART_SCENE,
 } from 'src/states/states';
@@ -34,6 +37,7 @@ import {
     getValueKeysMenu,
     isValidInputCity,
     isValidUUID,
+    isValidUrl,
 } from 'src/common/utils/some.utils';
 import { UserService } from 'src/users/user.service';
 
@@ -316,6 +320,21 @@ export class OrderMenuCart {
         await ctx.scene.enter(getValueKeysMenu(text));
     }
 
+    @Action('add_order_link')
+    async addOrderLink(@Ctx() ctx: WizardContext) {
+        await ctx.scene.enter(ORDER_INPUT_LINK_SCENE);
+    }
+
+    @Action('share_cart')
+    async shareCartLink(@Ctx() ctx: WizardContext) {
+        const api = ctx.session['api'];
+        const url = await api.createSnapshot()
+        if (!url) return await ctx.reply(ERROR_CREATE_LINK_CART);
+
+        await ctx.reply(url);
+        await ctx.scene.enter(ORDER_MENU_ACCOUNT_SCENE);
+    }
+
     @Action('add_item_cart')
     async addProduct(@Ctx() ctx: WizardContext) {
         await ctx.scene.enter(ORDER_INPUT_ARTICLE_SCENE);
@@ -355,6 +374,40 @@ export class OrderInputArticle {
             const resultAdding = await this.orderService.searchAndAddinputArticle(api, article);
             await ctx.reply(resultAdding);
         }
+        await ctx.scene.enter(ORDER_MENU_CART_SCENE);
+    }
+}
+
+
+@Scene(ORDER_INPUT_LINK_SCENE)
+export class OrderInputLink {
+    constructor(private orderService: OrderService) {}
+
+    @SceneEnter()
+    async onSceneEnter(@Ctx() ctx: WizardContext) {
+        await ctx.editMessageText(
+            'Отправьте ссылку, которую скопировали из мобильного приложения',
+            comebackCartkeyboard,
+        );
+    }
+
+    @Hears(ALL_KEYS_MENU_BUTTON_NAME)
+    async exit(@Ctx() ctx: WizardContext) {
+        await ctx.scene.leave();
+        const text = ctx.message['text'];
+        await ctx.scene.enter(getValueKeysMenu(text));
+    }
+
+    @On('text')
+    async addOrderLink(@Ctx() ctx: WizardContext) {
+        const api = ctx.session['api'];
+        const text: string = ctx.message['text'];
+
+        const isValid = isValidUrl(text)
+        if (!isValid) throw new TelegrafException(ERROR_ORDER_LINK);
+
+        const resultAdding = await this.orderService.addItemsLink(api, text)
+        await ctx.reply(resultAdding);
         await ctx.scene.enter(ORDER_MENU_CART_SCENE);
     }
 }

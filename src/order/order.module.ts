@@ -3,6 +3,7 @@ import {
     OrderCity,
     OrderFavouriteCity,
     OrderInputArticle,
+    OrderInputLink,
     OrderMenuAccount,
     OrderMenuCart,
     OrderUpdate,
@@ -23,6 +24,7 @@ import { BaseModule } from 'src/base/base.module';
         OrderMenuAccount,
         OrderCity,
         OrderFavouriteCity,
+        OrderInputLink
     ],
 })
 export class OrderModule {}

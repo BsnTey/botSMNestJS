@@ -57,8 +57,10 @@ export const ACCOUNT_BANNED = '❌ Аккаунт более не доступе
 export const ERROR_CONNECT_ACCOUNT = '❌ Проблемы с подключением аккаунта. Подождите 5-10мин';
 export const NO_FREE_PROXIES = '❌ Нет свободных прокси. Подождите 5-10мин. Сообщите Администратору';
 export const ERROR_GET_CART = '❌ Ошибка получения корзины. Попробуйте еще раз';
+export const ERROR_CREATE_LINK_CART = '❌ Ошибка в создании ссылки на корзину. Попробуйте еще раз';
 export const CITY_NOT_VALID =
     '❌ Не верно введено название города. Название должно содержать только кириллицу. Введите еще раз';
+    export const ERROR_ORDER_LINK = '❌ Не верный тип ссылки. Должна быть вида: https://www.sportmaster.ru/basket/checkout.do?specificationId=921ae601-c5a0-4dda-98aa-49ab5078f2d0&utm_source=android_appshare&utm_medium=soc&utm_campaign=socsharing_cart_android';
 
 export const ALL_KEYS_MENU_BUTTON = [
     CHANGE_NUMBER,

@@ -118,4 +118,11 @@ export class OrderService {
         const isDel = await this.userService.delUserCity(String(telegramId), cityId);
         return isDel ? 'Город удален из избранного' : 'Город не удален';
     }
+
+    async addItemsLink(api: ApiSM, link: string) {
+        const url = new URL(link);
+        const specificationId = url.searchParams.get('specificationId');
+        const status = await api.applySnapshot(specificationId);
+        return status ? 'Товары были добавлены в корзину' : 'Товары не добавлены';
+    }
 }

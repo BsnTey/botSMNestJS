@@ -224,4 +224,39 @@ export class ApiSM {
         }
         return foundCities;
     }
+
+    async applySnapshot(snapshotUrl: string): Promise<boolean> {
+        const url = 'https://mp4x-api.sportmaster.ru/api/v1/cart/add';
+
+        const payload = {
+            snapshotUrl: snapshotUrl
+        };
+
+        try {
+            const response = await axios.post(url, payload, {
+                headers: this.headers,
+                httpsAgent: this.httpsAgent,
+            });
+
+            return true;
+        } catch {
+            return false;
+        }
+    }
+
+    async createSnapshot(): Promise<string> | null {
+        const url = 'https://mp4x-api.sportmaster.ru/api/v1/cart/createSnapshot';
+
+        try {
+            const response = await axios.post(url, {}, {
+                headers: this.headers,
+                httpsAgent: this.httpsAgent,
+            });
+
+            return response.data.data.snapshotUrl;
+        } catch {
+            return null;
+        }
+    }
+
 }

@@ -47,3 +47,12 @@ export const findFavouriteCityName = (cityId, cities): IFavouriteCities => {
         }
     }
 };
+
+export const isValidUrl = (link: string): boolean => {
+    try {
+        new URL(link);
+        return true;
+    } catch (err) {
+        return false;
+    }
+};

@@ -8,6 +8,8 @@ export const ORDER_MENU_CART_SCENE = 'orderMenuCartScene';
 export const ORDER_CITY_SCENE = 'orderCityScene';
 export const ORDER_FAVOURITE_CITY_SCENE = 'orderFavouriteCityScene';
 
+export const ORDER_INPUT_LINK_SCENE = 'orderInputLinkScene';
+
 export const CHANGE_NUMBER_SCENE = 'changeNumberScene';
 export const GET_COOKIE_SCENE = 'getCookieScene';
 export const CHECKER_SCENE = 'checkerScene';
