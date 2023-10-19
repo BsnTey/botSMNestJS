@@ -1,16 +1,12 @@
 import { Ctx, Hears, Sender, On, Scene, SceneEnter, TelegrafException, Action } from 'nestjs-telegraf';
 import { WizardContext } from 'telegraf/typings/scenes';
 import { getMainMenu } from '../common/keyboards/reply.keyboard';
-import { ApiSM } from 'src/apiSM/apiSM.service';
 import { AccountService } from 'src/accounts/account.service';
 import {
-    ACCOUNT_BANNED,
-    ACCOUNT_NOT_FOUND,
     ALL_KEYS_MENU_BUTTON_NAME,
     CITY_NOT_VALID,
     ERROR_CREATE_LINK_CART,
     ERROR_ORDER_LINK,
-    INCORRECT_ENTERED_KEY,
     KNOWN_ERROR,
     MAKE_ORDER,
 } from 'src/app.constants';
@@ -32,7 +28,7 @@ import {
     ORDER_MENU_ACCOUNT_SCENE,
     ORDER_MENU_CART_SCENE,
 } from 'src/states/states';
-import { findCityName, getValueKeysMenu, isValidInputCity, isValidUUID, isValidUrl } from 'src/common/utils/some.utils';
+import { findCityName, getValueKeysMenu, isValidInputCity, isValidUrl } from 'src/common/utils/some.utils';
 import { UserService } from 'src/users/user.service';
 
 @Scene(MAKE_ORDER.scene)
@@ -60,27 +56,8 @@ export class OrderUpdate {
     async findAccount(@Ctx() ctx: WizardContext) {
         const accountId = ctx.message['text'];
 
-        const isValidAccount = isValidUUID(accountId);
-        if (!isValidAccount) throw new TelegrafException(INCORRECT_ENTERED_KEY);
-
-        const account = await this.accountService.findAccount(accountId);
-        if (!account) throw new TelegrafException(ACCOUNT_NOT_FOUND);
-
-        const readyAccount = {
-            accountId: accountId,
-            accessToken: account.accessToken,
-            refreshToken: account.refreshToken,
-            xUserId: account.xUserId,
-            deviceId: account.deviceId,
-            installationId: account.installationId,
-            expiresIn: account.expiresIn,
-        };
-
         try {
-            const api = new ApiSM(readyAccount);
-            const res = await this.accountService.refresh(api, "shortInfo");
-            if (!res) throw new TelegrafException(ACCOUNT_BANNED);
-
+            const api = await this.accountService.getApi(accountId, 'shortInfo');
             ctx.session['api'] = api;
             await ctx.scene.enter(ORDER_MENU_ACCOUNT_SCENE);
         } catch (error) {
@@ -360,7 +337,7 @@ export class OrderMenuCart {
         //@ts-ignore
         const sku = ctx.match[0].split('_')[3];
         const api = ctx.session['api'];
-        await api.addItemCart(productId, sku)
+        await api.addItemCart(productId, sku);
         await ctx.scene.enter(ORDER_MENU_CART_SCENE);
     }
 

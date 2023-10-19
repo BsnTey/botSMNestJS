@@ -2,8 +2,15 @@ import { Injectable } from '@nestjs/common';
 import { AccountRepository } from './repository/account.repository';
 import { ApiSM } from 'src/apiSM/apiSM.service';
 import { ProxyService } from 'src/proxy/proxy.service';
-import { ERROR_CONNECT_ACCOUNT, NO_FREE_PROXIES } from 'src/app.constants';
+import {
+    ACCOUNT_BANNED,
+    ACCOUNT_NOT_FOUND,
+    ERROR_CONNECT_ACCOUNT,
+    INCORRECT_ENTERED_KEY,
+    NO_FREE_PROXIES,
+} from 'src/app.constants';
 import { TypeRefreshBy } from 'src/common/interfaces/apiSM/apiSM.interface';
+import { isValidUUID } from 'src/common/utils/some.utils';
 
 @Injectable()
 export class AccountService {
@@ -27,53 +34,85 @@ export class AccountService {
                     throw new Error(NO_FREE_PROXIES);
                 }
 
-                const accountId = api.accountId;
-                let isNotRefresh = false;
-                const isRefreshDate = api.isRefreshDate();
-                if (!isRefreshDate) isNotRefresh = await this.refreshBy(api, refreshByType)
-
-                if (!isNotRefresh) {
-                    const dataAccount = await api.refresh();
-                    if (!dataAccount) {
-                        await this.accountRep.setBanMp(accountId);
-                        return false;
-                    }
-                    await this.accountRep.updateTokensAccount(accountId, dataAccount);
-
-                    isNotRefresh = await this.refreshBy(api, refreshByType)
+                try {
+                    const accountId = api.accountId;
+                    let isNotRefresh = false;
+                    const isRefreshDate = api.isRefreshDate();
+                    if (!isRefreshDate) isNotRefresh = await this.refreshBy(api, refreshByType);
 
                     if (!isNotRefresh) {
-                        await this.accountRep.setBanMp(accountId);
-                        return false;
+                        const dataAccount = await api.refresh();
+                        if (!dataAccount) {
+                            await this.accountRep.setBanMp(accountId);
+                            return false;
+                        }
+                        await this.accountRep.updateTokensAccount(accountId, dataAccount);
+
+                        isNotRefresh = await this.refreshBy(api, refreshByType);
+
+                        if (!isNotRefresh) {
+                            await this.accountRep.setBanMp(accountId);
+                            throw new Error(ACCOUNT_BANNED);
+                        }
+                    }
+                    return true;
+                } catch (error) {
+                    console.log('блок ошибки', error.message);
+                    //дописать ошибку прокси соединения с SM
+                    if (error.message === '') {
+                        this.proxyService.setProxyBan(proxy);
+                    } else {
+                        throw new Error(error);
                     }
                 }
-                return true;
             } catch (error) {
                 console.log(error);
-
-                if (error == '') {
-                    //дописать ошибку прокси соединения
-                    this.proxyService.setProxyBan(proxy);
-                    continue;
-                }
+                throw new Error(error);
             }
+            console.log('continue');
+            continue;
         }
     }
 
     private async refreshBy(api: ApiSM, refreshByType: TypeRefreshBy) {
-        let status: boolean
+        let status: boolean;
         switch (refreshByType) {
-            case "shortInfo":
-                status = await api.shortInfo()
+            case 'shortInfo':
+                status = await api.shortInfo();
                 break;
-            case "detailsBonus":
-                status = await api.detailsBonus()
+            case 'detailsBonus':
+                status = await api.detailsBonus();
                 break;
-            case "promocode":
-                status = await api.shortInfo()
+            case 'promocode':
+                status = await api.shortInfo();
                 break;
         }
-        return status
+        return status;
     }
 
+    async getApi(accountId: string, refreshByType: TypeRefreshBy) {
+        const isValidAccount = isValidUUID(accountId);
+        if (!isValidAccount) throw new Error(INCORRECT_ENTERED_KEY);
+
+        const account = await this.findAccount(accountId);
+        if (!account) throw new Error(ACCOUNT_NOT_FOUND);
+
+        const readyAccount = {
+            accountId: accountId,
+            accessToken: account.accessToken,
+            refreshToken: account.refreshToken,
+            xUserId: account.xUserId,
+            deviceId: account.deviceId,
+            installationId: account.installationId,
+            expiresIn: account.expiresIn,
+        };
+
+        try {
+            const api = new ApiSM(readyAccount);
+            await this.refresh(api, refreshByType);
+            return api;
+        } catch (err) {
+            throw new Error(err);
+        }
+    }
 }

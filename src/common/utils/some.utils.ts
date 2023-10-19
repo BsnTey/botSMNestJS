@@ -78,7 +78,7 @@ export const getCombustionDates = (currentAmount: number, data: any): IOututBonu
 export const bringCompliance = (checkingAccounts, accounts: string[]) => {
     return accounts.map((account: string) => {
         const accTrim = account.trim()
-        if (accTrim === '') return '';
+        if (accTrim === '') return '\n';
         return checkingAccounts[accTrim]
     })
 }

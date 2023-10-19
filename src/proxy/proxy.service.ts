@@ -18,14 +18,26 @@ export class ProxyService {
             }
 
             const dataAcc = data.split('\n');
-            this.proxyList = dataAcc;
+            const proxyList = [];
+            for (let proxy of dataAcc) {
+                if (proxy.length == 0) continue;
+                proxyList.push(proxy.trim());
+            }
 
-            dataAcc.forEach((line) => {
+            this.proxyList = proxyList;
+
+            this.proxyList.forEach((line) => {
                 this.proxyDict[line] = {
                     isBan: false,
                     timeBlock: new Date(),
                 };
             });
+            // this.proxyDict["socks5://MEwluo:Ljeic0GMlo@45.81.137.82:5501"] = {
+            //     isBan: true,
+            //     timeBlock: new Date(),
+            // }
+            // this.proxyList.push("socks5://MEwluo:Ljeic0GMlo@45.81.137.82:5501")
+            // let show
         });
     }
 
@@ -40,12 +52,12 @@ export class ProxyService {
             const proxyData = this.proxyDict[randomProxy];
 
             if (!proxyData.isBan) {
-                proxyListCopy.splice(randomIndex, 1);
+                // proxyListCopy.splice(randomIndex, 1);
                 return randomProxy;
             } else if (proxyData.isBan && currentTime.getTime() - proxyData.timeBlock.getTime() > 10 * 60 * 1000) {
                 proxyData.isBan = false;
                 proxyData.timeBlock = new Date();
-                proxyListCopy.splice(randomIndex, 1);
+                // proxyListCopy.splice(randomIndex, 1);
                 return randomProxy;
             }
 

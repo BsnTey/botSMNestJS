@@ -8,15 +8,17 @@ import {
 } from '../common/keyboards/inline.keyboard';
 import { prepareListOutput } from 'src/common/utils/transformRespBody';
 import { TelegrafException } from 'nestjs-telegraf';
-import { ERROR_GET_CART } from 'src/app.constants';
+import { ACCOUNT_BANNED, ACCOUNT_NOT_FOUND, ERROR_GET_CART, INCORRECT_ENTERED_KEY } from 'src/app.constants';
 import { UserService } from 'src/users/user.service';
-import { findFavouriteCityName, refactorCitiesAfterGetInBD } from 'src/common/utils/some.utils';
+import { findFavouriteCityName, isValidUUID, refactorCitiesAfterGetInBD } from 'src/common/utils/some.utils';
 import { InlineKeyboardMarkup } from 'telegraf/typings/core/types/typegram';
 import { Markup } from 'telegraf/typings/telegram-types';
+import { AccountService } from 'src/accounts/account.service';
 
 @Injectable()
 export class OrderService {
-    constructor(private userService: UserService) {}
+    constructor(private userService: UserService, private accountService: AccountService) {}
+
 
     async choosingWayCart(api: ApiSM) {
         const isItemsCart = await api.getListCart();
