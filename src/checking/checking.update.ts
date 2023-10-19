@@ -3,16 +3,13 @@ import { WizardContext } from 'telegraf/typings/scenes';
 import { getMainMenu } from '../common/keyboards/reply.keyboard';
 import { ApiSM } from 'src/apiSM/apiSM.service';
 import { AccountService } from 'src/accounts/account.service';
-import {
-    ALL_KEYS_MENU_BUTTON_NAME,
-    CHECK,
-} from 'src/app.constants';
+import { ALL_KEYS_MENU_BUTTON_NAME, CHECK } from 'src/app.constants';
 import { getValueKeysMenu } from 'src/common/utils/some.utils';
-
+import { CheckingService } from './checking.service';
 
 @Scene(CHECK.scene)
 export class CheckingUpdate {
-    constructor(private accountService: AccountService) {}
+    constructor(private checkingService: CheckingService) {}
 
     @SceneEnter()
     async onSceneEnter(@Ctx() ctx: WizardContext) {
@@ -29,10 +26,9 @@ export class CheckingUpdate {
     @On('text')
     async inputAccounts(@Ctx() ctx: WizardContext) {
         //@ts-ignore
-        const accounts = ctx.match[0].split('\n');
+        const accounts = ctx.message['text'].split('\n');
         await ctx.reply('Началась проверка');
-
-        
-
+        const checkedAccounts = await this.checkingService.checkingAccounts(accounts);
+        await ctx.reply(checkedAccounts.join(''), getMainMenu());
     }
 }

@@ -32,6 +32,7 @@ export class ApiSM {
     private emailOwner: string | null = null;
     public itemsCart: Array<IItemListCart> | null = null;
     public rawItemsCart: Array<any> | null = null;
+    public rawListDetailsBonus: Array<any> | null = null;
 
     public amountThreeDays: number | null = null;
     public promocodes: Array<string> | null = null;
@@ -135,16 +136,41 @@ export class ApiSM {
             this.qrCode = response.data.data.info.clubCard.qrCode;
             this.privatePersonType = response.data.data.info.privatePersonType.value;
 
-            return false;
-        } catch {
             return true;
+        } catch {
+            return false;
         }
     }
 
-    async isRefresh(): Promise<boolean> {
-        const isRefresh = await this.shortInfo();
-        return isRefresh;
+    async detailsBonus(): Promise<boolean> {
+        const today = new Date();
+        const year = today.getFullYear();
+        const month = String(today.getMonth() + 1).padStart(2, '0');
+        const day = String(today.getDate()).padStart(2, '0');
+
+        const formattedDate = `${year}-${month}-${day}`;
+
+        const url = `https://mp4x-api.sportmaster.ru/api/v1/bonus/detailsByDay?dateBegin=${formattedDate}&dateEnd=2024-02-28`;
+
+        try {
+            const response = await axios.get(url, {
+                headers: this.headers,
+                httpsAgent: this.httpsAgent,
+            });
+
+            this.rawListDetailsBonus = response.data.data.list;
+            this.bonusCount = this.rawListDetailsBonus[0].amount;
+
+            return true;
+        } catch {
+            return false;
+        }
     }
+
+    // async isRefresh(): Promise<boolean> {
+    //     const isRefresh = await this.shortInfo();
+    //     return isRefresh;
+    // }
 
     async getListCart(): Promise<boolean> {
         const url = 'https://mp4x-api.sportmaster.ru/api/v1/cart';
@@ -229,7 +255,7 @@ export class ApiSM {
         const url = 'https://mp4x-api.sportmaster.ru/api/v1/cart/add';
 
         const payload = {
-            snapshotUrl: snapshotUrl
+            snapshotUrl: snapshotUrl,
         };
 
         try {
@@ -248,10 +274,14 @@ export class ApiSM {
         const url = 'https://mp4x-api.sportmaster.ru/api/v1/cart/createSnapshot';
 
         try {
-            const response = await axios.post(url, {}, {
-                headers: this.headers,
-                httpsAgent: this.httpsAgent,
-            });
+            const response = await axios.post(
+                url,
+                {},
+                {
+                    headers: this.headers,
+                    httpsAgent: this.httpsAgent,
+                },
+            );
 
             return response.data.data.snapshotUrl;
         } catch {
@@ -264,13 +294,13 @@ export class ApiSM {
         const ids = removeList.map((item: IItemListCart) => {
             return {
                 productId: item.productId,
-                sku: item.sku
-            }
-        })
+                sku: item.sku,
+            };
+        });
 
         const payload = {
             ids: ids,
-            cartFormat: "FULL"
+            cartFormat: 'FULL',
         };
 
         try {
@@ -284,5 +314,4 @@ export class ApiSM {
             return false;
         }
     }
-
 }

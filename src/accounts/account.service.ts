@@ -2,8 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { AccountRepository } from './repository/account.repository';
 import { ApiSM } from 'src/apiSM/apiSM.service';
 import { ProxyService } from 'src/proxy/proxy.service';
-import { TelegrafException } from 'nestjs-telegraf';
 import { ERROR_CONNECT_ACCOUNT, NO_FREE_PROXIES } from 'src/app.constants';
+import { TypeRefreshBy } from 'src/common/interfaces/apiSM/apiSM.interface';
 
 @Injectable()
 export class AccountService {
@@ -14,25 +14,25 @@ export class AccountService {
         return account;
     }
 
-    async refresh(api: ApiSM) {
+    async refresh(api: ApiSM, refreshByType: TypeRefreshBy) {
         let proxy: string;
         for (let attempt = 0; attempt < 4; attempt++) {
             try {
-                if (attempt === 3) throw new TelegrafException(ERROR_CONNECT_ACCOUNT);
+                if (attempt === 3) throw new Error(ERROR_CONNECT_ACCOUNT);
 
                 try {
                     proxy = this.proxyService.getRandomProxy();
                     api.setProxy(proxy);
                 } catch {
-                    throw new TelegrafException(NO_FREE_PROXIES);
+                    throw new Error(NO_FREE_PROXIES);
                 }
 
                 const accountId = api.accountId;
-                let isRefresh = true;
+                let isNotRefresh = false;
                 const isRefreshDate = api.isRefreshDate();
-                if (!isRefreshDate) isRefresh = await api.isRefresh();
+                if (!isRefreshDate) isNotRefresh = await this.refreshBy(api, refreshByType)
 
-                if (isRefresh) {
+                if (!isNotRefresh) {
                     const dataAccount = await api.refresh();
                     if (!dataAccount) {
                         await this.accountRep.setBanMp(accountId);
@@ -40,9 +40,9 @@ export class AccountService {
                     }
                     await this.accountRep.updateTokensAccount(accountId, dataAccount);
 
-                    isRefresh = await api.isRefresh();
+                    isNotRefresh = await this.refreshBy(api, refreshByType)
 
-                    if (isRefresh) {
+                    if (!isNotRefresh) {
                         await this.accountRep.setBanMp(accountId);
                         return false;
                     }
@@ -59,4 +59,21 @@ export class AccountService {
             }
         }
     }
+
+    private async refreshBy(api: ApiSM, refreshByType: TypeRefreshBy) {
+        let status: boolean
+        switch (refreshByType) {
+            case "shortInfo":
+                status = await api.shortInfo()
+                break;
+            case "detailsBonus":
+                status = await api.detailsBonus()
+                break;
+            case "promocode":
+                status = await api.shortInfo()
+                break;
+        }
+        return status
+    }
+
 }

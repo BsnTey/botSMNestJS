@@ -20,3 +20,8 @@ export interface IFavouriteCities {
     name: string;
     fullName: string;
 }
+
+export interface IOututBonusDate {
+    amount: number;
+    date: string;
+}

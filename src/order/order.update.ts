@@ -78,7 +78,7 @@ export class OrderUpdate {
 
         try {
             const api = new ApiSM(readyAccount);
-            const res = await this.accountService.refresh(api);
+            const res = await this.accountService.refresh(api, "shortInfo");
             if (!res) throw new TelegrafException(ACCOUNT_BANNED);
 
             ctx.session['api'] = api;

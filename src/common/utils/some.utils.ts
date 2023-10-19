@@ -1,6 +1,8 @@
+import { parse, format } from 'date-fns';
+
 const validate = require('uuid-validate');
 import { ALL_KEYS_MENU_BUTTON } from 'src/app.constants';
-import { IFavouriteCities, IFavouriteCitiesGetBD } from '../interfaces/some.interface';
+import { IFavouriteCities, IFavouriteCitiesGetBD, IOututBonusDate } from '../interfaces/some.interface';
 
 export const isValidUUID = (uuid: string): boolean => {
     return validate(uuid);
@@ -56,3 +58,27 @@ export const isValidUrl = (link: string): boolean => {
         return false;
     }
 };
+
+export const getCombustionDates = (currentAmount: number, data: any): IOututBonusDate | null => {
+    for (const amountDate of data) {
+        const amount: number = amountDate.amount;
+        if (currentAmount > amount) {
+            const date = amountDate.date;
+            const dateObject = parse(date, 'yyyy-MM-dd', new Date());
+            const formattedDate = format(dateObject, 'dd/MM');
+            return {
+                amount: amount,
+                date: formattedDate,
+            };
+        }
+    }
+    return null;
+};
+
+export const bringCompliance = (checkingAccounts, accounts: string[]) => {
+    return accounts.map((account: string) => {
+        const accTrim = account.trim()
+        if (accTrim === '') return '';
+        return checkingAccounts[accTrim]
+    })
+}

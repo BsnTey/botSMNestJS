@@ -29,3 +29,5 @@ export interface IItemListCart {
     sku: string;
     name?: string;
 }
+
+export type TypeRefreshBy = "shortInfo" | "detailsBonus" | "promocode"
