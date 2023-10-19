@@ -25,6 +25,7 @@ import {
     ORDER_GET_ORDERS_SCENE,
     ORDER_INPUT_ARTICLE_SCENE,
     ORDER_INPUT_LINK_SCENE,
+    ORDER_INPUT_PROMO_SCENE,
     ORDER_MENU_ACCOUNT_SCENE,
     ORDER_MENU_CART_SCENE,
 } from 'src/states/states';
@@ -310,6 +311,11 @@ export class OrderMenuCart {
         await ctx.scene.enter(ORDER_INPUT_ARTICLE_SCENE);
     }
 
+    @Action('add_promo')
+    async addPromo(@Ctx() ctx: WizardContext) {
+        await ctx.scene.enter(ORDER_INPUT_PROMO_SCENE);
+    }
+
     @Action('clear_cart')
     async clearCart(@Ctx() ctx: WizardContext) {
         const api = ctx.session['api'];
@@ -359,6 +365,11 @@ export class OrderInputArticle {
         );
     }
 
+    @Action('go_to_cart')
+    async choosingWayCart(@Ctx() ctx: WizardContext) {
+        await ctx.scene.enter(ORDER_MENU_CART_SCENE);
+    }
+
     @Hears(ALL_KEYS_MENU_BUTTON_NAME)
     async exit(@Ctx() ctx: WizardContext) {
         await ctx.scene.leave();
@@ -391,6 +402,11 @@ export class OrderInputLink {
         );
     }
 
+    @Action('go_to_cart')
+    async choosingWayCart(@Ctx() ctx: WizardContext) {
+        await ctx.scene.enter(ORDER_MENU_CART_SCENE);
+    }
+
     @Hears(ALL_KEYS_MENU_BUTTON_NAME)
     async exit(@Ctx() ctx: WizardContext) {
         await ctx.scene.leave();
@@ -408,6 +424,40 @@ export class OrderInputLink {
 
         const resultAdding = await this.orderService.addItemsLink(api, text);
         await ctx.reply(resultAdding);
+        await ctx.scene.enter(ORDER_MENU_CART_SCENE);
+    }
+}
+
+@Scene(ORDER_INPUT_PROMO_SCENE)
+export class OrderInputPromo {
+    constructor(private orderService: OrderService) {}
+
+    @SceneEnter()
+    async onSceneEnter(@Ctx() ctx: WizardContext) {
+        await ctx.editMessageText('Введите промокод', comebackCartkeyboard);
+    }
+
+    @Action('go_to_cart')
+    async choosingWayCart(@Ctx() ctx: WizardContext) {
+        await ctx.scene.enter(ORDER_MENU_CART_SCENE);
+    }
+
+    @Hears(ALL_KEYS_MENU_BUTTON_NAME)
+    async exit(@Ctx() ctx: WizardContext) {
+        await ctx.scene.leave();
+        const text = ctx.message['text'];
+        await ctx.scene.enter(getValueKeysMenu(text));
+    }
+
+    @On('text')
+    async inputPromocode(@Ctx() ctx: WizardContext) {
+        const api = ctx.session['api'];
+        const text: string = ctx.message['text'];
+
+        const status = api.addPromocode(text);
+        const answer = status ? 'Промокод успешно применен' : 'Промокод не применен';
+
+        await ctx.reply(answer);
         await ctx.scene.enter(ORDER_MENU_CART_SCENE);
     }
 }

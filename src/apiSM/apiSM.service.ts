@@ -167,11 +167,6 @@ export class ApiSM {
         }
     }
 
-    // async isRefresh(): Promise<boolean> {
-    //     const isRefresh = await this.shortInfo();
-    //     return isRefresh;
-    // }
-
     async getListCart(): Promise<boolean> {
         const url = 'https://mp4x-api.sportmaster.ru/api/v1/cart';
         const params = { clearDeletedLines: true, cartResponse: 'FULL' };
@@ -301,6 +296,25 @@ export class ApiSM {
         const payload = {
             ids: ids,
             cartFormat: 'FULL',
+        };
+
+        try {
+            const response = await axios.post(url, payload, {
+                headers: this.headers,
+                httpsAgent: this.httpsAgent,
+            });
+
+            return true;
+        } catch {
+            return false;
+        }
+    }
+
+    async addPromocode(promocode: string): Promise<boolean> {
+        const url = 'https://mp4x-api.sportmaster.ru/api/v1/cart/promoCode';
+
+        const payload = {
+            promoCode: promocode,
         };
 
         try {
