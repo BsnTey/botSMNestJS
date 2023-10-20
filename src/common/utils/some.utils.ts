@@ -77,8 +77,28 @@ export const getCombustionDates = (currentAmount: number, data: any): IOututBonu
 
 export const bringCompliance = (checkingAccounts, accounts: string[]) => {
     return accounts.map((account: string) => {
-        const accTrim = account.trim()
+        const accTrim = account.trim();
         if (accTrim === '') return '\n';
-        return checkingAccounts[accTrim]
-    })
+        return checkingAccounts[accTrim];
+    });
+};
+
+export const isAccessShop = (rawItemsCart) => {
+    const unallocatedItems = rawItemsCart.data.cartFull.unallocatedItems;
+    const resultList = [];
+
+    for (const item of unallocatedItems) {
+        const name = item.name;
+        const deliveryInfo = item.deliveryInfo;
+        const onlyIntPickup = deliveryInfo.onlyIntPickup;
+        const isExpressDeliveryEnabled = deliveryInfo.isExpressDeliveryEnabled;
+        const isDeliveryServicesEnabled = deliveryInfo.isDeliveryServicesEnabled;
+
+        if (!onlyIntPickup && !isExpressDeliveryEnabled && !isDeliveryServicesEnabled) resultList.push(name);
+    }
+    return resultList;
+};
+
+export const refactorNonAccessItems = (resultList: string[]) => {
+    return resultList.join(', ');
 }

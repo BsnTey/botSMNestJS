@@ -328,4 +328,19 @@ export class ApiSM {
             return false;
         }
     }
+
+    async deletePromocode(promocode: string): Promise<boolean> {
+        const url = 'https://mp4x-api.sportmaster.ru/api/v1/cart/promoCode';
+
+        try {
+            const response = await axios.delete(url, {
+                headers: this.headers,
+                httpsAgent: this.httpsAgent,
+            });
+
+            return true;
+        } catch {
+            return false;
+        }
+    }
 }

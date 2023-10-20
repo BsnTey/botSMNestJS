@@ -8,6 +8,7 @@ import {
     OrderMenuCart,
     OrderUpdate,
     OrderInputPromo,
+    OrderShopSelection,
 } from './order.update';
 import { OrderService } from './order.service';
 import { AccountModule } from 'src/accounts/account.module';
@@ -27,6 +28,7 @@ import { BaseModule } from 'src/base/base.module';
         OrderFavouriteCity,
         OrderInputLink,
         OrderInputPromo,
+        OrderShopSelection,
     ],
 })
 export class OrderModule {}

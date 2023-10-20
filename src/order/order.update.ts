@@ -28,8 +28,9 @@ import {
     ORDER_INPUT_PROMO_SCENE,
     ORDER_MENU_ACCOUNT_SCENE,
     ORDER_MENU_CART_SCENE,
+    ORDER_SHOP_SELECTION_SCENE,
 } from 'src/states/states';
-import { findCityName, getValueKeysMenu, isValidInputCity, isValidUrl } from 'src/common/utils/some.utils';
+import { findCityName, getValueKeysMenu, isAccessShop, isValidInputCity, isValidUrl } from 'src/common/utils/some.utils';
 import { UserService } from 'src/users/user.service';
 
 @Scene(MAKE_ORDER.scene)
@@ -311,9 +312,28 @@ export class OrderMenuCart {
         await ctx.scene.enter(ORDER_INPUT_ARTICLE_SCENE);
     }
 
+    @Action('shop_selection')
+    async choosingShopOrder(@Ctx() ctx: WizardContext) {
+        const api = ctx.session['api'];
+        const nonAccessItems = isAccessShop(api.rawItemsCart)
+
+        if (nonAccessItems.length == 0) return await ctx.scene.enter(ORDER_SHOP_SELECTION_SCENE);
+
+        await ctx.reply(`❌ ${nonAccessItems.join(', ')} Нет доступности для какого-либо вида заказа.`);
+    }
+
     @Action('add_promo')
     async addPromo(@Ctx() ctx: WizardContext) {
         await ctx.scene.enter(ORDER_INPUT_PROMO_SCENE);
+    }
+
+    @Action('delete_promo')
+    async deletePromo(@Ctx() ctx: WizardContext) {
+        const api = ctx.session['api'];
+        const status = await api.deletePromocode()
+        const text = status ? 'Промокод успешно удален' : 'Промокод не удален';
+        await ctx.reply(text);
+        await ctx.scene.enter(ORDER_MENU_CART_SCENE);
     }
 
     @Action('clear_cart')
@@ -459,5 +479,32 @@ export class OrderInputPromo {
 
         await ctx.reply(answer);
         await ctx.scene.enter(ORDER_MENU_CART_SCENE);
+    }
+}
+
+@Scene(ORDER_SHOP_SELECTION_SCENE)
+export class OrderShopSelection {
+    constructor(private orderService: OrderService) {}
+
+    @SceneEnter()
+    async onSceneEnter(@Ctx() ctx: WizardContext) {
+        await ctx.editMessageText('Введите промокод', comebackCartkeyboard);
+    }
+
+    @Action('go_to_cart')
+    async choosingWayCart(@Ctx() ctx: WizardContext) {
+        await ctx.scene.enter(ORDER_MENU_CART_SCENE);
+    }
+
+    @Hears(ALL_KEYS_MENU_BUTTON_NAME)
+    async exit(@Ctx() ctx: WizardContext) {
+        await ctx.scene.leave();
+        const text = ctx.message['text'];
+        await ctx.scene.enter(getValueKeysMenu(text));
+    }
+
+    @On('text')
+    async hdfg(@Ctx() ctx: WizardContext) {
+
     }
 }
