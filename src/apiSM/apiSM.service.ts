@@ -2,7 +2,7 @@ import axios from 'axios';
 import qs from 'qs';
 import { SocksProxyAgent } from 'socks-proxy-agent';
 import { IAccountInputApi, IItemListCart, IRefreshAccount } from 'src/common/interfaces/apiSM/apiSM.interface';
-import { getCurrentTimestamp } from 'src/common/utils/some.utils';
+import { getCurrentTimestamp, refactorItemsCart } from 'src/common/utils/some.utils';
 import { parsingListCart } from 'src/common/utils/transformRespBody';
 
 export class ApiSM {
@@ -341,6 +341,27 @@ export class ApiSM {
             return true;
         } catch {
             return false;
+        }
+    }
+
+    async internalPickupAvailability(): Promise<any> {
+        const preparingCartItem = refactorItemsCart(this.itemsCart);
+
+        const url = 'https://mp4x-api.sportmaster.ru/api/v2/cart/internalPickupAvailability';
+
+        const payload = {
+            cartItemIds: preparingCartItem,
+        };
+
+        try {
+            const response = await axios.post(url, payload, {
+                headers: this.headers,
+                httpsAgent: this.httpsAgent,
+            });
+
+            return response.data.data.list;
+        } catch (err) {
+            throw new Error(err.data);
         }
     }
 }

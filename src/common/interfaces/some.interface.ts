@@ -25,3 +25,20 @@ export interface IOututBonusDate {
     amount: number;
     date: string;
 }
+
+export type ShopType = {
+    shop: {
+        shopNumber: string;
+        name: string;
+        address: string;
+    };
+    availability: string;
+};
+
+export type ShopAddressType = {
+    [key: string]: {
+        shopAddress: string;
+        name: string;
+        availability: string;
+    };
+};

@@ -2,7 +2,14 @@ import { parse, format } from 'date-fns';
 
 const validate = require('uuid-validate');
 import { ALL_KEYS_MENU_BUTTON } from 'src/app.constants';
-import { IFavouriteCities, IFavouriteCitiesGetBD, IOututBonusDate } from '../interfaces/some.interface';
+import {
+    IFavouriteCities,
+    IFavouriteCitiesGetBD,
+    IOututBonusDate,
+    ShopAddressType,
+    ShopType,
+} from '../interfaces/some.interface';
+import { IItemListCart } from '../interfaces/apiSM/apiSM.interface';
 
 export const isValidUUID = (uuid: string): boolean => {
     return validate(uuid);
@@ -85,7 +92,7 @@ export const bringCompliance = (checkingAccounts, accounts: string[]) => {
 
 export const isAccessShop = (rawItemsCart) => {
     const unallocatedItems = rawItemsCart.data.cartFull.unallocatedItems;
-    const resultList = [];
+    const unAccessItemsOrder = [];
 
     for (const item of unallocatedItems) {
         const name = item.name;
@@ -94,11 +101,42 @@ export const isAccessShop = (rawItemsCart) => {
         const isExpressDeliveryEnabled = deliveryInfo.isExpressDeliveryEnabled;
         const isDeliveryServicesEnabled = deliveryInfo.isDeliveryServicesEnabled;
 
-        if (!onlyIntPickup && !isExpressDeliveryEnabled && !isDeliveryServicesEnabled) resultList.push(name);
+        if (!(onlyIntPickup || isExpressDeliveryEnabled || isDeliveryServicesEnabled)) unAccessItemsOrder.push(name);
     }
-    return resultList;
+    return unAccessItemsOrder;
 };
 
 export const refactorNonAccessItems = (resultList: string[]) => {
     return resultList.join(', ');
-}
+};
+
+export const refactorItemsCart = (itemsCart: any[]): IItemListCart[] => {
+    const newItems: IItemListCart[] = [];
+
+    for (const item of itemsCart) {
+        const newItem: IItemListCart = {
+            productId: item.productId,
+            sku: item.sku,
+        };
+        newItems.push(newItem);
+    }
+    return newItems;
+};
+
+const availability = { SUPPLY: 'Под доставку', IN_STOCK: 'В наличии' };
+
+export const refactorShopAddress = (shops: ShopType[]): ShopAddressType => {
+    let shopAdd: ShopAddressType = {};
+
+    for (let shop of shops) {
+        let shopId = shop.shop.shopNumber;
+        let name = shop.shop.name;
+        let shopAddress = shop.shop.address;
+        shopAdd[shopId] = {
+            shopAddress,
+            name,
+            availability: availability[shop.availability],
+        };
+    }
+    return shopAdd;
+};

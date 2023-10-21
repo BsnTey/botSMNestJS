@@ -1,6 +1,6 @@
 import { Markup } from 'telegraf';
 import { IItemListCart } from '../interfaces/apiSM/apiSM.interface';
-import { IFavouriteCities } from '../interfaces/some.interface';
+import { IFavouriteCities, ShopAddressType } from '../interfaces/some.interface';
 
 export const mainMenuOrderKeyboard = (city: string) => {
     return Markup.inlineKeyboard([
@@ -85,4 +85,13 @@ export const getSelectCitiesKeyboard = (cities: any[], typeCity = 'common') => {
             ];
         }),
     );
+};
+
+export const accessShopsKeyboard = (shops: ShopAddressType) => {
+    const keyboard = [];
+    for (let shopKey in shops) {
+        const shop = shops[shopKey];
+        keyboard.push([Markup.button.callback(`${shop.name} ${shop.availability}`, `id_shop_${shopKey}`)]);
+    }
+    return Markup.inlineKeyboard(keyboard);
 };

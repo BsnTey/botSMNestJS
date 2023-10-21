@@ -30,7 +30,13 @@ import {
     ORDER_MENU_CART_SCENE,
     ORDER_SHOP_SELECTION_SCENE,
 } from 'src/states/states';
-import { findCityName, getValueKeysMenu, isAccessShop, isValidInputCity, isValidUrl } from 'src/common/utils/some.utils';
+import {
+    findCityName,
+    getValueKeysMenu,
+    isAccessShop,
+    isValidInputCity,
+    isValidUrl,
+} from 'src/common/utils/some.utils';
 import { UserService } from 'src/users/user.service';
 
 @Scene(MAKE_ORDER.scene)
@@ -315,11 +321,15 @@ export class OrderMenuCart {
     @Action('shop_selection')
     async choosingShopOrder(@Ctx() ctx: WizardContext) {
         const api = ctx.session['api'];
-        const nonAccessItems = isAccessShop(api.rawItemsCart)
+        const nonAccessItems = isAccessShop(api.rawItemsCart);
 
-        if (nonAccessItems.length == 0) return await ctx.scene.enter(ORDER_SHOP_SELECTION_SCENE);
+        if (nonAccessItems.length != 0)
+            return await ctx.reply(`❌ ${nonAccessItems.join(', ')} Нет доступности для какого-либо вида заказа.`);
 
-        await ctx.reply(`❌ ${nonAccessItems.join(', ')} Нет доступности для какого-либо вида заказа.`);
+        const { refPickupAvabilityList, shopKeyboard } = await this.orderService.choosingShopOrder(api);
+        ctx.session['refPickupAvabilityList'] = refPickupAvabilityList;
+
+        await ctx.editMessageText('Выберите ТЦ', shopKeyboard);
     }
 
     @Action('add_promo')
@@ -330,7 +340,7 @@ export class OrderMenuCart {
     @Action('delete_promo')
     async deletePromo(@Ctx() ctx: WizardContext) {
         const api = ctx.session['api'];
-        const status = await api.deletePromocode()
+        const status = await api.deletePromocode();
         const text = status ? 'Промокод успешно удален' : 'Промокод не удален';
         await ctx.reply(text);
         await ctx.scene.enter(ORDER_MENU_CART_SCENE);
@@ -504,7 +514,5 @@ export class OrderShopSelection {
     }
 
     @On('text')
-    async hdfg(@Ctx() ctx: WizardContext) {
-
-    }
+    async hdfg(@Ctx() ctx: WizardContext) {}
 }

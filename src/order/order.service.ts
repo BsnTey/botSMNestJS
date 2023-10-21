@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ApiSM } from 'src/apiSM/apiSM.service';
 import {
+    accessShopsKeyboard,
     cartItemsOrderKeyboard,
     comebackOrderMenuKeyboard,
     emptyCartKeyboard,
@@ -10,7 +11,12 @@ import { prepareListOutput } from 'src/common/utils/transformRespBody';
 import { TelegrafException } from 'nestjs-telegraf';
 import { ACCOUNT_BANNED, ACCOUNT_NOT_FOUND, ERROR_GET_CART, INCORRECT_ENTERED_KEY } from 'src/app.constants';
 import { UserService } from 'src/users/user.service';
-import { findFavouriteCityName, isValidUUID, refactorCitiesAfterGetInBD } from 'src/common/utils/some.utils';
+import {
+    findFavouriteCityName,
+    isValidUUID,
+    refactorCitiesAfterGetInBD,
+    refactorShopAddress,
+} from 'src/common/utils/some.utils';
 import { InlineKeyboardMarkup } from 'telegraf/typings/core/types/typegram';
 import { Markup } from 'telegraf/typings/telegram-types';
 import { AccountService } from 'src/accounts/account.service';
@@ -18,7 +24,6 @@ import { AccountService } from 'src/accounts/account.service';
 @Injectable()
 export class OrderService {
     constructor(private userService: UserService, private accountService: AccountService) {}
-
 
     async choosingWayCart(api: ApiSM) {
         const isItemsCart = await api.getListCart();
@@ -138,5 +143,13 @@ export class OrderService {
             },
         ]);
         return status;
+    }
+
+    async choosingShopOrder(api: ApiSM) {
+        const pickupAvabilityList = await api.internalPickupAvailability();
+        const refPickupAvabilityList = refactorShopAddress(pickupAvabilityList);
+        const shopKeyboard = accessShopsKeyboard(refPickupAvabilityList);
+
+        return { refPickupAvabilityList, shopKeyboard };
     }
 }
