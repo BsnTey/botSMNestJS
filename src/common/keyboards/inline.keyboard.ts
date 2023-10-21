@@ -106,6 +106,14 @@ export const recipientKeyboard = Markup.inlineKeyboard([
     [Markup.button.callback(`Оставить из профиля`, 'recipient_i')],
 ]);
 
-// export const orderInfoKeyboard = (order: string) => {
-//     return Markup.inlineKeyboard([[Markup.button.callback(`Получить инфо по заказу`, `order_info_${order}`)]]);
-// };
+export const orderInfoKeyboard = (orderNumber: string) => {
+    const keyboard = [
+        [
+            {
+                text: 'Получить инфо по заказу',
+                callback_data: `order_info_${orderNumber}`,
+            },
+        ],
+    ];
+    return keyboard;
+};

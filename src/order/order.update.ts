@@ -18,6 +18,7 @@ import {
     getFavouriteCitiesKeyboard,
     getSelectCitiesKeyboard,
     mainMenuOrderKeyboard,
+    orderInfoKeyboard,
     recipientKeyboard,
 } from '../common/keyboards/inline.keyboard';
 import { OrderService } from './order.service';
@@ -367,18 +368,11 @@ export class OrderMenuCart {
         const version = ctx.session['version'];
 
         const orderNumber = await this.orderService.orderConfirmation(api, version);
-        // const keyboard = orderInfoKeyboard(orderNumber);
+        const keyboard = orderInfoKeyboard(orderNumber);
 
         await ctx.editMessageText(`Поздравляю! Ваш заказ под номером: <code>${orderNumber}</code>`, {
             reply_markup: {
-                inline_keyboard: [
-                    [
-                        {
-                            text: 'Получить инфо по заказу',
-                            callback_data: `order_info_${orderNumber}`,
-                        },
-                    ],
-                ],
+                inline_keyboard: keyboard,
             },
             parse_mode: 'HTML',
         });
