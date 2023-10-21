@@ -9,17 +9,13 @@ import {
 } from '../common/keyboards/inline.keyboard';
 import { prepareListOutput } from 'src/common/utils/transformRespBody';
 import { TelegrafException } from 'nestjs-telegraf';
-import { ACCOUNT_BANNED, ACCOUNT_NOT_FOUND, ERROR_GET_CART, INCORRECT_ENTERED_KEY } from 'src/app.constants';
+import { ERROR_GET_CART } from 'src/app.constants';
 import { UserService } from 'src/users/user.service';
-import {
-    findFavouriteCityName,
-    isValidUUID,
-    refactorCitiesAfterGetInBD,
-    refactorShopAddress,
-} from 'src/common/utils/some.utils';
+import { findFavouriteCityName, refactorCitiesAfterGetInBD, refactorShopAddress } from 'src/common/utils/some.utils';
 import { InlineKeyboardMarkup } from 'telegraf/typings/core/types/typegram';
 import { Markup } from 'telegraf/typings/telegram-types';
 import { AccountService } from 'src/accounts/account.service';
+import { ShopAddressType } from 'src/common/interfaces/some.interface';
 
 @Injectable()
 export class OrderService {
@@ -147,9 +143,15 @@ export class OrderService {
 
     async choosingShopOrder(api: ApiSM) {
         const pickupAvabilityList = await api.internalPickupAvailability();
-        const refPickupAvabilityList = refactorShopAddress(pickupAvabilityList);
+        const refPickupAvabilityList: ShopAddressType = refactorShopAddress(pickupAvabilityList);
         const shopKeyboard = accessShopsKeyboard(refPickupAvabilityList);
 
         return { refPickupAvabilityList, shopKeyboard };
+    }
+
+    async orderConfirmation(api: ApiSM, version: string) {
+        const orderNumber = await api.submitOrder(version);
+        return orderNumber;
+        //доделать систему бонусов
     }
 }

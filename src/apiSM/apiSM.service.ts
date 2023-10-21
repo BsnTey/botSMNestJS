@@ -364,4 +364,50 @@ export class ApiSM {
             throw new Error(err.data);
         }
     }
+
+    async internalPickup(shopId: string): Promise<{ potentialOrder: string; version: string }> {
+        const preparingCartItem = refactorItemsCart(this.itemsCart);
+
+        const url = 'https://mp4x-api.sportmaster.ru/api/v1/cart/obtainPoint/internalPickup';
+
+        const payload = {
+            shopNumber: shopId,
+            cartItemIds: preparingCartItem,
+        };
+
+        try {
+            const response = await axios.post(url, payload, {
+                headers: this.headers,
+                httpsAgent: this.httpsAgent,
+            });
+
+            const data = response.data.data.cart.obtainPoints[0];
+            const potentialOrder = data.potentialOrder.id;
+            const version = response.data.data.cart.version;
+
+            return { potentialOrder, version };
+        } catch (err) {
+            throw new Error(err.data);
+        }
+    }
+
+    async submitOrder(version: string): Promise<any> {
+        const url = 'https://mp4x-api.sportmaster.ru/api/v1/cart/submit';
+
+        const payload = {
+            cartVersion: version,
+        };
+
+        try {
+            const response = await axios.post(url, payload, {
+                headers: this.headers,
+                httpsAgent: this.httpsAgent,
+            });
+
+            const orderNumber = response.data.data.orders[0];
+            return orderNumber.orderNumber;
+        } catch (err) {
+            throw new Error(err.data);
+        }
+    }
 }

@@ -95,3 +95,17 @@ export const accessShopsKeyboard = (shops: ShopAddressType) => {
     }
     return Markup.inlineKeyboard(keyboard);
 };
+
+export const aproveShopKeyboard = Markup.inlineKeyboard([
+    [Markup.button.callback(`Подтвердить`, `approve_shop`)],
+    [Markup.button.callback(`Вернуться назад`, 'shop_selection')],
+]);
+
+export const recipientKeyboard = Markup.inlineKeyboard([
+    [Markup.button.callback(`Изменить получателя`, `f'recipient_not_i`)],
+    [Markup.button.callback(`Оставить из профиля`, 'recipient_i')],
+]);
+
+// export const orderInfoKeyboard = (order: string) => {
+//     return Markup.inlineKeyboard([[Markup.button.callback(`Получить инфо по заказу`, `order_info_${order}`)]]);
+// };

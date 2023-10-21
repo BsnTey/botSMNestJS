@@ -11,12 +11,14 @@ import {
     MAKE_ORDER,
 } from 'src/app.constants';
 import {
+    aproveShopKeyboard,
     comebackCartkeyboard,
     comebackOrderMenuKeyboard,
     getCitiesKeyboard,
     getFavouriteCitiesKeyboard,
     getSelectCitiesKeyboard,
     mainMenuOrderKeyboard,
+    recipientKeyboard,
 } from '../common/keyboards/inline.keyboard';
 import { OrderService } from './order.service';
 import {
@@ -38,6 +40,7 @@ import {
     isValidUrl,
 } from 'src/common/utils/some.utils';
 import { UserService } from 'src/users/user.service';
+import { ShopAddressType } from 'src/common/interfaces/some.interface';
 
 @Scene(MAKE_ORDER.scene)
 export class OrderUpdate {
@@ -330,6 +333,55 @@ export class OrderMenuCart {
         ctx.session['refPickupAvabilityList'] = refPickupAvabilityList;
 
         await ctx.editMessageText('Выберите ТЦ', shopKeyboard);
+    }
+
+    @Action(/^id_shop_\d+$/)
+    async approveShop(@Ctx() ctx: WizardContext) {
+        const refPickupAvabilityList: ShopAddressType = ctx.session['refPickupAvabilityList'];
+        //@ts-ignore
+        const shopId = ctx.match[0].split('_')[2];
+
+        const shop = refPickupAvabilityList[shopId];
+        ctx.session['shopId'] = shopId;
+        await ctx.editMessageText(
+            `Подтвердите выбор ТЦ по адресу:\n${shop['shopAddress']}\n${shop['name']}`,
+            aproveShopKeyboard,
+        );
+    }
+
+    @Action('approve_shop')
+    async choiceChangeRecipient(@Ctx() ctx: WizardContext) {
+        const api = ctx.session['api'];
+        const shopId = ctx.session['shopId'];
+
+        const { potentialOrder, version } = await api.internalPickup(shopId);
+        ctx.session['potentialOrder'] = potentialOrder;
+        ctx.session['version'] = version;
+
+        await ctx.editMessageText(`Изменить получателя заказа?`, recipientKeyboard);
+    }
+
+    @Action('recipient_i')
+    async orderConfirmation(@Ctx() ctx: WizardContext) {
+        const api = ctx.session['api'];
+        const version = ctx.session['version'];
+
+        const orderNumber = await this.orderService.orderConfirmation(api, version);
+        // const keyboard = orderInfoKeyboard(orderNumber);
+
+        await ctx.editMessageText(`Поздравляю! Ваш заказ под номером: <code>${orderNumber}</code>`, {
+            reply_markup: {
+                inline_keyboard: [
+                    [
+                        {
+                            text: 'Получить инфо по заказу',
+                            callback_data: `order_info_${orderNumber}`,
+                        },
+                    ],
+                ],
+            },
+            parse_mode: 'HTML',
+        });
     }
 
     @Action('add_promo')
