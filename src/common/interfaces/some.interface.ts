@@ -42,3 +42,31 @@ export type ShopAddressType = {
         availability: string;
     };
 };
+
+interface TotalSum {
+    value: number;
+    currency: string;
+}
+
+interface Status {
+    status: string;
+    statusText: string;
+    statusDate: string | null;
+    textColor: string;
+    backgroundColor: string;
+}
+
+interface DeliveryType {
+    title: string;
+    value: string;
+}
+
+export interface Order {
+    number: string;
+    receiptCode: string | null;
+    date: string;
+    status: Status;
+    totalSum: TotalSum;
+    deliveryType: DeliveryType;
+    showQrCode: boolean;
+}

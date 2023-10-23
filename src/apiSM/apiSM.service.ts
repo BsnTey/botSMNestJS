@@ -410,4 +410,36 @@ export class ApiSM {
             throw new Error(err.data);
         }
     }
+
+    async orderHistory(): Promise<any> | null {
+        const url = `https://mp4x-api.sportmaster.ru/api/v1/orderHistory`;
+
+        try {
+            const response = await axios.get(url, {
+                headers: this.headers,
+                httpsAgent: this.httpsAgent,
+            });
+
+            return response.data.data.orders;
+
+        } catch (err){
+            throw new Error(err.data);
+        }
+
+    }
+
+    async orderInfo(orderNumber: string): Promise<any> {
+        const url = `https://mp4x-api.sportmaster.ru/api/v1/order/${orderNumber}`;
+
+        try {
+            const response = await axios.get(url, {
+                headers: this.headers,
+                httpsAgent: this.httpsAgent,
+            });
+
+            return response.data.data.order;
+        } catch (err){
+            throw new Error(err.data);
+        }
+    }
 }

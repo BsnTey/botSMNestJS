@@ -18,6 +18,7 @@ import {
     getFavouriteCitiesKeyboard,
     getSelectCitiesKeyboard,
     mainMenuOrderKeyboard,
+    orderHistoryKeyboard,
     orderInfoKeyboard,
     recipientKeyboard,
 } from '../common/keyboards/inline.keyboard';
@@ -31,7 +32,6 @@ import {
     ORDER_INPUT_PROMO_SCENE,
     ORDER_MENU_ACCOUNT_SCENE,
     ORDER_MENU_CART_SCENE,
-    ORDER_SHOP_SELECTION_SCENE,
 } from 'src/states/states';
 import {
     findCityName,
@@ -256,12 +256,14 @@ export class OrderFavouriteCity {
 
 @Scene(ORDER_GET_ORDERS_SCENE)
 export class OrderGetOrders {
-    constructor() {}
+    // constructor() {}
 
     @SceneEnter()
     async onSceneEnter(@Ctx() ctx: WizardContext) {
         const api = ctx.session['api'];
-        await ctx.reply('Вошел в сущестующие заказы');
+        const orders = await api.orderHistory();
+        const keyboard = orderHistoryKeyboard(orders);
+        await ctx.editMessageText('Имеющиеся заказы на аккаунте:', keyboard);
     }
 
     @Hears(ALL_KEYS_MENU_BUTTON_NAME)
@@ -271,13 +273,28 @@ export class OrderGetOrders {
         await ctx.scene.enter(getValueKeysMenu(text));
     }
 
-    @Action('')
-    async some(@Ctx() ctx: WizardContext) {}
+    @Action(/^order_(\d+)-\d+$/)
+    async selectOrder(@Ctx() ctx: WizardContext) {
+        //@ts-ignore
+        const orderNumber = ctx.match[0].split('_')[1];
+
+        const api = ctx.session['api'];
+        const order = await api.orderInfo(orderNumber);
+
+        await ctx.editMessageText(`Заказ номер: <code>${order.number}</code>\nКод авторизации? ${order.authCode}`, {
+            reply_markup: {
+                inline_keyboard: keyboard,
+            },
+            parse_mode: 'HTML',
+        });
+    }
 
     @Action('go_to_menu')
     async goToMenu(@Ctx() ctx: WizardContext) {
         await ctx.scene.enter(ORDER_MENU_ACCOUNT_SCENE);
     }
+
+
 }
 
 @Scene(ORDER_MENU_CART_SCENE)
@@ -538,27 +555,25 @@ export class OrderInputPromo {
     }
 }
 
-@Scene(ORDER_SHOP_SELECTION_SCENE)
-export class OrderShopSelection {
-    constructor(private orderService: OrderService) {}
+// @Scene(ORDER_SHOP_SELECTION_SCENE)
+// export class OrderShopSelection {
+//     constructor(private orderService: OrderService) {}
 
-    @SceneEnter()
-    async onSceneEnter(@Ctx() ctx: WizardContext) {
-        await ctx.editMessageText('Введите промокод', comebackCartkeyboard);
-    }
+//     @SceneEnter()
+//     async onSceneEnter(@Ctx() ctx: WizardContext) {
+//         await ctx.editMessageText('Введите промокод', comebackCartkeyboard);
+//     }
 
-    @Action('go_to_cart')
-    async choosingWayCart(@Ctx() ctx: WizardContext) {
-        await ctx.scene.enter(ORDER_MENU_CART_SCENE);
-    }
+//     @Action('go_to_cart')
+//     async choosingWayCart(@Ctx() ctx: WizardContext) {
+//         await ctx.scene.enter(ORDER_MENU_CART_SCENE);
+//     }
 
-    @Hears(ALL_KEYS_MENU_BUTTON_NAME)
-    async exit(@Ctx() ctx: WizardContext) {
-        await ctx.scene.leave();
-        const text = ctx.message['text'];
-        await ctx.scene.enter(getValueKeysMenu(text));
-    }
+//     @Hears(ALL_KEYS_MENU_BUTTON_NAME)
+//     async exit(@Ctx() ctx: WizardContext) {
+//         await ctx.scene.leave();
+//         const text = ctx.message['text'];
+//         await ctx.scene.enter(getValueKeysMenu(text));
+//     }
 
-    @On('text')
-    async hdfg(@Ctx() ctx: WizardContext) {}
-}
+// }

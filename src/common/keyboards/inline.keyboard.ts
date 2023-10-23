@@ -1,6 +1,6 @@
 import { Markup } from 'telegraf';
 import { IItemListCart } from '../interfaces/apiSM/apiSM.interface';
-import { IFavouriteCities, ShopAddressType } from '../interfaces/some.interface';
+import { IFavouriteCities, Order, ShopAddressType } from '../interfaces/some.interface';
 
 export const mainMenuOrderKeyboard = (city: string) => {
     return Markup.inlineKeyboard([
@@ -116,4 +116,18 @@ export const orderInfoKeyboard = (orderNumber: string) => {
         ],
     ];
     return keyboard;
+};
+
+export const orderHistoryKeyboard = (orders: Order[]) => {
+    const keyboard = [];
+    for (const order of orders) {
+        keyboard.push([
+            Markup.button.callback(
+                `${order.number} ${order.status.statusText} ${order.receiptCode || ""}`,
+                `order_${order.number}`,
+            ),
+        ]);
+    }
+    keyboard.push([Markup.button.callback(`Вернуться в меню`, `go_to_menu`)]);
+    return Markup.inlineKeyboard(keyboard);
 };
