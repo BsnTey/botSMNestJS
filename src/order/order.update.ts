@@ -17,9 +17,10 @@ import {
     getCitiesKeyboard,
     getFavouriteCitiesKeyboard,
     getSelectCitiesKeyboard,
+    infoOrderKeyboard,
     mainMenuOrderKeyboard,
     orderHistoryKeyboard,
-    orderInfoKeyboard,
+    ordersInfoKeyboard,
     recipientKeyboard,
 } from '../common/keyboards/inline.keyboard';
 import { OrderService } from './order.service';
@@ -263,7 +264,14 @@ export class OrderGetOrders {
         const api = ctx.session['api'];
         const orders = await api.orderHistory();
         const keyboard = orderHistoryKeyboard(orders);
-        await ctx.editMessageText('Имеющиеся заказы на аккаунте:', keyboard);
+
+        const text = 'Имеющиеся заказы на аккаунте:';
+
+        if (ctx.updateType === 'callback_query') {
+            await ctx.editMessageText(text, keyboard);
+        } else {
+            await ctx.reply(text, keyboard);
+        }
     }
 
     @Hears(ALL_KEYS_MENU_BUTTON_NAME)
@@ -280,21 +288,33 @@ export class OrderGetOrders {
 
         const api = ctx.session['api'];
         const order = await api.orderInfo(orderNumber);
+        const keyboard = infoOrderKeyboard(order.number, !!order.isCancelled);
 
-        await ctx.editMessageText(`Заказ номер: <code>${order.number}</code>\nКод авторизации? ${order.authCode}`, {
-            reply_markup: {
-                inline_keyboard: keyboard,
-            },
+        const text = order.authCode
+            ? `Заказ номер: <code>${order.number}</code>\nКод авторизации? ${order.authCode}`
+            : `Заказ номер: <code>${order.number}</code>\n`;
+
+        await ctx.editMessageText(text, {
             parse_mode: 'HTML',
+            ...keyboard,
         });
+    }
+
+    @Action(/^cancelled_order_(\d+)-\d+$/)
+    async cancellOrder(@Ctx() ctx: WizardContext) {
+        //@ts-ignore
+        const orderNumber = ctx.match[0].split('_')[2];
+        const api = ctx.session['api'];
+        await api.cancellOrder(orderNumber);
+
+        await ctx.reply('Заказ отменен');
+        await ctx.scene.reenter();
     }
 
     @Action('go_to_menu')
     async goToMenu(@Ctx() ctx: WizardContext) {
         await ctx.scene.enter(ORDER_MENU_ACCOUNT_SCENE);
     }
-
-
 }
 
 @Scene(ORDER_MENU_CART_SCENE)
@@ -385,14 +405,18 @@ export class OrderMenuCart {
         const version = ctx.session['version'];
 
         const orderNumber = await this.orderService.orderConfirmation(api, version);
-        const keyboard = orderInfoKeyboard(orderNumber);
+        const keyboard = ordersInfoKeyboard;
 
         await ctx.editMessageText(`Поздравляю! Ваш заказ под номером: <code>${orderNumber}</code>`, {
-            reply_markup: {
-                inline_keyboard: keyboard,
-            },
             parse_mode: 'HTML',
+            ...keyboard,
         });
+    }
+
+    @Action('go_to_orders')
+    async selectOrder(@Ctx() ctx: WizardContext) {
+        ctx.scene.leave();
+        ctx.scene.enter(ORDER_GET_ORDERS_SCENE);
     }
 
     @Action('add_promo')
@@ -523,7 +547,7 @@ export class OrderInputLink {
 
 @Scene(ORDER_INPUT_PROMO_SCENE)
 export class OrderInputPromo {
-    constructor(private orderService: OrderService) {}
+    constructor() {}
 
     @SceneEnter()
     async onSceneEnter(@Ctx() ctx: WizardContext) {

@@ -442,4 +442,27 @@ export class ApiSM {
             throw new Error(err.data);
         }
     }
+
+    async cancellOrder(orderNumber: string): Promise<any> {
+        const reasons = [103, 104, 105, 106]
+        const randomIndex = Math.floor(Math.random() * reasons.length);
+        const reason =  reasons[randomIndex];
+
+        const url = `https://mp4x-api.sportmaster.ru/api/v1/order/${orderNumber}`;
+
+        const payload = {
+            cancelReasonId: reason,
+        };
+
+        try {
+            const response = await axios.post(url, payload, {
+                headers: this.headers,
+                httpsAgent: this.httpsAgent,
+            });
+
+            return true
+        } catch (err) {
+            throw new Error(err.data);
+        }
+    }
 }

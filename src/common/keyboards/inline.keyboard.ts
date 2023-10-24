@@ -106,28 +106,31 @@ export const recipientKeyboard = Markup.inlineKeyboard([
     [Markup.button.callback(`Оставить из профиля`, 'recipient_i')],
 ]);
 
-export const orderInfoKeyboard = (orderNumber: string) => {
-    const keyboard = [
-        [
-            {
-                text: 'Получить инфо по заказу',
-                callback_data: `order_info_${orderNumber}`,
-            },
-        ],
-    ];
-    return keyboard;
-};
+export const ordersInfoKeyboard = Markup.inlineKeyboard([
+    [Markup.button.callback(`Перейти к заказам`, `go_to_orders`)],
+]);
 
 export const orderHistoryKeyboard = (orders: Order[]) => {
     const keyboard = [];
     for (const order of orders) {
         keyboard.push([
             Markup.button.callback(
-                `${order.number} ${order.status.statusText} ${order.receiptCode || ""}`,
+                `${order.number} ${order.status.statusText} ${order.receiptCode || ''}`,
                 `order_${order.number}`,
             ),
         ]);
     }
     keyboard.push([Markup.button.callback(`Вернуться в меню`, `go_to_menu`)]);
+    return Markup.inlineKeyboard(keyboard);
+};
+
+export const infoOrderKeyboard = (orderNumber: string, isCancelled: boolean) => {
+    const keyboard = [];
+
+    !isCancelled && keyboard.push([Markup.button.callback(`Отменить заказ`, `cancelled_order_${orderNumber}`)]);
+
+    keyboard.push([Markup.button.callback(`Вернуться к заказам`, `go_to_orders`)]);
+    keyboard.push([Markup.button.url(`Посмотреть заказ на сайте`, `http://nonofficialsport.ru/${orderNumber}`)]);
+
     return Markup.inlineKeyboard(keyboard);
 };
