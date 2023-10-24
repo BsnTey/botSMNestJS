@@ -13,6 +13,8 @@ export const ORDER_INPUT_PROMO_SCENE = 'orderInputPromoScene';
 
 export const ORDER_SHOP_SELECTION_SCENE = 'orderShopSelectionScene';
 
+export const ORDER_CHANGE_RECIPIENT_SCENE = 'orderChangeRecipientScene';
+
 
 export const CHANGE_NUMBER_SCENE = 'changeNumberScene';
 export const GET_COOKIE_SCENE = 'getCookieScene';

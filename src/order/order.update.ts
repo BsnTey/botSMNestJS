@@ -25,6 +25,7 @@ import {
 } from '../common/keyboards/inline.keyboard';
 import { OrderService } from './order.service';
 import {
+    ORDER_CHANGE_RECIPIENT_SCENE,
     ORDER_CITY_SCENE,
     ORDER_FAVOURITE_CITY_SCENE,
     ORDER_GET_ORDERS_SCENE,
@@ -257,7 +258,6 @@ export class OrderFavouriteCity {
 
 @Scene(ORDER_GET_ORDERS_SCENE)
 export class OrderGetOrders {
-    // constructor() {}
 
     @SceneEnter()
     async onSceneEnter(@Ctx() ctx: WizardContext) {
@@ -411,6 +411,11 @@ export class OrderMenuCart {
             parse_mode: 'HTML',
             ...keyboard,
         });
+    }
+
+    @Action('recipient_not_i')
+    async changeRecipient(@Ctx() ctx: WizardContext) {
+        ctx.scene.enter(ORDER_CHANGE_RECIPIENT_SCENE);
     }
 
     @Action('go_to_orders')
@@ -579,25 +584,37 @@ export class OrderInputPromo {
     }
 }
 
-// @Scene(ORDER_SHOP_SELECTION_SCENE)
-// export class OrderShopSelection {
-//     constructor(private orderService: OrderService) {}
+@Scene(ORDER_CHANGE_RECIPIENT_SCENE)
+export class OrderChangeRecipient {
+    constructor(private orderService: OrderService) {}
 
-//     @SceneEnter()
-//     async onSceneEnter(@Ctx() ctx: WizardContext) {
-//         await ctx.editMessageText('Введите промокод', comebackCartkeyboard);
-//     }
+    @SceneEnter()
+    async onSceneEnter(@Ctx() ctx: WizardContext) {
+        const api = ctx.session['api'];
 
-//     @Action('go_to_cart')
-//     async choosingWayCart(@Ctx() ctx: WizardContext) {
-//         await ctx.scene.enter(ORDER_MENU_CART_SCENE);
-//     }
+        const keyboard = comebackCartkeyboard;
 
-//     @Hears(ALL_KEYS_MENU_BUTTON_NAME)
-//     async exit(@Ctx() ctx: WizardContext) {
-//         await ctx.scene.leave();
-//         const text = ctx.message['text'];
-//         await ctx.scene.enter(getValueKeysMenu(text));
-//     }
+        await ctx.editMessageText(`Введите Имя, Фамилию, email и номер телефона через пробелы:\nИванов Иван <code>${api.emailOwner}</code> 88005553535`, {
+            parse_mode: 'HTML',
+            ...keyboard,
+        });
+    }
 
-// }
+    @Action('go_to_cart')
+    async choosingWayCart(@Ctx() ctx: WizardContext) {
+        await ctx.scene.enter(ORDER_MENU_CART_SCENE);
+    }
+
+    @On('text')
+    async inputRecipient(@Ctx() ctx: WizardContext) {
+
+    }
+
+    @Hears(ALL_KEYS_MENU_BUTTON_NAME)
+    async exit(@Ctx() ctx: WizardContext) {
+        await ctx.scene.leave();
+        const text = ctx.message['text'];
+        await ctx.scene.enter(getValueKeysMenu(text));
+    }
+
+}

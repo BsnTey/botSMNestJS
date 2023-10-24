@@ -9,6 +9,7 @@ import {
     OrderUpdate,
     OrderInputPromo,
     OrderGetOrders,
+    OrderChangeRecipient,
     // OrderShopSelection,
 } from './order.update';
 import { OrderService } from './order.service';
@@ -29,8 +30,8 @@ import { BaseModule } from 'src/base/base.module';
         OrderFavouriteCity,
         OrderInputLink,
         OrderInputPromo,
-        OrderGetOrders
-        // OrderShopSelection,
+        OrderGetOrders,
+        OrderChangeRecipient
     ],
 })
 export class OrderModule {}

@@ -30,4 +30,11 @@ export interface IItemListCart {
     name?: string;
 }
 
-export type TypeRefreshBy = "shortInfo" | "detailsBonus" | "promocode"
+export type TypeRefreshBy = 'shortInfo' | 'detailsBonus' | 'promocode';
+
+export interface IRecipientOrder {
+    firstName: string;
+    lastName: string;
+    nationalNumber: string;
+    email: string;
+}

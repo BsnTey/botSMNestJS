@@ -1,7 +1,7 @@
 import axios from 'axios';
 import qs from 'qs';
 import { SocksProxyAgent } from 'socks-proxy-agent';
-import { IAccountInputApi, IItemListCart, IRefreshAccount } from 'src/common/interfaces/apiSM/apiSM.interface';
+import { IAccountInputApi, IItemListCart, IRecipientOrder, IRefreshAccount } from 'src/common/interfaces/apiSM/apiSM.interface';
 import { getCurrentTimestamp, refactorItemsCart } from 'src/common/utils/some.utils';
 import { parsingListCart } from 'src/common/utils/transformRespBody';
 
@@ -26,8 +26,6 @@ export class ApiSM {
 
     public bonusCount: number | null = null;
     private qrCode: string | null = null;
-    //где используется?? цвет карты
-    private privatePersonType: string | null = null;
 
     private emailOwner: string | null = null;
     public itemsCart: Array<IItemListCart> | null = null;
@@ -60,7 +58,7 @@ export class ApiSM {
             Locale: 'ru',
             Country: 'RU',
             'Device-Id': this.deviceId,
-            'Installation-Id': this.deviceId,
+            'Installation-Id': this.installationId,
             'City-Id': this.cityId,
             Eutc: 'UTC+3',
             'x-user-id': this.xUserId,
@@ -134,7 +132,6 @@ export class ApiSM {
 
             this.bonusCount = response.data.data.info.totalAmount;
             this.qrCode = response.data.data.info.clubCard.qrCode;
-            this.privatePersonType = response.data.data.info.privatePersonType.value;
 
             return true;
         } catch {
@@ -179,6 +176,7 @@ export class ApiSM {
 
             this.itemsCart = parsingListCart(response.data);
             this.rawItemsCart = response.data;
+            this.emailOwner = response.data.data.cartFull.owner.email;
 
             return true;
         } catch {
@@ -421,11 +419,9 @@ export class ApiSM {
             });
 
             return response.data.data.orders;
-
-        } catch (err){
+        } catch (err) {
             throw new Error(err.data);
         }
-
     }
 
     async orderInfo(orderNumber: string): Promise<any> {
@@ -438,15 +434,15 @@ export class ApiSM {
             });
 
             return response.data.data.order;
-        } catch (err){
+        } catch (err) {
             throw new Error(err.data);
         }
     }
 
     async cancellOrder(orderNumber: string): Promise<any> {
-        const reasons = [103, 104, 105, 106]
+        const reasons = [103, 104, 105, 106];
         const randomIndex = Math.floor(Math.random() * reasons.length);
-        const reason =  reasons[randomIndex];
+        const reason = reasons[randomIndex];
 
         const url = `https://mp4x-api.sportmaster.ru/api/v1/order/${orderNumber}`;
 
@@ -460,7 +456,30 @@ export class ApiSM {
                 httpsAgent: this.httpsAgent,
             });
 
-            return true
+            return true;
+        } catch (err) {
+            throw new Error(err.data);
+        }
+    }
+
+    async approveRecipientOrder(recipient: IRecipientOrder): Promise<any> {
+        const url = `https://mp4x-api.sportmaster.ru/api/v1/cart/order/${potentialOrder}/receiver`;
+
+        const payload = {
+            receiver: {
+                fio: `${recipient.firstName} ${recipient.lastName}`,
+                phone: { countryCode: 7, nationalNumber: `${recipient.nationalNumber}`, isoCode: 'RU' },
+                email: `${recipient.email}`
+            },
+        };
+
+        try {
+            const response = await axios.post(url, payload, {
+                headers: this.headers,
+                httpsAgent: this.httpsAgent,
+            });
+
+            return response.data.data.cart.version;
         } catch (err) {
             throw new Error(err.data);
         }
