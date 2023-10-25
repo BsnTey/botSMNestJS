@@ -11,7 +11,7 @@ import { prepareListOutput } from 'src/common/utils/transformRespBody';
 import { TelegrafException } from 'nestjs-telegraf';
 import { ERROR_GET_CART } from 'src/app.constants';
 import { UserService } from 'src/users/user.service';
-import { findFavouriteCityName, refactorCitiesAfterGetInBD, refactorShopAddress } from 'src/common/utils/some.utils';
+import { checkPhoneNumber, findFavouriteCityName, refactorCitiesAfterGetInBD, refactorShopAddress } from 'src/common/utils/some.utils';
 import { InlineKeyboardMarkup } from 'telegraf/typings/core/types/typegram';
 import { Markup } from 'telegraf/typings/telegram-types';
 import { AccountService } from 'src/accounts/account.service';
@@ -153,5 +153,27 @@ export class OrderService {
         const orderNumber = await api.submitOrder(version);
         return orderNumber;
         //доделать систему бонусов
+    }
+
+    async inputRecipient(api: ApiSM, dataRecipient: string[]) {
+        const [firstName, lastName, email, number, potentialOrder] = dataRecipient;
+
+        if (!firstName.match(/[а-яёА-ЯЁ]+/g)) throw new Error("Имя должно быть введено на кириллице");
+
+        if (!lastName.match(/[а-яёА-ЯЁ]+/g)) throw new Error("Фамилия должна быть введена на кириллице");
+
+        if (!email.match(/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/)) throw new Error("ИНе верный формат email. Он должен быть вида example@example.ru");
+
+        const checkNumberPhone = checkPhoneNumber(number)
+        if (!!!checkNumberPhone) throw new Error("Неправильно введён номер! Номер должен иметь вид 88005553535");
+
+        const version = await api.approveRecipientOrder({
+            firstName,
+            lastName,
+            email,
+            nationalNumber: checkNumberPhone,
+            potentialOrder
+        })
+
     }
 }

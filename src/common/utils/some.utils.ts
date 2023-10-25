@@ -39,6 +39,23 @@ export const isValidInputCity = (city: string): boolean => {
     return regex.test(city);
 };
 
+export const checkPhoneNumber = (number): string | null => {
+    const regex1 = new RegExp('^7\\d{10}$');
+    const regex2 = new RegExp('^8\\d{10}$');
+    const regex3 = new RegExp('^\\+7\\d{10}$');
+    const regex4 = new RegExp('^9\\d{9}$');
+
+    if (regex1.test(number) || regex2.test(number)) {
+        return number.substring(1);
+    } else if (regex3.test(number)) {
+        return number.substring(2);
+    } else if (regex4.test(number)) {
+        return number;
+    }
+
+    return null;
+};
+
 export const findCityName = (cityId, cities) => {
     for (let city of cities) {
         if (cityId === city.id) return city.name;

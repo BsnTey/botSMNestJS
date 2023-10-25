@@ -37,4 +37,5 @@ export interface IRecipientOrder {
     lastName: string;
     nationalNumber: string;
     email: string;
+    potentialOrder: string;
 }

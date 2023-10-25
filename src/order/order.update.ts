@@ -258,7 +258,6 @@ export class OrderFavouriteCity {
 
 @Scene(ORDER_GET_ORDERS_SCENE)
 export class OrderGetOrders {
-
     @SceneEnter()
     async onSceneEnter(@Ctx() ctx: WizardContext) {
         const api = ctx.session['api'];
@@ -594,10 +593,13 @@ export class OrderChangeRecipient {
 
         const keyboard = comebackCartkeyboard;
 
-        await ctx.editMessageText(`Введите Имя, Фамилию, email и номер телефона через пробелы:\nИванов Иван <code>${api.emailOwner}</code> 88005553535`, {
-            parse_mode: 'HTML',
-            ...keyboard,
-        });
+        await ctx.editMessageText(
+            `Введите Имя, Фамилию, email и номер телефона через пробелы:\nИванов Иван <code>${api.emailOwner}</code> 88005553535`,
+            {
+                parse_mode: 'HTML',
+                ...keyboard,
+            },
+        );
     }
 
     @Action('go_to_cart')
@@ -607,7 +609,16 @@ export class OrderChangeRecipient {
 
     @On('text')
     async inputRecipient(@Ctx() ctx: WizardContext) {
+        try {
+            const text = ctx.message['text'];
+            const dataRecipient = text.split(' ');
+        } catch {
+            throw new Error(
+                'Не введены данные. Они должны быть как в примере ниже через пробел:\nПетров Петр petroffff148@mail.ru 88005553535',
+            );
+        }
 
+        
     }
 
     @Hears(ALL_KEYS_MENU_BUTTON_NAME)
@@ -616,5 +627,4 @@ export class OrderChangeRecipient {
         const text = ctx.message['text'];
         await ctx.scene.enter(getValueKeysMenu(text));
     }
-
 }

@@ -463,7 +463,7 @@ export class ApiSM {
     }
 
     async approveRecipientOrder(recipient: IRecipientOrder): Promise<any> {
-        const url = `https://mp4x-api.sportmaster.ru/api/v1/cart/order/${potentialOrder}/receiver`;
+        const url = `https://mp4x-api.sportmaster.ru/api/v1/cart/order/${recipient.potentialOrder}/receiver`;
 
         const payload = {
             receiver: {
