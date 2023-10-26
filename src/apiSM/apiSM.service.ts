@@ -1,7 +1,12 @@
 import axios from 'axios';
 import qs from 'qs';
 import { SocksProxyAgent } from 'socks-proxy-agent';
-import { IAccountInputApi, IItemListCart, IRecipientOrder, IRefreshAccount } from 'src/common/interfaces/apiSM/apiSM.interface';
+import {
+    IAccountInputApi,
+    IItemListCart,
+    IRecipientOrder,
+    IRefreshAccount,
+} from 'src/common/interfaces/apiSM/apiSM.interface';
 import { getCurrentTimestamp, refactorItemsCart } from 'src/common/utils/some.utils';
 import { parsingListCart } from 'src/common/utils/transformRespBody';
 
@@ -116,8 +121,10 @@ export class ApiSM {
                 refreshToken: this.refreshToken,
                 expiresIn: this.expiresIn,
             };
-        } catch {
-            return null;
+        } catch (err) {
+            console.log("refresh", err);
+
+            throw new Error(err.data);
         }
     }
 
@@ -134,8 +141,10 @@ export class ApiSM {
             this.qrCode = response.data.data.info.clubCard.qrCode;
 
             return true;
-        } catch {
-            return false;
+        } catch (err) {
+            console.log("shortInfo", err);
+
+            throw new Error(err.data);
         }
     }
 
@@ -159,8 +168,10 @@ export class ApiSM {
             this.bonusCount = this.rawListDetailsBonus[0].amount;
 
             return true;
-        } catch {
-            return false;
+        } catch (err) {
+            console.log("detailsBonus", err);
+
+            throw new Error(err.data);
         }
     }
 
@@ -469,7 +480,7 @@ export class ApiSM {
             receiver: {
                 fio: `${recipient.firstName} ${recipient.lastName}`,
                 phone: { countryCode: 7, nationalNumber: `${recipient.nationalNumber}`, isoCode: 'RU' },
-                email: `${recipient.email}`
+                email: `${recipient.email}`,
             },
         };
 
@@ -481,7 +492,7 @@ export class ApiSM {
 
             return response.data.data.cart.version;
         } catch (err) {
-            throw new Error(err.data);
+            throw new Error(err.response.data.error.message);
         }
     }
 }

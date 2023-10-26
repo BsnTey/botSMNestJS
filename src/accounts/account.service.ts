@@ -57,9 +57,7 @@ export class AccountService {
                     }
                     return true;
                 } catch (error) {
-                    console.log('блок ошибки', error.message);
-                    //дописать ошибку прокси соединения с SM
-                    if (error.message === '') {
+                    if (error.message.includes("connect ECONNREFUSED")) {
                         this.proxyService.setProxyBan(proxy);
                     } else {
                         throw new Error(error);

@@ -607,24 +607,39 @@ export class OrderChangeRecipient {
         await ctx.scene.enter(ORDER_MENU_CART_SCENE);
     }
 
-    @On('text')
-    async inputRecipient(@Ctx() ctx: WizardContext) {
-        try {
-            const text = ctx.message['text'];
-            const dataRecipient = text.split(' ');
-        } catch {
-            throw new Error(
-                'Не введены данные. Они должны быть как в примере ниже через пробел:\nПетров Петр petroffff148@mail.ru 88005553535',
-            );
-        }
-
-        
-    }
-
     @Hears(ALL_KEYS_MENU_BUTTON_NAME)
     async exit(@Ctx() ctx: WizardContext) {
         await ctx.scene.leave();
         const text = ctx.message['text'];
         await ctx.scene.enter(getValueKeysMenu(text));
+    }
+
+    @On('text')
+    async inputRecipient(@Ctx() ctx: WizardContext) {
+        const api = ctx.session['api'];
+        const potentialOrder =  ctx.session['potentialOrder']
+        let dataRecipient = [];
+        try {
+            const text = ctx.message['text'];
+            dataRecipient = text.split(' ');
+            dataRecipient.push(potentialOrder)
+        } catch {
+            throw new Error(
+                'Не введены данные. Они должны быть как в примере ниже через пробел:\nПетров Петр petroffff148@mail.ru 88005553535',
+            );
+        }
+        const orderNumber = await this.orderService.inputRecipient(api, dataRecipient);
+        const keyboard = ordersInfoKeyboard;
+
+        await ctx.reply(`Поздравляю! Ваш заказ под номером: <code>${orderNumber}</code>`, {
+            parse_mode: 'HTML',
+            ...keyboard,
+        });
+    }
+
+    @Action('go_to_orders')
+    async selectOrder(@Ctx() ctx: WizardContext) {
+        ctx.scene.leave();
+        ctx.scene.enter(ORDER_GET_ORDERS_SCENE);
     }
 }

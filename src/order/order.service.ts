@@ -162,7 +162,7 @@ export class OrderService {
 
         if (!lastName.match(/[а-яёА-ЯЁ]+/g)) throw new Error("Фамилия должна быть введена на кириллице");
 
-        if (!email.match(/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/)) throw new Error("ИНе верный формат email. Он должен быть вида example@example.ru");
+        if (!email.match(/^[a-zA-Z0-9][\-_\.\+\!\#\$\%\&\'\*\/\=\?\^\`\{\|]{0,1}([a-zA-Z0-9][\-_\.\+\!\#\$\%\&\'\*\/\=\?\^\`\{\|]{0,1})*[a-zA-Z0-9]@[a-zA-Z0-9][-\.]{0,1}([a-zA-Z][-\.]{0,1})*[a-zA-Z0-9]\.[a-zA-Z0-9]{1,}([\.\-]{0,1}[a-zA-Z]){0,}[a-zA-Z0-9]{0,}$/i)) throw new Error("Не верный формат email. Он должен быть вида example@example.ru");
 
         const checkNumberPhone = checkPhoneNumber(number)
         if (!!!checkNumberPhone) throw new Error("Неправильно введён номер! Номер должен иметь вид 88005553535");
@@ -175,5 +175,6 @@ export class OrderService {
             potentialOrder
         })
 
+        return await this.orderConfirmation(api, version)
     }
 }

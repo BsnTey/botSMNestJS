@@ -102,7 +102,7 @@ export const aproveShopKeyboard = Markup.inlineKeyboard([
 ]);
 
 export const recipientKeyboard = Markup.inlineKeyboard([
-    [Markup.button.callback(`Изменить получателя`, `f'recipient_not_i`)],
+    [Markup.button.callback(`Изменить получателя`, `recipient_not_i`)],
     [Markup.button.callback(`Оставить из профиля`, 'recipient_i')],
 ]);
 
