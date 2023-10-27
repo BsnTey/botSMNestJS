@@ -9,8 +9,7 @@ import {
     OrderUpdate,
     OrderInputPromo,
     OrderGetOrders,
-    OrderChangeRecipient,
-    // OrderShopSelection,
+    OrderChangeRecipient
 } from './order.update';
 import { OrderService } from './order.service';
 import { AccountModule } from 'src/accounts/account.module';

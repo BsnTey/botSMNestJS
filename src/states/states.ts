@@ -15,8 +15,10 @@ export const ORDER_SHOP_SELECTION_SCENE = 'orderShopSelectionScene';
 
 export const ORDER_CHANGE_RECIPIENT_SCENE = 'orderChangeRecipientScene';
 
-
 export const CHANGE_NUMBER_SCENE = 'changeNumberScene';
+export const CHANGE_NUMBER_INPUT_NUMBER_SCENE = 'changeNumberInputNumberScene';
+export const CHANGE_NUMBER_CODE_SCENE = 'changeNumberCodeScene';
+
 export const GET_COOKIE_SCENE = 'getCookieScene';
 export const CHECKER_SCENE = 'checkerScene';
 export const GET_QR_CODE_SCENE = 'getQrCodeScene';

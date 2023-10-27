@@ -122,7 +122,7 @@ export class ApiSM {
                 expiresIn: this.expiresIn,
             };
         } catch (err) {
-            console.log("refresh", err);
+            console.log('refresh', err);
 
             throw new Error(err.data);
         }
@@ -142,7 +142,7 @@ export class ApiSM {
 
             return true;
         } catch (err) {
-            console.log("shortInfo", err);
+            console.log('shortInfo', err);
 
             throw new Error(err.data);
         }
@@ -169,7 +169,7 @@ export class ApiSM {
 
             return true;
         } catch (err) {
-            console.log("detailsBonus", err);
+            console.log('detailsBonus', err);
 
             throw new Error(err.data);
         }
@@ -493,6 +493,73 @@ export class ApiSM {
             return response.data.data.cart.version;
         } catch (err) {
             throw new Error(err.response.data.error.message);
+        }
+    }
+
+    async sendSms(phoneNumber): Promise<any> {
+        const url = `https://mp4x-api.sportmaster.ru/api/v1/verify/sendSms`;
+
+        const payload = {
+            phone: {
+                countryCode: 7,
+                nationalNumber: phoneNumber,
+                isoCode: 'RU',
+            },
+            operation: 'change_phone',
+            communicationChannel: 'SMS',
+        };
+
+        try {
+            const response = await axios.post(url, payload, {
+                headers: this.headers,
+                httpsAgent: this.httpsAgent,
+            });
+
+            return response.data.data.requestId;
+        } catch (err) {
+            throw new Error(err.data);
+        }
+    }
+
+    async verifyCheck(requestId: string, code: string): Promise<string> {
+        const url = `https://mp4x-api.sportmaster.ru/api/v1/verify/check`;
+
+        const payload = {
+            requestId,
+            code,
+        };
+
+        try {
+            const response = await axios.post(url, payload, {
+                headers: this.headers,
+                httpsAgent: this.httpsAgent,
+            });
+
+            return response.data.data.token;
+        } catch (err) {
+            throw new Error(err.data);
+        }
+    }
+
+    async changePhone(token: string): Promise<string> {
+        const url = `https://mp4x-api.sportmaster.ru/api/v1/profile/changePhone`;
+
+        const payload = {
+            token,
+        };
+
+        try {
+            const response = await axios.post(url, payload, {
+                headers: this.headers,
+                httpsAgent: this.httpsAgent,
+            });
+
+            return response.data.data.token;
+        } catch (err) {
+            throw new Error(err.data);
+            if (err.data.error.code === 'PHONE_ALREADY_USED') throw new Error(ERROR_ALREADY_USED_PHONE);
+
+            throw new Error(ERROR_UNKNOW_PHONE);
         }
     }
 }

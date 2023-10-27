@@ -11,6 +11,7 @@ import { ProxyModule } from './proxy/proxy.module';
 import { TelegrafExceptionFilter } from './common/filters/telegraf-exception.filter';
 import { APP_FILTER } from '@nestjs/core';
 import { CheckingModule } from './checking/checking.module';
+import { ChangeNumberModule } from './change-number/change-number.module';
 
 @Module({
     imports: [
@@ -29,6 +30,7 @@ import { CheckingModule } from './checking/checking.module';
         // AccountsModule,
         ProxyModule,
         CheckingModule,
+        ChangeNumberModule,
     ],
     providers: [
         {

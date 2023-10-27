@@ -49,19 +49,6 @@ export const HELP = {
     scene: HELP_SCENE,
 };
 
-export const UNKNOWN_ERROR = '❌ Неизвестная ошибка. Обратитесь к Администратору';
-export const INCORRECT_ENTERED_KEY =
-    '❌ Не верно введен ключ. Проверьте правильность написания и повторите попытку ввода заново';
-export const ACCOUNT_NOT_FOUND = '❌ Аккаунт не найден';
-export const ACCOUNT_BANNED = '❌ Аккаунт более не доступен. Используйте куки или обратитесь к Администратору';
-export const ERROR_CONNECT_ACCOUNT = '❌ Проблемы с подключением аккаунта. Подождите 5-10мин';
-export const NO_FREE_PROXIES = '❌ Нет свободных прокси. Подождите 5-10мин. Сообщите Администратору';
-export const ERROR_GET_CART = '❌ Ошибка получения корзины. Попробуйте еще раз';
-export const ERROR_CREATE_LINK_CART = '❌ Ошибка в создании ссылки на корзину. Попробуйте еще раз';
-export const CITY_NOT_VALID =
-    '❌ Не верно введено название города. Название должно содержать только кириллицу. Введите еще раз';
-    export const ERROR_ORDER_LINK = '❌ Не верный тип ссылки. Должна быть вида: https://www.sportmaster.ru/basket/checkout.do?specificationId=921ae601-c5a0-4dda-98aa-49ab5078f2d0&utm_source=android_appshare&utm_medium=soc&utm_campaign=socsharing_cart_android';
-
 export const ALL_KEYS_MENU_BUTTON = [
     CHANGE_NUMBER,
     MAKE_ORDER,
@@ -74,6 +61,29 @@ export const ALL_KEYS_MENU_BUTTON = [
 ];
 
 export const ALL_KEYS_MENU_BUTTON_NAME = ALL_KEYS_MENU_BUTTON.map((item) => item.name);
+
+export const UNKNOWN_ERROR = '❌ Неизвестная ошибка. Обратитесь к Администратору';
+export const INCORRECT_ENTERED_KEY =
+    '❌ Не верно введен ключ. Проверьте правильность написания и повторите попытку ввода заново';
+export const ACCOUNT_NOT_FOUND = '❌ Аккаунт не найден';
+export const ACCOUNT_BANNED = '❌ Аккаунт более не доступен. Используйте куки или обратитесь к Администратору';
+export const ERROR_CONNECT_ACCOUNT = '❌ Проблемы с подключением аккаунта. Подождите 5-10мин';
+export const NO_FREE_PROXIES = '❌ Нет свободных прокси. Подождите 5-10мин. Сообщите Администратору';
+export const ERROR_GET_CART = '❌ Ошибка получения корзины. Попробуйте еще раз';
+export const ERROR_CREATE_LINK_CART = '❌ Ошибка в создании ссылки на корзину. Попробуйте еще раз';
+export const CITY_NOT_VALID =
+    '❌ Не верно введено название города. Название должно содержать только кириллицу. Введите еще раз';
+export const ERROR_ORDER_LINK =
+    '❌ Не верный тип ссылки. Должна быть вида: https://www.sportmaster.ru/basket/checkout.do?specificationId=921ae601-c5a0-4dda-98aa-49ab5078f2d0&utm_source=android_appshare&utm_medium=soc&utm_campaign=socsharing_cart_android';
+export const ERROR_PHONE_NUMBER = '❌ Неправильно введён номер! Номер должен иметь вид 88005553535';
+export const GOOD_SEND_PHONE_CODE =
+    'Код выслан на указанный номер. Отправьте его в чат. Если код не пришел, то проблема в номере, используйте другой, ранее не использованный в Спортмастер. У вас есть 3 попытки отправки кода в день';
+export const ERROR_SEND_PHONE_CODE = '❌ Слишком много попыток запроса кода. Обратитесь в поддержку';
+export const ERROR_ALREADY_USED_PHONE =
+    '❌ Номер уже занят. Попробуйте заново и введите ранее не зарегистрированный в Спортмастер';
+export const ERROR_CODE_PHONE = '❌ В коде должно быть 4 цифры, повторите ввод';
+export const ERROR_BAN_ACCOUNT = '❌ Возможно бан аккаунта. Обратитесь в поддержку или попробуйте еще раз';
+
 
 export const KNOWN_ERROR = [
     INCORRECT_ENTERED_KEY,
