@@ -82,8 +82,11 @@ export const ERROR_SEND_PHONE_CODE = '❌ Слишком много попыто
 export const ERROR_ALREADY_USED_PHONE =
     '❌ Номер уже занят. Попробуйте заново и введите ранее не зарегистрированный в Спортмастер';
 export const ERROR_CODE_PHONE = '❌ В коде должно быть 4 цифры, повторите ввод';
+export const ERROR_TOO_MANY_INCORRECT_CODE_PHONE = '❌ Много попыток ввода неправильного кода. Попробуйте завтра';
+export const ERROR_INCORRECT_CODE_PHONE = '❌ Не верный код';
+export const ERROR_PHONE = '❌ Номер телефона уже занят. Используйте ранее не зарегистрированный';
 export const ERROR_BAN_ACCOUNT = '❌ Возможно бан аккаунта. Обратитесь в поддержку или попробуйте еще раз';
-
+export const GOOD_CHANGE_NUMBER_PHONE = '✅ Номер успешно изменен. Можете авторизовываться в аккаунт';
 
 export const KNOWN_ERROR = [
     INCORRECT_ENTERED_KEY,

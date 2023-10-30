@@ -1,12 +1,17 @@
 import { Ctx, Hears, Sender, On, Scene, SceneEnter, TelegrafException, Action } from 'nestjs-telegraf';
-import { ALL_KEYS_MENU_BUTTON_NAME, CHANGE_NUMBER, ERROR_PHONE_NUMBER, GOOD_SEND_PHONE_CODE, KNOWN_ERROR } from 'src/app.constants';
+import {
+    ALL_KEYS_MENU_BUTTON_NAME,
+    CHANGE_NUMBER,
+    ERROR_PHONE_NUMBER,
+    GOOD_SEND_PHONE_CODE,
+    KNOWN_ERROR,
+} from 'src/app.constants';
 import { checkPhoneNumber, getValueKeysMenu } from 'src/common/utils/some.utils';
 import { WizardContext } from 'telegraf/typings/scenes';
 import { getMainMenu } from '../common/keyboards/reply.keyboard';
 import { AccountService } from 'src/accounts/account.service';
 import { CHANGE_NUMBER_CODE_SCENE, CHANGE_NUMBER_INPUT_NUMBER_SCENE } from 'src/states/states';
 import { ChangeNumberService } from './change-number.service';
-
 
 @Scene(CHANGE_NUMBER.scene)
 export class ChangeNumberUpdate {
@@ -62,8 +67,7 @@ export class ChangeNumberInputNumber {
     async inputPhoneNumber(@Ctx() ctx: WizardContext) {
         const api = ctx.session['api'];
         let phoneNumber = ctx.message['text'];
-
-        const requestId = this.changeNumberService.sendSms(api, phoneNumber)
+        const requestId = await this.changeNumberService.sendSms(api, phoneNumber);
         ctx.session['requestId'] = requestId;
 
         await ctx.scene.enter(CHANGE_NUMBER_CODE_SCENE);
@@ -72,7 +76,7 @@ export class ChangeNumberInputNumber {
 
 @Scene(CHANGE_NUMBER_CODE_SCENE)
 export class ChangeNumberInputCode {
-    constructor() {}
+    constructor(private changeNumberService: ChangeNumberService) {}
 
     @SceneEnter()
     async onSceneEnter(@Ctx() ctx: WizardContext) {
@@ -88,12 +92,10 @@ export class ChangeNumberInputCode {
 
     @On('text')
     async inputCodePhoneNumber(@Ctx() ctx: WizardContext) {
+        let code = ctx.message['text'];
         const api = ctx.session['api'];
-        let phoneNumber = ctx.message['text'];
-
-        const requestId = this.changeNumberService.sendSms(api, phoneNumber)
-        ctx.session['requestId'] = requestId;
-
-        await ctx.scene.enter(CHANGE_NUMBER_CODE_SCENE);
+        const requestId = ctx.session['requestId'];
+        const changeNumberStatus = await this.changeNumberService.phoneChange(api, requestId, code);
+        await ctx.reply(changeNumberStatus, getMainMenu());
     }
 }

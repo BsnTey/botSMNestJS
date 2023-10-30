@@ -517,7 +517,7 @@ export class ApiSM {
 
             return response.data.data.requestId;
         } catch (err) {
-            throw new Error(err.data);
+            throw new Error(err.response.data.error.code);
         }
     }
 
@@ -537,11 +537,11 @@ export class ApiSM {
 
             return response.data.data.token;
         } catch (err) {
-            throw new Error(err.data);
+            throw new Error(err.response.data.error.code);
         }
     }
 
-    async changePhone(token: string): Promise<string> {
+    async changePhone(token: string): Promise<any> {
         const url = `https://mp4x-api.sportmaster.ru/api/v1/profile/changePhone`;
 
         const payload = {
@@ -554,12 +554,9 @@ export class ApiSM {
                 httpsAgent: this.httpsAgent,
             });
 
-            return response.data.data.token;
+            return true;
         } catch (err) {
-            throw new Error(err.data);
-            if (err.data.error.code === 'PHONE_ALREADY_USED') throw new Error(ERROR_ALREADY_USED_PHONE);
-
-            throw new Error(ERROR_UNKNOW_PHONE);
+            throw new Error(err.response.data.error.code);
         }
     }
 }

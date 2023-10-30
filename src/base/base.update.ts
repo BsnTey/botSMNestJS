@@ -1,10 +1,11 @@
 import { UseGuards } from '@nestjs/common';
-import { Command, Ctx, Hears, Start, Update, Sender, Message, On } from 'nestjs-telegraf';
+import { Command, Ctx, Hears, Start, Update, Sender } from 'nestjs-telegraf';
 import { AdminGuard } from 'src/common/guards/admin.guard';
 import { Context } from 'src/common/interfaces/context.interface';
 import { WizardContext } from 'telegraf/typings/scenes';
-import { CHECK, MAKE_ORDER } from 'src/app.constants';
+import { CHANGE_NUMBER, CHECK, MAKE_ORDER } from 'src/app.constants';
 import { UserService } from 'src/users/user.service';
+import { getMainMenu } from 'src/common/keyboards/reply.keyboard';
 
 @Update()
 export class BaseUpdate {
@@ -19,9 +20,11 @@ export class BaseUpdate {
             telegramId: String(telegramId),
         });
 
+        const keyboard = getMainMenu();
+
         await ctx.replyWithPhoto(
             'https://cstor.nn2.ru/forum/data/forum/images/2018-04/203019686-3f3b88013d6894fa103d7e79121a346a.jpg',
-            { caption: `Добро пожаловать в меню, ${telegramName}!\n\nЧто вас интересует?` },
+            { caption: `Добро пожаловать в меню, ${telegramName}!\n\nЧто вас интересует?`, ...keyboard },
         );
     }
 
@@ -31,8 +34,13 @@ export class BaseUpdate {
         await ctx.reply('admin');
     }
 
+    @Hears(['📱 Смена номера'])
+    async onStartChangeNumber(@Ctx() ctx: WizardContext) {
+        await ctx.scene.enter(CHANGE_NUMBER.scene);
+    }
+
     @Hears(['🛒 Сделать заказ'])
-    async onStartOrder(@Ctx() ctx: WizardContext, @Sender() telegramUser: any) {
+    async onStartOrder(@Ctx() ctx: WizardContext) {
         await ctx.scene.enter(MAKE_ORDER.scene);
     }
 
