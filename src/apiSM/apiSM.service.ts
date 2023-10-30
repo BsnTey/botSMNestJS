@@ -24,15 +24,12 @@ export class ApiSM {
 
     private expiresIn: number | null = null;
 
-    private xRequestIdCode: string | null = null;
-    private tokenCode: string | null = null;
-
     private headers;
 
     public bonusCount: number | null = null;
-    private qrCode: string | null = null;
+    public qrCode: string | null = null;
 
-    private emailOwner: string | null = null;
+    public emailOwner: string | null = null;
     public itemsCart: Array<IItemListCart> | null = null;
     public rawItemsCart: Array<any> | null = null;
     public rawListDetailsBonus: Array<any> | null = null;

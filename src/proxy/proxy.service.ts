@@ -32,12 +32,6 @@ export class ProxyService {
                     timeBlock: new Date(),
                 };
             });
-            // this.proxyDict["socks5://MEwluo:Ljeic0GMlo@45.81.137.82:5501"] = {
-            //     isBan: true,
-            //     timeBlock: new Date(),
-            // }
-            // this.proxyList.push("socks5://MEwluo:Ljeic0GMlo@45.81.137.82:5501")
-            // let show
         });
     }
 
@@ -52,12 +46,10 @@ export class ProxyService {
             const proxyData = this.proxyDict[randomProxy];
 
             if (!proxyData.isBan) {
-                // proxyListCopy.splice(randomIndex, 1);
                 return randomProxy;
             } else if (proxyData.isBan && currentTime.getTime() - proxyData.timeBlock.getTime() > 10 * 60 * 1000) {
                 proxyData.isBan = false;
                 proxyData.timeBlock = new Date();
-                // proxyListCopy.splice(randomIndex, 1);
                 return randomProxy;
             }
 

@@ -13,6 +13,7 @@ import { APP_FILTER } from '@nestjs/core';
 import { CheckingModule } from './checking/checking.module';
 import { ChangeNumberModule } from './change-number/change-number.module';
 import { CookieModule } from './cookie/cookie.module';
+import { QrCodeModule } from './qr-code/qr-code.module';
 
 @Module({
     imports: [
@@ -33,6 +34,7 @@ import { CookieModule } from './cookie/cookie.module';
         CheckingModule,
         ChangeNumberModule,
         CookieModule,
+        QrCodeModule,
     ],
     providers: [
         {

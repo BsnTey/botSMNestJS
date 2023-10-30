@@ -3,7 +3,7 @@ import { Command, Ctx, Hears, Start, Update, Sender } from 'nestjs-telegraf';
 import { AdminGuard } from 'src/common/guards/admin.guard';
 import { Context } from 'src/common/interfaces/context.interface';
 import { WizardContext } from 'telegraf/typings/scenes';
-import { CHANGE_NUMBER, CHECK, GET_COOKIE, MAKE_ORDER } from 'src/app.constants';
+import { CHANGE_NUMBER, CHECK, GET_CASH_RECEIPT, GET_COOKIE, GET_QR, HELP, MAKE_ORDER, PROFILE } from 'src/app.constants';
 import { UserService } from 'src/users/user.service';
 import { getMainMenu } from 'src/common/keyboards/reply.keyboard';
 
@@ -52,5 +52,25 @@ export class BaseUpdate {
     @Hears(['🔑 Выдать Cookie'])
     async onStartCookie(@Ctx() ctx: WizardContext) {
         await ctx.scene.enter(GET_COOKIE.scene);
+    }
+
+    @Hears(['🪪 Выдать QR_Code'])
+    async onStartQrCode(@Ctx() ctx: WizardContext) {
+        await ctx.scene.enter(GET_QR.scene);
+    }
+
+    @Hears(['✉️ Выдать Кассовый чек'])
+    async onStartCashReceipt(@Ctx() ctx: WizardContext) {
+        await ctx.scene.enter(GET_CASH_RECEIPT.scene);
+    }
+
+    @Hears(['🏠️ Личный кабинет'])
+    async onStartProfile(@Ctx() ctx: WizardContext) {
+        await ctx.scene.enter(PROFILE.scene);
+    }
+
+    @Hears(['📞 Поддержка'])
+    async onStartHelp(@Ctx() ctx: WizardContext) {
+        await ctx.scene.enter(HELP.scene);
     }
 }
