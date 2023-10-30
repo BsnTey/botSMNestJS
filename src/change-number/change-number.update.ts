@@ -1,12 +1,6 @@
-import { Ctx, Hears, Sender, On, Scene, SceneEnter, TelegrafException, Action } from 'nestjs-telegraf';
-import {
-    ALL_KEYS_MENU_BUTTON_NAME,
-    CHANGE_NUMBER,
-    ERROR_PHONE_NUMBER,
-    GOOD_SEND_PHONE_CODE,
-    KNOWN_ERROR,
-} from 'src/app.constants';
-import { checkPhoneNumber, getValueKeysMenu } from 'src/common/utils/some.utils';
+import { Ctx, Hears, On, Scene, SceneEnter, TelegrafException } from 'nestjs-telegraf';
+import { ALL_KEYS_MENU_BUTTON_NAME, CHANGE_NUMBER, GOOD_SEND_PHONE_CODE, KNOWN_ERROR } from 'src/app.constants';
+import {  getValueKeysMenu } from 'src/common/utils/some.utils';
 import { WizardContext } from 'telegraf/typings/scenes';
 import { getMainMenu } from '../common/keyboards/reply.keyboard';
 import { AccountService } from 'src/accounts/account.service';

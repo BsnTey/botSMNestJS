@@ -21,6 +21,11 @@ export class AccountService {
         return account;
     }
 
+    async findAccountWithCookie(accountId: string) {
+        const account = await this.accountRep.getAccountCookie(accountId);
+        return account;
+    }
+
     async refresh(api: ApiSM, refreshByType: TypeRefreshBy) {
         let proxy: string;
         for (let attempt = 0; attempt < 4; attempt++) {
@@ -57,7 +62,7 @@ export class AccountService {
                     }
                     return true;
                 } catch (error) {
-                    if (error.message.includes("connect ECONNREFUSED")) {
+                    if (error.message.includes('connect ECONNREFUSED')) {
                         this.proxyService.setProxyBan(proxy);
                     } else {
                         throw new Error(error);

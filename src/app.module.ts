@@ -12,6 +12,7 @@ import { TelegrafExceptionFilter } from './common/filters/telegraf-exception.fil
 import { APP_FILTER } from '@nestjs/core';
 import { CheckingModule } from './checking/checking.module';
 import { ChangeNumberModule } from './change-number/change-number.module';
+import { CookieModule } from './cookie/cookie.module';
 
 @Module({
     imports: [
@@ -31,6 +32,7 @@ import { ChangeNumberModule } from './change-number/change-number.module';
         ProxyModule,
         CheckingModule,
         ChangeNumberModule,
+        CookieModule,
     ],
     providers: [
         {

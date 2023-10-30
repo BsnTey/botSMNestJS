@@ -3,7 +3,7 @@ import { Command, Ctx, Hears, Start, Update, Sender } from 'nestjs-telegraf';
 import { AdminGuard } from 'src/common/guards/admin.guard';
 import { Context } from 'src/common/interfaces/context.interface';
 import { WizardContext } from 'telegraf/typings/scenes';
-import { CHANGE_NUMBER, CHECK, MAKE_ORDER } from 'src/app.constants';
+import { CHANGE_NUMBER, CHECK, GET_COOKIE, MAKE_ORDER } from 'src/app.constants';
 import { UserService } from 'src/users/user.service';
 import { getMainMenu } from 'src/common/keyboards/reply.keyboard';
 
@@ -47,5 +47,10 @@ export class BaseUpdate {
     @Hears(['♻️ Чекер'])
     async onStartChecking(@Ctx() ctx: WizardContext) {
         await ctx.scene.enter(CHECK.scene);
+    }
+
+    @Hears(['🔑 Выдать Cookie'])
+    async onStartCookie(@Ctx() ctx: WizardContext) {
+        await ctx.scene.enter(GET_COOKIE.scene);
     }
 }

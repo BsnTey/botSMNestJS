@@ -21,6 +21,16 @@ export class AccountRepository {
         });
     }
 
+    async getAccountCookie(accountId: string) {
+        return await this.prisma.account.findUnique({
+            where: { accountId: accountId },
+            select: {
+                cookie: true,
+                isOnlyAccessOrder: true,
+            },
+        });
+    }
+
     async updateTokensAccount(accountId: string, { accessToken, refreshToken, expiresIn }: IRefreshAccount) {
         return await this.prisma.account.update({
             where: {
