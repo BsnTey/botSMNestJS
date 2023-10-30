@@ -31,7 +31,6 @@ export class QrCodeService {
             .composite([{ input: cropped_qr_img, top: 680, left: 290 }])
             .toBuffer();
 
-        // return final_img.toString('base64');
         return final_img;
     };
 }

@@ -110,6 +110,10 @@ export const ordersInfoKeyboard = Markup.inlineKeyboard([
     [Markup.button.callback(`Перейти к заказам`, `go_to_orders`)],
 ]);
 
+export const qrCodeUpdateKeyboard = Markup.inlineKeyboard([
+    [Markup.button.callback(`Обновить Код`, `update_qrcode`)],
+]);
+
 export const orderHistoryKeyboard = (orders: Order[]) => {
     const keyboard = [];
     for (const order of orders) {
