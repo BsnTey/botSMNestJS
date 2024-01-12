@@ -138,3 +138,16 @@ export const infoOrderKeyboard = (orderNumber: string, isCancelled: boolean) => 
 
     return Markup.inlineKeyboard(keyboard);
 };
+
+export const profileMenuKeyboard = Markup.inlineKeyboard([
+    [Markup.button.callback(`Как получить бонусы`, `go_to_requirement`)],
+    [
+        Markup.button.callback(`Магазин`, 'go_to_shop'),
+        Markup.button.callback(`Чекер промо`, 'check_promo'),
+    ],
+    [Markup.button.callback(`Получить инфо по заказу`, 'get_info_order')],
+]);
+
+export const calculateInfoKeyboard = Markup.inlineKeyboard([
+    [Markup.button.callback(`Как пользоваться калькулятором`, `go_to_calculate_info`)],
+]);

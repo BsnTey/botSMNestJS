@@ -14,6 +14,8 @@ import { CheckingModule } from './checking/checking.module';
 import { ChangeNumberModule } from './change-number/change-number.module';
 import { CookieModule } from './cookie/cookie.module';
 import { QrCodeModule } from './qr-code/qr-code.module';
+import { CalculateModule } from './calculate/calculate.module';
+import { ProfileModule } from './profile/profile.module';
 
 @Module({
     imports: [
@@ -35,6 +37,8 @@ import { QrCodeModule } from './qr-code/qr-code.module';
         ChangeNumberModule,
         CookieModule,
         QrCodeModule,
+        CalculateModule,
+        ProfileModule,
     ],
     providers: [
         {

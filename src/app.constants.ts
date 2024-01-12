@@ -1,4 +1,6 @@
 import {
+    ADMIN_SCENE,
+    CALCULATE_SCENE,
     CHANGE_NUMBER_SCENE,
     CHECKER_SCENE,
     GET_CASH_RECEIPT_SCENE,
@@ -7,7 +9,13 @@ import {
     HELP_SCENE,
     ORDER_SCENE,
     PROFILE_SCENE,
+    START_SCENE,
 } from './states/states';
+
+export const CALCULATE_BONUS = {
+    name: '💵 Рассчитать стоимость',
+    scene: CALCULATE_SCENE,
+};
 
 export const CHANGE_NUMBER = {
     name: '📱 Смена номера',
@@ -30,12 +38,12 @@ export const CHECK = {
 };
 
 export const GET_QR = {
-    name: '🪪 Выдать QR_Code',
+    name: '🪪 Выдать QR',
     scene: GET_QR_CODE_SCENE,
 };
 
 export const GET_CASH_RECEIPT = {
-    name: '✉️ Выдать Кассовый чек',
+    name: '✉️ Выдать чек',
     scene: GET_CASH_RECEIPT_SCENE,
 };
 
@@ -49,7 +57,18 @@ export const HELP = {
     scene: HELP_SCENE,
 };
 
+export const START = {
+    name: '/start',
+    scene: START_SCENE,
+};
+
+export const ADMIN = {
+    name: '/admin',
+    scene: ADMIN_SCENE,
+};
+
 export const ALL_KEYS_MENU_BUTTON = [
+    CALCULATE_BONUS,
     CHANGE_NUMBER,
     MAKE_ORDER,
     GET_COOKIE,
@@ -58,6 +77,8 @@ export const ALL_KEYS_MENU_BUTTON = [
     GET_CASH_RECEIPT,
     PROFILE,
     HELP,
+    START,
+    ADMIN
 ];
 
 export const ALL_KEYS_MENU_BUTTON_NAME = ALL_KEYS_MENU_BUTTON.map((item) => item.name);
