@@ -3,7 +3,7 @@ import { WizardContext } from 'telegraf/typings/scenes';
 import { ALL_KEYS_MENU_BUTTON_NAME, CALCULATE_BONUS, KNOWN_ERROR } from 'src/app.constants';
 import { getMainMenu } from '../common/keyboards/reply.keyboard';
 import { getValueKeysMenu } from 'src/common/utils/some.utils';
-import { calculateInfoKeyboard } from 'src/common/keyboards/inline.keyboard';
+import { calculateInfoKeyboard, calculateShowKeyboard } from 'src/common/keyboards/inline.keyboard';
 
 @Scene(CALCULATE_BONUS.scene)
 export class CalculateUpdate {
@@ -34,6 +34,8 @@ export class CalculateUpdate {
         let totalDiscount = 0
         let totalPrice = 0
 
+        const calculatePrices = []
+
         prices.forEach((value) => {
             try {
                 let discountShop = 0
@@ -45,14 +47,35 @@ export class CalculateUpdate {
                 const currentPriceItem = calculateCurrentPrice(+price, discountShop)
                 const currentBonus = calculateBonus(+price, currentPriceItem, discountShop)
 
-                totalPrice += currentPriceItem - currentBonus
+                const priceDiscount = currentPriceItem - currentBonus
+
+                totalPrice += priceDiscount
                 totalDiscount += currentBonus
+
+                calculatePrices.push({
+                    price: `${price}${discountSTR? ' ' + discountSTR : ''}`,
+                    priceDiscount,
+                    currentBonus
+                })
             } catch (e) {
                 console.log(e);
             }
         })
-        await ctx.reply(`Цена на кассу: ${totalPrice}\nКоличество возможно примененных бонусов: ${totalDiscount}`, getMainMenu())
 
+        ctx.session['calculatePrices'] = calculatePrices;
+        await ctx.reply(`Цена на кассу: ${totalPrice}\nКоличество возможно примененных бонусов: ${totalDiscount}`, calculateShowKeyboard)
+
+    }
+
+    @Action('go_to_calculate_show')
+    async goToCalculateShow(@Ctx() ctx: WizardContext) {
+        const calculatePrices = ctx.session['calculatePrices'];
+
+        let message = ""
+        calculatePrices.forEach((value) => {
+            message += `Изначальная цена: ${value['price']}\nТекущая цена со скидкой: ${value['priceDiscount']}\nКоличество возможно применяемых бонусов: ${value['currentBonus']}\n\n`
+        })
+        await ctx.reply(message)
     }
 }
 
