@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { UserRepository } from './repository/user.repository';
-import { ICreateUser } from 'src/common/interfaces/user/user.interface';
-import { IFavouriteCities } from 'src/common/interfaces/some.interface';
+import { ICreateUser } from '../common/interfaces/user/user.interface';
+import { IFavouriteCities } from '../common/interfaces/some.interface';
 
 @Injectable()
 export class UserService {

@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/database/prisma.service';
-import { ICreateUser } from 'src/common/interfaces/user/user.interface';
-import { IFavouriteCities } from 'src/common/interfaces/some.interface';
+import { ICreateUser } from '../../common/interfaces/user/user.interface';
+import { IFavouriteCities } from '../../common/interfaces/some.interface';
 
 @Injectable()
 export class UserRepository {
