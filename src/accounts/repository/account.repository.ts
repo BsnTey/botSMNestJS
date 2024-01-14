@@ -31,6 +31,17 @@ export class AccountRepository {
         });
     }
 
+    async getAccountEmail(accountId: string) {
+        return await this.prisma.account.findUnique({
+            where: { accountId: accountId },
+            select: {
+                email: true,
+                passImap: true,
+                passEmail: true,
+            },
+        });
+    }
+
     async updateTokensAccount(accountId: string, { accessToken, refreshToken, expiresIn }: IRefreshAccount) {
         return await this.prisma.account.update({
             where: {

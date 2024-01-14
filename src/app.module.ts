@@ -16,6 +16,7 @@ import { CookieModule } from './cookie/cookie.module';
 import { QrCodeModule } from './qr-code/qr-code.module';
 import { CalculateModule } from './calculate/calculate.module';
 import { ProfileModule } from './profile/profile.module';
+import { EmailReceiptModule } from './email-receipt/email-receipt.module';
 
 @Module({
     imports: [
@@ -39,6 +40,7 @@ import { ProfileModule } from './profile/profile.module';
         QrCodeModule,
         CalculateModule,
         ProfileModule,
+        EmailReceiptModule
     ],
     providers: [
         {

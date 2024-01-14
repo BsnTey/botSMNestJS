@@ -26,6 +26,11 @@ export class AccountService {
         return account;
     }
 
+    async findAccountEmail(accountId: string) {
+        const account = await this.accountRep.getAccountEmail(accountId);
+        return account;
+    }
+
     async refresh(api: ApiSM, refreshByType: TypeRefreshBy) {
         let proxy: string;
         for (let attempt = 0; attempt < 4; attempt++) {
