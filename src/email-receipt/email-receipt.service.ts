@@ -2,11 +2,13 @@ import { Injectable } from '@nestjs/common';
 import * as Imap from 'imap';
 import { simpleParser } from 'mailparser';
 import { promisify } from 'util';
+const util = require('util');
 
 @Injectable()
 export class EmailReceiptService {
     private async searchRegex(bodys: Array<Buffer | undefined>): Promise<Array<string>> {
-        const regex = /https:\/\/consumer\.1-ofd\.ru\/[\w\W]*?(?=\"\ target=\"_)/;
+        const regex = /https:\/\/consumer\.1-ofd\.ru\/v1\?.*?t=\d+T\d+&s=\d+&fn=\d+&i=\d+&fp=\d+&n=1/g;
+
         const cashReceipt: string[] = [];
         for (const body of bodys) {
             try {
@@ -37,18 +39,34 @@ export class EmailReceiptService {
 
             mail.once('ready', async () => {
                 try {
-                    for (const box of ['INBOX', 'INBOX/Social', 'INBOX/Newsletters', 'INBOX/ToMyself', 'INBOX/News', 'INBOX/Receipts']) {
+                    const getBoxes = promisify(mail.getBoxes.bind(mail));
+                    const rawBoxes = await getBoxes();
+                    const boxes = Object.keys(rawBoxes);
+
+                    for (const box of boxes) {
                         const openBox = promisify(mail.openBox.bind(mail));
+                        const simpleParserPromise = util.promisify(simpleParser);
                         await openBox(box, false);
                         const search = promisify(mail.search.bind(mail));
                         const nums = await search(['ALL']);
                         for (const num of nums) {
                             const fetch = mail.fetch(num, { bodies: 'TEXT' });
-                            for await (const message of fetch) {
-                                const part = promisify(simpleParser);
-                                const parsed = await part(message.body);
-                                bodys.push(parsed.text);
-                            }
+                            fetch.on('message', (msg) => {
+                                msg.on('body', async (stream) => {
+                                    try {
+                                        const parsed = await simpleParserPromise(stream);
+                                        bodys.push(parsed.text);
+                                    } catch (error) {
+                                        console.error(error);
+                                    }
+                                });
+                            });
+
+                            fetch.once('error', (error) => {
+                                console.error('Fetch error:', error);
+                            });
+
+                            fetch.once('end', () => {});
                         }
                     }
                     const cashReceipt = await this.searchRegex(bodys);
@@ -64,9 +82,7 @@ export class EmailReceiptService {
                 reject(err);
             });
 
-            mail.once('end', () => {
-                console.log('Connection ended');
-            });
+            mail.once('end', () => {});
 
             mail.connect();
         });

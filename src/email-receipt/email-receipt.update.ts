@@ -11,6 +11,7 @@ import { getMainMenu } from '../common/keyboards/reply.keyboard';
 import { AccountService } from 'src/accounts/account.service';
 import { getValueKeysMenu } from 'src/common/utils/some.utils';
 import { EmailReceiptService } from './email-receipt.service';
+import { log } from 'console';
 
 @Scene(GET_CASH_RECEIPT.scene)
 export class EmailReceiptUpdate {
@@ -35,13 +36,17 @@ export class EmailReceiptUpdate {
 
         try {
             const account = await this.accountService.findAccountEmail(accountId);
+
             if (!account) throw new Error(ACCOUNT_NOT_FOUND);
 
             await ctx.reply('Начался поиск, подождите');
 
             const cashReceipt = await this.emailReceiptService.findEmailCashReceipt(account.email, account.passImap);
 
-            if (!cashReceipt) await ctx.reply('Чеков не найдено');
+            if (cashReceipt.length == 0) {
+                await ctx.reply('❌ Чеков не найдено');
+            }
+
             cashReceipt.forEach(async (receipt) => {
                 await ctx.reply(receipt);
             });
