@@ -4,14 +4,12 @@ import {
     ACCOUNT_NOT_FOUND,
     ALL_KEYS_MENU_BUTTON_NAME,
     GET_CASH_RECEIPT,
-    GET_COOKIE,
     KNOWN_ERROR,
 } from 'src/app.constants';
 import { getMainMenu } from '../common/keyboards/reply.keyboard';
 import { AccountService } from 'src/accounts/account.service';
 import { getValueKeysMenu } from 'src/common/utils/some.utils';
 import { EmailReceiptService } from './email-receipt.service';
-import { log } from 'console';
 
 @Scene(GET_CASH_RECEIPT.scene)
 export class EmailReceiptUpdate {

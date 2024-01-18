@@ -65,4 +65,15 @@ export class AccountRepository {
             },
         });
     }
+
+    async updatetBonusCount(accountId: string, bonusCount: string) {
+        return await this.prisma.account.update({
+            where: {
+                accountId: accountId,
+            },
+            data: {
+                bonusCount: bonusCount,
+            },
+        });
+    }
 }

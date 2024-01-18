@@ -33,7 +33,7 @@ export class ChangeNumberUpdate {
             ctx.session['api'] = api;
             await ctx.scene.enter(CHANGE_NUMBER_INPUT_NUMBER_SCENE);
         } catch (error) {
-            if (KNOWN_ERROR.includes(error.message)) throw new TelegrafException(error.message);
+            if (KNOWN_ERROR.includes(error.message)) throw new TelegrafException(KNOWN_ERROR.message);
             throw new TelegrafException(error);
         }
     }

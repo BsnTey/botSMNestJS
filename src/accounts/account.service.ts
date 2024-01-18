@@ -1,16 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { AccountRepository } from './repository/account.repository';
-import { ApiSM } from 'src/apiSM/apiSM.service';
-import { ProxyService } from 'src/proxy/proxy.service';
-import {
-    ACCOUNT_BANNED,
-    ACCOUNT_NOT_FOUND,
-    ERROR_CONNECT_ACCOUNT,
-    INCORRECT_ENTERED_KEY,
-    NO_FREE_PROXIES,
-} from 'src/app.constants';
-import { TypeRefreshBy } from 'src/common/interfaces/apiSM/apiSM.interface';
-import { isValidUUID } from 'src/common/utils/some.utils';
+import { ApiSM } from '../apiSM/apiSM.service';
+import { ProxyService } from '../proxy/proxy.service';
+import { IRefreshAccount, TypeRefreshBy } from '../common/interfaces/apiSM/apiSM.interface';
+import { isValidUUID } from '../common/utils/some.utils';
+import { KNOWN_ERROR } from '../app.constants';
 
 @Injectable()
 export class AccountService {
@@ -31,55 +25,69 @@ export class AccountService {
         return account;
     }
 
+    async updateAccountBonusCount(accountId: string, bonusCount: string) {
+        const account = await this.accountRep.updatetBonusCount(accountId, bonusCount);
+        return account;
+    }
+
+    async updateTokensAccount(accountId: string, dataAccount: IRefreshAccount) {
+        const account = await this.accountRep.updateTokensAccount(accountId, dataAccount);
+        return account;
+    }
+
+    async setBanMp(accountId: string) {
+        const account = await this.accountRep.setBanMp(accountId);
+        return account;
+    }
+
     async refresh(api: ApiSM, refreshByType: TypeRefreshBy) {
         let proxy: string;
         for (let attempt = 0; attempt < 4; attempt++) {
             try {
-                if (attempt === 3) throw new Error(ERROR_CONNECT_ACCOUNT);
+                proxy = this.proxyService.getRandomProxy();
+                api.setProxy(proxy);
+            } catch {
+                throw new Error(KNOWN_ERROR.NOT_FREE_PROXIES.code);
+            }
 
-                try {
-                    proxy = this.proxyService.getRandomProxy();
-                    api.setProxy(proxy);
-                } catch {
-                    throw new Error(NO_FREE_PROXIES);
-                }
+            try {
+                const accountId = api.accountId;
+                let isNotRefresh = false;
+                const isRefreshDate = api.isRefreshDate();
+                if (!isRefreshDate) isNotRefresh = await this.refreshBy(api, refreshByType);
 
-                try {
-                    const accountId = api.accountId;
-                    let isNotRefresh = false;
-                    const isRefreshDate = api.isRefreshDate();
-                    if (!isRefreshDate) isNotRefresh = await this.refreshBy(api, refreshByType);
+                if (!isNotRefresh) {
+                    try {
+                        const dataAccount = await api.refresh();
+                        await this.updateTokensAccount(accountId, dataAccount);
+                    } catch (error) {
+                        if (error.message == 'WRONG_TOKEN') {
+                            await this.setBanMp(accountId);
+                            throw new Error(KNOWN_ERROR.WRONG_TOKEN.code);
+                        }
+                        throw error.message;
+                    }
+
+                    isNotRefresh = await this.refreshBy(api, refreshByType);
 
                     if (!isNotRefresh) {
-                        const dataAccount = await api.refresh();
-                        if (!dataAccount) {
-                            await this.accountRep.setBanMp(accountId);
-                            return false;
-                        }
-                        await this.accountRep.updateTokensAccount(accountId, dataAccount);
-
-                        isNotRefresh = await this.refreshBy(api, refreshByType);
-
-                        if (!isNotRefresh) {
-                            await this.accountRep.setBanMp(accountId);
-                            throw new Error(ACCOUNT_BANNED);
-                        }
-                    }
-                    return true;
-                } catch (error) {
-                    if (error.message.includes('connect ECONNREFUSED')) {
-                        this.proxyService.setProxyBan(proxy);
-                    } else {
-                        throw new Error(error);
+                        await this.setBanMp(accountId);
+                        throw new Error(KNOWN_ERROR.WRONG_TOKEN.code);
                     }
                 }
+                return true;
             } catch (error) {
-                console.log(error);
-                throw new Error(error);
+                if (error.message.includes('connect ECONNREFUSED')) {
+                    this.proxyService.setProxyBan(proxy);
+                } else {
+                    throw new Error(error.message);
+                }
             }
-            console.log('continue');
+
             continue;
         }
+
+        throw new Error(KNOWN_ERROR.ERROR_CONNECT_ACCOUNT.code);
     }
 
     private async refreshBy(api: ApiSM, refreshByType: TypeRefreshBy) {
@@ -100,10 +108,10 @@ export class AccountService {
 
     async getApi(accountId: string, refreshByType: TypeRefreshBy) {
         const isValidAccount = isValidUUID(accountId);
-        if (!isValidAccount) throw new Error(INCORRECT_ENTERED_KEY);
+        if (!isValidAccount) throw new Error(KNOWN_ERROR.INCORRECT_ENTERED_KEY.code);
 
         const account = await this.findAccount(accountId);
-        if (!account) throw new Error(ACCOUNT_NOT_FOUND);
+        if (!account) throw new Error(KNOWN_ERROR.ACCOUNT_NOT_FOUND.code);
 
         const readyAccount = {
             accountId: accountId,
@@ -120,8 +128,7 @@ export class AccountService {
             await this.refresh(api, refreshByType);
             return api;
         } catch (err) {
-            throw new Error(err);
+            throw new Error(err.message);
         }
     }
-
 }

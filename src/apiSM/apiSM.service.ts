@@ -124,15 +124,13 @@ export class ApiSM {
             const currentTimeTimestamp = getCurrentTimestamp();
             this.expiresIn = expires + currentTimeTimestamp;
 
-            // this.setHeaders(url);
-
             return {
                 accessToken: this.accessToken,
                 refreshToken: this.refreshToken,
                 expiresIn: this.expiresIn,
             };
         } catch (err) {
-            console.log('refresh', err);
+            if (err.response.data.error.code === "WRONG_TOKEN") throw new Error(err.response.data.error.code)
 
             throw new Error(err.data);
         }

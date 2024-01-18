@@ -78,41 +78,88 @@ export const ALL_KEYS_MENU_BUTTON = [
     PROFILE,
     HELP,
     START,
-    ADMIN
+    ADMIN,
 ];
 
 export const ALL_KEYS_MENU_BUTTON_NAME = ALL_KEYS_MENU_BUTTON.map((item) => item.name);
 
 export const UNKNOWN_ERROR = '❌ Неизвестная ошибка. Обратитесь к Администратору';
-export const INCORRECT_ENTERED_KEY =
-    '❌ Не верно введен ключ. Проверьте правильность написания и повторите попытку ввода заново';
-export const ACCOUNT_NOT_FOUND = '❌ Аккаунт не найден';
-export const ACCOUNT_BANNED = '❌ Аккаунт более не доступен. Используйте куки или обратитесь к Администратору';
-export const ERROR_CONNECT_ACCOUNT = '❌ Проблемы с подключением аккаунта. Подождите 5-10мин';
-export const NO_FREE_PROXIES = '❌ Нет свободных прокси. Подождите 5-10мин. Сообщите Администратору';
-export const ERROR_GET_CART = '❌ Ошибка получения корзины. Попробуйте еще раз';
-export const ERROR_CREATE_LINK_CART = '❌ Ошибка в создании ссылки на корзину. Попробуйте еще раз';
-export const CITY_NOT_VALID =
-    '❌ Не верно введено название города. Название должно содержать только кириллицу. Введите еще раз';
-export const ERROR_ORDER_LINK =
-    '❌ Не верный тип ссылки. Должна быть вида: https://www.sportmaster.ru/basket/checkout.do?specificationId=921ae601-c5a0-4dda-98aa-49ab5078f2d0&utm_source=android_appshare&utm_medium=soc&utm_campaign=socsharing_cart_android';
-export const ERROR_PHONE_NUMBER = '❌ Неправильно введён номер! Номер должен иметь вид 88005553535';
-export const GOOD_SEND_PHONE_CODE =
-    'Код выслан на указанный номер. Отправьте его в чат. Если код не пришел, то проблема в номере, используйте другой, ранее не использованный в Спортмастер. У вас есть 3 попытки отправки кода в день';
-export const ERROR_SEND_PHONE_CODE = '❌ Слишком много попыток запроса кода. Обратитесь в поддержку';
-export const ERROR_ALREADY_USED_PHONE =
-    '❌ Номер уже занят. Попробуйте заново и введите ранее не зарегистрированный в Спортмастер';
-export const ERROR_CODE_PHONE = '❌ В коде должно быть 4 цифры, повторите ввод';
-export const ERROR_TOO_MANY_INCORRECT_CODE_PHONE = '❌ Много попыток ввода неправильного кода. Попробуйте завтра';
-export const ERROR_INCORRECT_CODE_PHONE = '❌ Не верный код';
-export const ERROR_PHONE = '❌ Номер телефона уже занят. Используйте ранее не зарегистрированный';
-export const ERROR_BAN_ACCOUNT = '❌ Возможно бан аккаунта. Обратитесь в поддержку или попробуйте еще раз';
-export const GOOD_CHANGE_NUMBER_PHONE = '✅ Номер успешно изменен. Можете авторизовываться в аккаунт';
 
-export const KNOWN_ERROR = [
-    INCORRECT_ENTERED_KEY,
-    ACCOUNT_NOT_FOUND,
-    ACCOUNT_BANNED,
-    ERROR_CONNECT_ACCOUNT,
-    NO_FREE_PROXIES,
-];
+export const KNOWN_ERROR = {
+    INCORRECT_ENTERED_KEY: {
+        code: 'INCORRECT_ENTERED_KEY',
+        messageTg: '❌ Не верно введен ключ. Проверьте правильность написания и повторите попытку ввода заново',
+        messageCheck: 'Не верно введен ключ',
+    },
+    ACCOUNT_NOT_FOUND: {
+        code: 'ACCOUNT_NOT_FOUND',
+        messageTg: '❌ Аккаунт не найден',
+        messageCheck: 'Не найден',
+    },
+    WRONG_TOKEN: {
+        code: 'WRONG_TOKEN',
+        messageTg: '❌ Аккаунт более не доступен в боте. Используйте куки или обратитесь к Администратору',
+        messageCheck: 'Не доступен в боте',
+    },
+    ERROR_CONNECT_ACCOUNT: {
+        code: 'ERROR_CONNECT_ACCOUNT',
+        messageTg: '❌ Проблемы с подключением аккаунта. Подождите 5-10мин',
+        messageCheck: 'Проблема прокси. Подождите',
+    },
+    NOT_FREE_PROXIES: {
+        code: 'NOT_FREE_PROXIES',
+        messageTg: '❌ Нет свободных прокси. Подождите 5-10мин. Сообщите Администратору',
+        messageCheck: 'Проблема прокси. Подождите',
+    },
+    ERROR_GET_CART: {
+        code: 'ERROR_GET_CART',
+        messageTg: '❌ Ошибка получения корзины. Попробуйте еще раз',
+    },
+    ERROR_CREATE_LINK_CART: {
+        code: 'ERROR_CREATE_LINK_CART',
+        messageTg: '❌ Ошибка в создании ссылки на корзину. Попробуйте еще раз',
+    },
+    CITY_NOT_VALID: {
+        code: 'CITY_NOT_VALID',
+        messageTg: '❌ Не верно введено название города. Название должно содержать только кириллицу. Введите еще раз',
+    },
+    ERROR_ORDER_LINK: {
+        code: 'ERROR_ORDER_LINK',
+        messageTg: '❌ Не верный тип ссылки. Должна быть вида: https://www.sportmaster.ru/basket/checkout.do?specificationId=921ae601-c5a0-4dda-98aa-49ab5078f2d0&utm_source=android_appshare&utm_medium=soc&utm_campaign=socsharing_cart_android',
+    },
+    ERROR_PHONE_NUMBER: {
+        code: 'ERROR_PHONE_NUMBER',
+        messageTg: '❌ Неправильно введён номер! Номер должен иметь вид 88005553535',
+    },
+    GOOD_SEND_PHONE_CODE: {
+        code: 'GOOD_SEND_PHONE_CODE',
+        messageTg: 'Код выслан на указанный номер. Отправьте его в чат. Если код не пришел, то проблема в номере, используйте другой, ранее не использованный в Спортмастер. У вас есть 3 попытки отправки кода в день',
+    },
+    ERROR_SEND_PHONE_CODE: {
+        code: 'ERROR_SEND_PHONE_CODE',
+        messageTg: '❌ Слишком много попыток запроса кода. Обратитесь в поддержку',
+    },
+    ERROR_ALREADY_USED_PHONE: {
+        code: 'ERROR_ALREADY_USED_PHONE',
+        messageTg: '❌ Номер уже занят. Попробуйте заново и введите ранее не зарегистрированный в Спортмастер',
+    },
+    ERROR_CODE_PHONE: {
+        code: 'ERROR_CODE_PHONE',
+        messageTg: '❌ В коде должно быть 4 цифры, повторите ввод',
+    },
+    ERROR_TOO_MANY_INCORRECT_CODE_PHONE: {
+        code: 'ERROR_TOO_MANY_INCORRECT_CODE_PHONE',
+        messageTg: '❌ Много попыток ввода неправильного кода. Попробуйте завтра',
+    },
+    ERROR_INCORRECT_CODE_PHONE: {
+        code: 'ERROR_INCORRECT_CODE_PHONE',
+        messageTg: '❌ Не верный код',
+    },
+    ERROR_PHONE: {
+        code: 'ERROR_PHONE',
+        messageTg: '❌ Номер телефона уже занят. Используйте ранее не зарегистрированный',
+    },
+}
+
+
+export const GOOD_CHANGE_NUMBER_PHONE = '✅ Номер успешно изменен. Можете авторизовываться в аккаунт';
