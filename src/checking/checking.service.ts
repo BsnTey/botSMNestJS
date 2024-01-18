@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { AccountService } from 'src/accounts/account.service';
-import { NOT_FREE_PROXIES, WRONG_TOKEN } from 'src/app.constants';
+import { KNOWN_ERROR } from 'src/app.constants';
 import { bringCompliance, getCombustionDates } from 'src/common/utils/some.utils';
 
 @Injectable()
@@ -43,8 +43,8 @@ export class CheckingService {
             resultChecking[accountId] = result;
             console.log('Checking', accountId);
         } catch (err) {
-            if (err.message == WRONG_TOKEN) err = 'Аккаунт более не доступен в МП';
-            if (err.message == NOT_FREE_PROXIES) err = 'Нет свободного прокси. Подождите';
+            if (Object.keys(KNOWN_ERROR).includes(err.message)) err = KNOWN_ERROR[err.message].messageCheck
+
             console.log('err', accountId);
             resultChecking[accountId] = `${accountId}: ${err}\n`;
         }

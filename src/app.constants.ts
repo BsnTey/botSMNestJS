@@ -123,10 +123,6 @@ export const KNOWN_ERROR = {
         code: 'CITY_NOT_VALID',
         messageTg: '❌ Не верно введено название города. Название должно содержать только кириллицу. Введите еще раз',
     },
-    ERROR_ORDER_LINK: {
-        code: 'ERROR_ORDER_LINK',
-        messageTg: '❌ Не верный тип ссылки. Должна быть вида: https://www.sportmaster.ru/basket/checkout.do?specificationId=921ae601-c5a0-4dda-98aa-49ab5078f2d0&utm_source=android_appshare&utm_medium=soc&utm_campaign=socsharing_cart_android',
-    },
     ERROR_PHONE_NUMBER: {
         code: 'ERROR_PHONE_NUMBER',
         messageTg: '❌ Неправильно введён номер! Номер должен иметь вид 88005553535',

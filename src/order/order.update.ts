@@ -4,8 +4,6 @@ import { getMainMenu } from '../common/keyboards/reply.keyboard';
 import { AccountService } from 'src/accounts/account.service';
 import {
     ALL_KEYS_MENU_BUTTON_NAME,
-    CITY_NOT_VALID,
-    ERROR_CREATE_LINK_CART,
     ERROR_ORDER_LINK,
     KNOWN_ERROR,
     MAKE_ORDER,
@@ -156,7 +154,7 @@ export class OrderCity {
         const city = ctx.message['text'];
 
         const isValidCity = isValidInputCity(city);
-        if (!isValidCity) throw new TelegrafException(CITY_NOT_VALID);
+        if (!isValidCity) throw new TelegrafException(KNOWN_ERROR.CITY_NOT_VALID.messageTg);
 
         const { text, keyboard, cities } = await this.orderService.findCity(api, city);
         ctx.session['cities'] = cities;
@@ -230,7 +228,7 @@ export class OrderFavouriteCity {
         const city = ctx.message['text'];
 
         const isValidCity = isValidInputCity(city);
-        if (!isValidCity) throw new TelegrafException(CITY_NOT_VALID);
+        if (!isValidCity) throw new TelegrafException(KNOWN_ERROR.CITY_NOT_VALID.messageTg);
 
         const { text, keyboard, cities } = await this.orderService.findCity(api, city, 'favourite');
         ctx.session['addFavouriteCities'] = cities;
@@ -349,7 +347,7 @@ export class OrderMenuCart {
         const api = ctx.session['api'];
         const url = await api.createSnapshot();
 
-        await ctx.reply(url || ERROR_CREATE_LINK_CART);
+        await ctx.reply(url || '❌ Не верный тип ссылки. Должна быть вида: https://www.sportmaster.ru/basket/checkout.do?specificationId=921ae601-c5a0-4dda-98aa-49ab5078f2d0&utm_source=android_appshare&utm_medium=soc&utm_campaign=socsharing_cart_android')
         await ctx.scene.enter(ORDER_MENU_CART_SCENE);
     }
 
