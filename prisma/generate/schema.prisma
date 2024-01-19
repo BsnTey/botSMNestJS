@@ -1,0 +1,60 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../prisma/generate"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  telegramId   String       @id @unique
+  telegramName String
+  firstName    String?
+  login        String?
+  password     String?
+  email        String?
+  countBonuses Int          @default(0)
+  isBan        Boolean      @default(false)
+  accounts     Account[]
+  userCities   UserCitySM[]
+}
+
+model Account {
+  accountId         String  @id
+  email             String
+  passImap          String
+  passEmail         String
+  cookie            String
+  accessToken       String
+  refreshToken      String
+  xUserId           String
+  deviceId          String
+  installationId    String
+  expiresIn         Int
+  isAccessMp        Boolean @default(false)
+  isAccessCookie    Boolean @default(false)
+  isOnlyAccessOrder Boolean @default(false)
+  bonusCount        String
+  isUpdateBonus     Boolean @default(false)
+  userOwnerId       String?
+  userOwner         User?   @relation(fields: [userOwnerId], references: [telegramId])
+}
+
+model CitySM {
+  cityId   String @id
+  name     String
+  fullName String
+
+  cityUsers UserCitySM[]
+}
+
+model UserCitySM {
+  cityId String
+  userId String
+  user   User   @relation(fields: [userId], references: [telegramId])
+  city   CitySM @relation(fields: [cityId], references: [cityId])
+
+  @@id([cityId, userId])
+}
