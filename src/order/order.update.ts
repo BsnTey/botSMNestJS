@@ -4,7 +4,6 @@ import { getMainMenu } from '../common/keyboards/reply.keyboard';
 import { AccountService } from 'src/accounts/account.service';
 import {
     ALL_KEYS_MENU_BUTTON_NAME,
-    ERROR_ORDER_LINK,
     KNOWN_ERROR,
     MAKE_ORDER,
 } from 'src/app.constants';
@@ -45,7 +44,7 @@ import { ShopAddressType } from 'src/common/interfaces/some.interface';
 
 @Scene(MAKE_ORDER.scene)
 export class OrderUpdate {
-    constructor(private userService: UserService, private accountService: AccountService) {}
+    constructor(private userService: UserService, private accountService: AccountService) { }
 
     @SceneEnter()
     async onSceneEnter(@Ctx() ctx: WizardContext, @Sender() telegramUser: any) {
@@ -73,7 +72,7 @@ export class OrderUpdate {
             ctx.session['api'] = api;
             await ctx.scene.enter(ORDER_MENU_ACCOUNT_SCENE);
         } catch (error) {
-            if (KNOWN_ERROR.includes(error.message)) throw new TelegrafException(error.message);
+            if (Object.keys(KNOWN_ERROR).includes(error.message)) throw new TelegrafException(KNOWN_ERROR[error.message].messageTg);
             throw new TelegrafException(error);
         }
     }
@@ -81,7 +80,7 @@ export class OrderUpdate {
 
 @Scene(ORDER_MENU_ACCOUNT_SCENE)
 export class OrderMenuAccount {
-    constructor() {}
+    constructor() { }
 
     @SceneEnter()
     async onSceneEnter(@Ctx() ctx: WizardContext) {
@@ -123,7 +122,7 @@ export class OrderMenuAccount {
 
 @Scene(ORDER_CITY_SCENE)
 export class OrderCity {
-    constructor(private orderService: OrderService) {}
+    constructor(private orderService: OrderService) { }
 
     @SceneEnter()
     async onSceneEnter(@Ctx() ctx: WizardContext, @Sender() telegramUser: any) {
@@ -208,7 +207,7 @@ export class OrderCity {
 
 @Scene(ORDER_FAVOURITE_CITY_SCENE)
 export class OrderFavouriteCity {
-    constructor(private orderService: OrderService) {}
+    constructor(private orderService: OrderService) { }
 
     @SceneEnter()
     async onSceneEnter(@Ctx() ctx: WizardContext) {
@@ -316,7 +315,7 @@ export class OrderGetOrders {
 
 @Scene(ORDER_MENU_CART_SCENE)
 export class OrderMenuCart {
-    constructor(private orderService: OrderService) {}
+    constructor(private orderService: OrderService) { }
 
     @SceneEnter()
     async onSceneEnter(@Ctx() ctx: WizardContext) {
@@ -347,7 +346,7 @@ export class OrderMenuCart {
         const api = ctx.session['api'];
         const url = await api.createSnapshot();
 
-        await ctx.reply(url || '❌ Не верный тип ссылки. Должна быть вида: https://www.sportmaster.ru/basket/checkout.do?specificationId=921ae601-c5a0-4dda-98aa-49ab5078f2d0&utm_source=android_appshare&utm_medium=soc&utm_campaign=socsharing_cart_android')
+        await ctx.reply(url || '❌ Ошибка в создании ссылки на корзину')
         await ctx.scene.enter(ORDER_MENU_CART_SCENE);
     }
 
@@ -474,7 +473,7 @@ export class OrderMenuCart {
 
 @Scene(ORDER_INPUT_ARTICLE_SCENE)
 export class OrderInputArticle {
-    constructor(private orderService: OrderService) {}
+    constructor(private orderService: OrderService) { }
 
     @SceneEnter()
     async onSceneEnter(@Ctx() ctx: WizardContext) {
@@ -511,7 +510,7 @@ export class OrderInputArticle {
 
 @Scene(ORDER_INPUT_LINK_SCENE)
 export class OrderInputLink {
-    constructor(private orderService: OrderService) {}
+    constructor(private orderService: OrderService) { }
 
     @SceneEnter()
     async onSceneEnter(@Ctx() ctx: WizardContext) {
@@ -539,7 +538,7 @@ export class OrderInputLink {
         const text: string = ctx.message['text'];
 
         const isValid = isValidUrl(text);
-        if (!isValid) throw new TelegrafException(ERROR_ORDER_LINK);
+        if (!isValid) throw new TelegrafException('❌ Не верный тип ссылки. Должна быть вида: https://www.sportmaster.ru/basket/checkout.do?specificationId=921ae601-c5a0-4dda-98aa-49ab5078f2d0&utm_source=android_appshare&utm_medium=soc&utm_campaign=socsharing_cart_android');
 
         const resultAdding = await this.orderService.addItemsLink(api, text);
         await ctx.reply(resultAdding);
@@ -549,7 +548,7 @@ export class OrderInputLink {
 
 @Scene(ORDER_INPUT_PROMO_SCENE)
 export class OrderInputPromo {
-    constructor() {}
+    constructor() { }
 
     @SceneEnter()
     async onSceneEnter(@Ctx() ctx: WizardContext) {
@@ -583,7 +582,7 @@ export class OrderInputPromo {
 
 @Scene(ORDER_CHANGE_RECIPIENT_SCENE)
 export class OrderChangeRecipient {
-    constructor(private orderService: OrderService) {}
+    constructor(private orderService: OrderService) { }
 
     @SceneEnter()
     async onSceneEnter(@Ctx() ctx: WizardContext) {
@@ -615,14 +614,14 @@ export class OrderChangeRecipient {
     @On('text')
     async inputRecipient(@Ctx() ctx: WizardContext) {
         const api = ctx.session['api'];
-        const potentialOrder =  ctx.session['potentialOrder']
+        const potentialOrder = ctx.session['potentialOrder']
         let dataRecipient = [];
         try {
             const text = ctx.message['text'];
             dataRecipient = text.split(' ');
             dataRecipient.push(potentialOrder)
         } catch {
-            throw new Error(
+            throw new TelegrafException(
                 'Не введены данные. Они должны быть как в примере ниже через пробел:\nПетров Петр petroffff148@mail.ru 88005553535',
             );
         }

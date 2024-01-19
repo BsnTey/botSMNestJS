@@ -1,5 +1,5 @@
 import { Ctx, Hears, On, Scene, SceneEnter, TelegrafException } from 'nestjs-telegraf';
-import { ALL_KEYS_MENU_BUTTON_NAME, CHANGE_NUMBER, GOOD_SEND_PHONE_CODE, KNOWN_ERROR } from 'src/app.constants';
+import { ALL_KEYS_MENU_BUTTON_NAME, CHANGE_NUMBER, KNOWN_ERROR } from 'src/app.constants';
 import {  getValueKeysMenu } from 'src/common/utils/some.utils';
 import { WizardContext } from 'telegraf/typings/scenes';
 import { getMainMenu } from '../common/keyboards/reply.keyboard';
@@ -33,7 +33,7 @@ export class ChangeNumberUpdate {
             ctx.session['api'] = api;
             await ctx.scene.enter(CHANGE_NUMBER_INPUT_NUMBER_SCENE);
         } catch (error) {
-            if (KNOWN_ERROR.includes(error.message)) throw new TelegrafException(KNOWN_ERROR.message);
+            if (Object.keys(KNOWN_ERROR).includes(error.message)) throw new TelegrafException(KNOWN_ERROR[error.message].messageTg);
             throw new TelegrafException(error);
         }
     }
@@ -74,7 +74,7 @@ export class ChangeNumberInputCode {
 
     @SceneEnter()
     async onSceneEnter(@Ctx() ctx: WizardContext) {
-        await ctx.reply(GOOD_SEND_PHONE_CODE);
+        await ctx.reply('Код выслан на указанный номер. Отправьте его в чат. Если код не пришел, то проблема в номере, используйте другой, ранее не использованный в Спортмастер. У вас есть 3 попытки отправки кода в день');
     }
 
     @Hears(ALL_KEYS_MENU_BUTTON_NAME)
@@ -89,7 +89,7 @@ export class ChangeNumberInputCode {
         let code = ctx.message['text'];
         const api = ctx.session['api'];
         const requestId = ctx.session['requestId'];
-        const changeNumberStatus = await this.changeNumberService.phoneChange(api, requestId, code);
-        await ctx.reply(changeNumberStatus, getMainMenu());
+        await this.changeNumberService.phoneChange(api, requestId, code);
+        await ctx.reply('✅ Номер успешно изменен. Можете авторизовываться в аккаунт', getMainMenu());
     }
 }

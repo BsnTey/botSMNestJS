@@ -40,8 +40,8 @@ export class QrCodeUpdate {
 
             await ctx.replyWithPhoto({ source: qrCodeBuff }, { caption: text, ...keyboard });
         } catch (error) {
-            if (KNOWN_ERROR.includes(error.message)) throw new TelegrafException(error.message);
-            throw new TelegrafException(error);
+            if (Object.keys(KNOWN_ERROR).includes(error.message)) throw new TelegrafException(KNOWN_ERROR[error.message].messageTg);
+            throw new TelegrafException(error.message);
         }
     }
 

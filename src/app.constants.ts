@@ -127,28 +127,24 @@ export const KNOWN_ERROR = {
         code: 'ERROR_PHONE_NUMBER',
         messageTg: '❌ Неправильно введён номер! Номер должен иметь вид 88005553535',
     },
-    GOOD_SEND_PHONE_CODE: {
-        code: 'GOOD_SEND_PHONE_CODE',
-        messageTg: 'Код выслан на указанный номер. Отправьте его в чат. Если код не пришел, то проблема в номере, используйте другой, ранее не использованный в Спортмастер. У вас есть 3 попытки отправки кода в день',
-    },
     ERROR_SEND_PHONE_CODE: {
         code: 'ERROR_SEND_PHONE_CODE',
         messageTg: '❌ Слишком много попыток запроса кода. Обратитесь в поддержку',
     },
-    ERROR_ALREADY_USED_PHONE: {
-        code: 'ERROR_ALREADY_USED_PHONE',
+    PHONE_ALREADY_USED: {
+        code: 'PHONE_ALREADY_USED',
         messageTg: '❌ Номер уже занят. Попробуйте заново и введите ранее не зарегистрированный в Спортмастер',
     },
     ERROR_CODE_PHONE: {
         code: 'ERROR_CODE_PHONE',
         messageTg: '❌ В коде должно быть 4 цифры, повторите ввод',
     },
-    ERROR_TOO_MANY_INCORRECT_CODE_PHONE: {
-        code: 'ERROR_TOO_MANY_INCORRECT_CODE_PHONE',
+    TOO_MANY_INCORRECT_CODE_INPUTS: {
+        code: 'TOO_MANY_INCORRECT_CODE_INPUTS',
         messageTg: '❌ Много попыток ввода неправильного кода. Попробуйте завтра',
     },
-    ERROR_INCORRECT_CODE_PHONE: {
-        code: 'ERROR_INCORRECT_CODE_PHONE',
+    SMS_CODE_INCORRECT: {
+        code: 'SMS_CODE_INCORRECT',
         messageTg: '❌ Не верный код',
     },
     ERROR_PHONE: {
@@ -156,6 +152,3 @@ export const KNOWN_ERROR = {
         messageTg: '❌ Номер телефона уже занят. Используйте ранее не зарегистрированный',
     },
 }
-
-
-export const GOOD_CHANGE_NUMBER_PHONE = '✅ Номер успешно изменен. Можете авторизовываться в аккаунт';
