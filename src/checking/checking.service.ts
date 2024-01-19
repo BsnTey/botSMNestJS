@@ -20,6 +20,7 @@ export class CheckingService {
 
         try {
             let result: string;
+            accountId = accountId.trim();
             const api = await this.accountService.getApi(accountId, 'detailsBonus');
             const currentAmount = api.bonusCount;
             await this.accountService.updateAccountBonusCount(accountId, String(currentAmount));
@@ -41,11 +42,8 @@ export class CheckingService {
             }
             result += `\n`;
             resultChecking[accountId] = result;
-            console.log('Checking', accountId);
         } catch (err) {
-            if (Object.keys(KNOWN_ERROR).includes(err.message)) err = KNOWN_ERROR[err.message].messageCheck
-
-            console.log('err', accountId);
+            if (Object.keys(KNOWN_ERROR).includes(err.message)) err = KNOWN_ERROR[err.message].messageCheck;
             resultChecking[accountId] = `${accountId}: ${err}\n`;
         }
     }

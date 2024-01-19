@@ -77,7 +77,8 @@ export class AccountService {
                 }
                 return true;
             } catch (error) {
-                if (error.message.includes('connect ECONNREFUSED')) {
+                const errMessage = error.message
+                if (errMessage.includes('connect ECONNREFUSED')) {
                     this.proxyService.setProxyBan(proxy);
                 } else {
                     throw new Error(error.message);

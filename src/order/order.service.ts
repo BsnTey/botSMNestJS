@@ -9,7 +9,7 @@ import {
 } from '../common/keyboards/inline.keyboard';
 import { prepareListOutput } from 'src/common/utils/transformRespBody';
 import { TelegrafException } from 'nestjs-telegraf';
-import { ERROR_GET_CART } from 'src/app.constants';
+import { KNOWN_ERROR } from 'src/app.constants';
 import { UserService } from 'src/users/user.service';
 import { checkPhoneNumber, findFavouriteCityName, refactorCitiesAfterGetInBD, refactorShopAddress } from 'src/common/utils/some.utils';
 import { InlineKeyboardMarkup } from 'telegraf/typings/core/types/typegram';
@@ -23,7 +23,7 @@ export class OrderService {
 
     async choosingWayCart(api: ApiSM) {
         const isItemsCart = await api.getListCart();
-        if (isItemsCart == null) throw new TelegrafException(ERROR_GET_CART);
+        if (isItemsCart == null) throw new TelegrafException(KNOWN_ERROR.ERROR_GET_CART.messageTg);
 
         const itemsCart = api.itemsCart;
         let text: any;

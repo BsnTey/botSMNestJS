@@ -1,11 +1,6 @@
 import { Ctx, Hears, On, Scene, SceneEnter, TelegrafException } from 'nestjs-telegraf';
 import { WizardContext } from 'telegraf/typings/scenes';
-import {
-    ACCOUNT_NOT_FOUND,
-    ALL_KEYS_MENU_BUTTON_NAME,
-    GET_CASH_RECEIPT,
-    KNOWN_ERROR,
-} from 'src/app.constants';
+import { ALL_KEYS_MENU_BUTTON_NAME, GET_CASH_RECEIPT, KNOWN_ERROR } from 'src/app.constants';
 import { getMainMenu } from '../common/keyboards/reply.keyboard';
 import { AccountService } from 'src/accounts/account.service';
 import { getValueKeysMenu } from 'src/common/utils/some.utils';
@@ -34,8 +29,7 @@ export class EmailReceiptUpdate {
 
         try {
             const account = await this.accountService.findAccountEmail(accountId);
-
-            if (!account) throw new Error(ACCOUNT_NOT_FOUND);
+            if (!account) throw new Error(KNOWN_ERROR.ACCOUNT_NOT_FOUND.code);
 
             await ctx.reply('Начался поиск, подождите');
 
@@ -49,7 +43,8 @@ export class EmailReceiptUpdate {
                 await ctx.reply(receipt);
             });
         } catch (error) {
-            if (KNOWN_ERROR.includes(error.message)) throw new TelegrafException(error.message);
+            if (Object.keys(KNOWN_ERROR).includes(error.message))
+                throw new TelegrafException(KNOWN_ERROR[error.message].messageTg);
             throw new TelegrafException(error);
         }
     }

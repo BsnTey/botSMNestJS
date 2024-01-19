@@ -151,8 +151,6 @@ export class ApiSM {
 
             return true;
         } catch (err) {
-            console.log('shortInfo', err);
-
             throw new Error(err.data);
         }
     }
@@ -179,8 +177,6 @@ export class ApiSM {
 
             return true;
         } catch (err) {
-            console.log('detailsBonus', err);
-
             throw new Error(err.data);
         }
     }
