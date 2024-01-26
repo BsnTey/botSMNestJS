@@ -28,6 +28,6 @@ export class CookieUpdate {
 
         const account = await this.accountService.findAccountWithCookie(accountId);
         if (!account) throw new TelegrafException(KNOWN_ERROR.ACCOUNT_NOT_FOUND.messageTg);
-        await ctx.reply(account.cookie)
+        await ctx.reply(String(account.cookie))
     }
 }

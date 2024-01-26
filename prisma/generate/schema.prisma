@@ -26,7 +26,7 @@ model Account {
   email             String
   passImap          String
   passEmail         String
-  cookie            String
+  cookie            String[]
   accessToken       String
   refreshToken      String
   xUserId           String

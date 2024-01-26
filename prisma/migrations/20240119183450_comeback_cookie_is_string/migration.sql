@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "Account" ALTER COLUMN "cookie" SET NOT NULL,
+ALTER COLUMN "cookie" SET DATA TYPE TEXT;

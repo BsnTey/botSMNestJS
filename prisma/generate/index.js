@@ -32,11 +32,11 @@ exports.$Enums = {}
 
 /**
  * Prisma Client JS version: 5.7.1
- * Query Engine version: ac9d7041ed77bcc8a8dbd2ab6616b39013829574
+ * Query Engine version: 1e7af066ee9cb95cf3a403c78d9aab3e6b04f37a
  */
 Prisma.prismaVersion = {
   client: "5.7.1",
-  engine: "ac9d7041ed77bcc8a8dbd2ab6616b39013829574"
+  engine: "1e7af066ee9cb95cf3a403c78d9aab3e6b04f37a"
 }
 
 Prisma.PrismaClientKnownRequestError = PrismaClientKnownRequestError;
@@ -81,24 +81,6 @@ Prisma.NullTypes = {
 /**
  * Enums
  */
-exports.Prisma.TransactionIsolationLevel = makeStrictEnum({
-  ReadUncommitted: 'ReadUncommitted',
-  ReadCommitted: 'ReadCommitted',
-  RepeatableRead: 'RepeatableRead',
-  Serializable: 'Serializable'
-});
-
-exports.Prisma.UserScalarFieldEnum = {
-  telegramId: 'telegramId',
-  telegramName: 'telegramName',
-  firstName: 'firstName',
-  login: 'login',
-  password: 'password',
-  email: 'email',
-  countBonuses: 'countBonuses',
-  isBan: 'isBan'
-};
-
 exports.Prisma.AccountScalarFieldEnum = {
   accountId: 'accountId',
   email: 'email',
@@ -125,9 +107,9 @@ exports.Prisma.CitySMScalarFieldEnum = {
   fullName: 'fullName'
 };
 
-exports.Prisma.UserCitySMScalarFieldEnum = {
-  cityId: 'cityId',
-  userId: 'userId'
+exports.Prisma.QueryMode = {
+  default: 'default',
+  insensitive: 'insensitive'
 };
 
 exports.Prisma.SortOrder = {
@@ -135,14 +117,27 @@ exports.Prisma.SortOrder = {
   desc: 'desc'
 };
 
-exports.Prisma.QueryMode = {
-  default: 'default',
-  insensitive: 'insensitive'
+exports.Prisma.TransactionIsolationLevel = makeStrictEnum({
+  ReadUncommitted: 'ReadUncommitted',
+  ReadCommitted: 'ReadCommitted',
+  RepeatableRead: 'RepeatableRead',
+  Serializable: 'Serializable'
+});
+
+exports.Prisma.UserCitySMScalarFieldEnum = {
+  cityId: 'cityId',
+  userId: 'userId'
 };
 
-exports.Prisma.NullsOrder = {
-  first: 'first',
-  last: 'last'
+exports.Prisma.UserScalarFieldEnum = {
+  telegramId: 'telegramId',
+  telegramName: 'telegramName',
+  firstName: 'firstName',
+  login: 'login',
+  password: 'password',
+  email: 'email',
+  countBonuses: 'countBonuses',
+  isBan: 'isBan'
 };
 
 
@@ -169,13 +164,7 @@ const config = {
     "config": {
       "engineType": "library"
     },
-    "binaryTargets": [
-      {
-        "fromEnvVar": null,
-        "value": "windows",
-        "native": true
-      }
-    ],
+    "binaryTargets": [],
     "previewFeatures": [],
     "isCustomOutput": true
   },
@@ -185,12 +174,11 @@ const config = {
   },
   "relativePath": "..",
   "clientVersion": "5.7.1",
-  "engineVersion": "ac9d7041ed77bcc8a8dbd2ab6616b39013829574",
+  "engineVersion": "1e7af066ee9cb95cf3a403c78d9aab3e6b04f37a",
   "datasourceNames": [
     "db"
   ],
   "activeProvider": "postgresql",
-  "postinstall": true,
   "inlineDatasources": {
     "db": {
       "url": {
@@ -200,8 +188,7 @@ const config = {
     }
   },
   "inlineSchema": "Z2VuZXJhdG9yIGNsaWVudCB7DQogIHByb3ZpZGVyID0gInByaXNtYS1jbGllbnQtanMiDQogIG91dHB1dCAgID0gIi4uL3ByaXNtYS9nZW5lcmF0ZSINCn0NCg0KZGF0YXNvdXJjZSBkYiB7DQogIHByb3ZpZGVyID0gInBvc3RncmVzcWwiDQogIHVybCAgICAgID0gZW52KCJEQVRBQkFTRV9VUkwiKQ0KfQ0KDQptb2RlbCBVc2VyIHsNCiAgdGVsZWdyYW1JZCAgIFN0cmluZyAgICAgICBAaWQgQHVuaXF1ZQ0KICB0ZWxlZ3JhbU5hbWUgU3RyaW5nDQogIGZpcnN0TmFtZSAgICBTdHJpbmc/DQogIGxvZ2luICAgICAgICBTdHJpbmc/DQogIHBhc3N3b3JkICAgICBTdHJpbmc/DQogIGVtYWlsICAgICAgICBTdHJpbmc/DQogIGNvdW50Qm9udXNlcyBJbnQgICAgICAgICAgQGRlZmF1bHQoMCkNCiAgaXNCYW4gICAgICAgIEJvb2xlYW4gICAgICBAZGVmYXVsdChmYWxzZSkNCiAgYWNjb3VudHMgICAgIEFjY291bnRbXQ0KICB1c2VyQ2l0aWVzICAgVXNlckNpdHlTTVtdDQp9DQoNCm1vZGVsIEFjY291bnQgew0KICBhY2NvdW50SWQgICAgICAgICBTdHJpbmcgIEBpZA0KICBlbWFpbCAgICAgICAgICAgICBTdHJpbmcNCiAgcGFzc0ltYXAgICAgICAgICAgU3RyaW5nDQogIHBhc3NFbWFpbCAgICAgICAgIFN0cmluZw0KICBjb29raWUgICAgICAgICAgICBTdHJpbmcNCiAgYWNjZXNzVG9rZW4gICAgICAgU3RyaW5nDQogIHJlZnJlc2hUb2tlbiAgICAgIFN0cmluZw0KICB4VXNlcklkICAgICAgICAgICBTdHJpbmcNCiAgZGV2aWNlSWQgICAgICAgICAgU3RyaW5nDQogIGluc3RhbGxhdGlvbklkICAgIFN0cmluZw0KICBleHBpcmVzSW4gICAgICAgICBJbnQNCiAgaXNBY2Nlc3NNcCAgICAgICAgQm9vbGVhbiBAZGVmYXVsdChmYWxzZSkNCiAgaXNBY2Nlc3NDb29raWUgICAgQm9vbGVhbiBAZGVmYXVsdChmYWxzZSkNCiAgaXNPbmx5QWNjZXNzT3JkZXIgQm9vbGVhbiBAZGVmYXVsdChmYWxzZSkNCiAgYm9udXNDb3VudCAgICAgICAgU3RyaW5nDQogIGlzVXBkYXRlQm9udXMgICAgIEJvb2xlYW4gQGRlZmF1bHQoZmFsc2UpDQogIHVzZXJPd25lcklkICAgICAgIFN0cmluZz8NCiAgdXNlck93bmVyICAgICAgICAgVXNlcj8gICBAcmVsYXRpb24oZmllbGRzOiBbdXNlck93bmVySWRdLCByZWZlcmVuY2VzOiBbdGVsZWdyYW1JZF0pDQp9DQoNCm1vZGVsIENpdHlTTSB7DQogIGNpdHlJZCAgIFN0cmluZyBAaWQNCiAgbmFtZSAgICAgU3RyaW5nDQogIGZ1bGxOYW1lIFN0cmluZw0KDQogIGNpdHlVc2VycyBVc2VyQ2l0eVNNW10NCn0NCg0KbW9kZWwgVXNlckNpdHlTTSB7DQogIGNpdHlJZCBTdHJpbmcNCiAgdXNlcklkIFN0cmluZw0KICB1c2VyICAgVXNlciAgIEByZWxhdGlvbihmaWVsZHM6IFt1c2VySWRdLCByZWZlcmVuY2VzOiBbdGVsZWdyYW1JZF0pDQogIGNpdHkgICBDaXR5U00gQHJlbGF0aW9uKGZpZWxkczogW2NpdHlJZF0sIHJlZmVyZW5jZXM6IFtjaXR5SWRdKQ0KDQogIEBAaWQoW2NpdHlJZCwgdXNlcklkXSkNCn0NCg==",
-  "inlineSchemaHash": "272489310ce3dc11bfb96bbb4bac588e0551dd625ff8af5317e3d1a1111c39e6",
-  "noEngine": false
+  "inlineSchemaHash": "272489310ce3dc11bfb96bbb4bac588e0551dd625ff8af5317e3d1a1111c39e6"
 }
 
 const fs = require('fs')

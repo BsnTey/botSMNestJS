@@ -438,7 +438,7 @@ export class ApiSM {
     }
 
     async orderHistory(): Promise<any> | null {
-        const url = `https://mp4x-api.sportmaster.ru/api/v1/orderHistory`;
+        const url = `https://mp4x-api.sportmaster.ru/api/v4/orderHistory`;
         this.setHeaders(url);
 
         try {
@@ -458,7 +458,7 @@ export class ApiSM {
         this.setHeaders(url);
 
         try {
-            const response = await axios.get(url, {
+            const response = await axios.post(url, {
                 headers: this.headers,
                 httpsAgent: this.httpsAgent,
             });

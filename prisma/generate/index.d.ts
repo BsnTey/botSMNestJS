@@ -253,7 +253,7 @@ export namespace Prisma {
 
   /**
    * Prisma Client JS version: 5.7.1
-   * Query Engine version: ac9d7041ed77bcc8a8dbd2ab6616b39013829574
+   * Query Engine version: 1e7af066ee9cb95cf3a403c78d9aab3e6b04f37a
    */
   export type PrismaVersion = {
     client: string
@@ -1107,8 +1107,8 @@ export namespace Prisma {
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    accounts?: boolean | UserCountOutputTypeCountAccountsArgs
-    userCities?: boolean | UserCountOutputTypeCountUserCitiesArgs
+    accounts?: boolean
+    userCities?: boolean
   }
 
   // Custom InputTypes
@@ -1124,22 +1124,6 @@ export namespace Prisma {
   }
 
 
-  /**
-   * UserCountOutputType without action
-   */
-  export type UserCountOutputTypeCountAccountsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: AccountWhereInput
-  }
-
-
-  /**
-   * UserCountOutputType without action
-   */
-  export type UserCountOutputTypeCountUserCitiesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: UserCitySMWhereInput
-  }
-
-
 
   /**
    * Count Type CitySMCountOutputType
@@ -1150,7 +1134,7 @@ export namespace Prisma {
   }
 
   export type CitySMCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    cityUsers?: boolean | CitySMCountOutputTypeCountCityUsersArgs
+    cityUsers?: boolean
   }
 
   // Custom InputTypes
@@ -1163,14 +1147,6 @@ export namespace Prisma {
      * Select specific fields to fetch from the CitySMCountOutputType
      */
     select?: CitySMCountOutputTypeSelect<ExtArgs> | null
-  }
-
-
-  /**
-   * CitySMCountOutputType without action
-   */
-  export type CitySMCountOutputTypeCountCityUsersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: UserCitySMWhereInput
   }
 
 
@@ -1932,7 +1908,7 @@ export namespace Prisma {
      * 
      * Filter by unique combinations of Users.
      */
-    distinct?: UserScalarFieldEnum | UserScalarFieldEnum[]
+    distinct?: UserScalarFieldEnum[]
   }
 
 
@@ -1981,7 +1957,7 @@ export namespace Prisma {
      * 
      * Filter by unique combinations of Users.
      */
-    distinct?: UserScalarFieldEnum | UserScalarFieldEnum[]
+    distinct?: UserScalarFieldEnum[]
   }
 
 
@@ -2025,7 +2001,7 @@ export namespace Prisma {
      * Skip the first `n` Users.
      */
     skip?: number
-    distinct?: UserScalarFieldEnum | UserScalarFieldEnum[]
+    distinct?: UserScalarFieldEnum[]
   }
 
 
@@ -2172,7 +2148,7 @@ export namespace Prisma {
     cursor?: AccountWhereUniqueInput
     take?: number
     skip?: number
-    distinct?: AccountScalarFieldEnum | AccountScalarFieldEnum[]
+    distinct?: AccountScalarFieldEnum[]
   }
 
 
@@ -2193,7 +2169,7 @@ export namespace Prisma {
     cursor?: UserCitySMWhereUniqueInput
     take?: number
     skip?: number
-    distinct?: UserCitySMScalarFieldEnum | UserCitySMScalarFieldEnum[]
+    distinct?: UserCitySMScalarFieldEnum[]
   }
 
 
@@ -2507,7 +2483,7 @@ export namespace Prisma {
     bonusCount?: boolean
     isUpdateBonus?: boolean
     userOwnerId?: boolean
-    userOwner?: boolean | Account$userOwnerArgs<ExtArgs>
+    userOwner?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["account"]>
 
   export type AccountSelectScalar = {
@@ -2531,7 +2507,7 @@ export namespace Prisma {
   }
 
   export type AccountInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    userOwner?: boolean | Account$userOwnerArgs<ExtArgs>
+    userOwner?: boolean | UserDefaultArgs<ExtArgs>
   }
 
 
@@ -2923,7 +2899,7 @@ export namespace Prisma {
   export interface Prisma__AccountClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: 'PrismaPromise';
 
-    userOwner<T extends Account$userOwnerArgs<ExtArgs> = {}>(args?: Subset<T, Account$userOwnerArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, 'findUniqueOrThrow'> | null, null, ExtArgs>;
+    userOwner<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, 'findUniqueOrThrow'> | null, null, ExtArgs>;
 
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -3058,7 +3034,7 @@ export namespace Prisma {
      * 
      * Filter by unique combinations of Accounts.
      */
-    distinct?: AccountScalarFieldEnum | AccountScalarFieldEnum[]
+    distinct?: AccountScalarFieldEnum[]
   }
 
 
@@ -3107,7 +3083,7 @@ export namespace Prisma {
      * 
      * Filter by unique combinations of Accounts.
      */
-    distinct?: AccountScalarFieldEnum | AccountScalarFieldEnum[]
+    distinct?: AccountScalarFieldEnum[]
   }
 
 
@@ -3151,7 +3127,7 @@ export namespace Prisma {
      * Skip the first `n` Accounts.
      */
     skip?: number
-    distinct?: AccountScalarFieldEnum | AccountScalarFieldEnum[]
+    distinct?: AccountScalarFieldEnum[]
   }
 
 
@@ -3278,22 +3254,6 @@ export namespace Prisma {
      * Filter which Accounts to delete
      */
     where?: AccountWhereInput
-  }
-
-
-  /**
-   * Account.userOwner
-   */
-  export type Account$userOwnerArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the User
-     */
-    select?: UserSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well.
-     */
-    include?: UserInclude<ExtArgs> | null
-    where?: UserWhereInput
   }
 
 
@@ -3972,7 +3932,7 @@ export namespace Prisma {
      * 
      * Filter by unique combinations of CitySMS.
      */
-    distinct?: CitySMScalarFieldEnum | CitySMScalarFieldEnum[]
+    distinct?: CitySMScalarFieldEnum[]
   }
 
 
@@ -4021,7 +3981,7 @@ export namespace Prisma {
      * 
      * Filter by unique combinations of CitySMS.
      */
-    distinct?: CitySMScalarFieldEnum | CitySMScalarFieldEnum[]
+    distinct?: CitySMScalarFieldEnum[]
   }
 
 
@@ -4065,7 +4025,7 @@ export namespace Prisma {
      * Skip the first `n` CitySMS.
      */
     skip?: number
-    distinct?: CitySMScalarFieldEnum | CitySMScalarFieldEnum[]
+    distinct?: CitySMScalarFieldEnum[]
   }
 
 
@@ -4212,7 +4172,7 @@ export namespace Prisma {
     cursor?: UserCitySMWhereUniqueInput
     take?: number
     skip?: number
-    distinct?: UserCitySMScalarFieldEnum | UserCitySMScalarFieldEnum[]
+    distinct?: UserCitySMScalarFieldEnum[]
   }
 
 
@@ -4883,7 +4843,7 @@ export namespace Prisma {
      * 
      * Filter by unique combinations of UserCitySMS.
      */
-    distinct?: UserCitySMScalarFieldEnum | UserCitySMScalarFieldEnum[]
+    distinct?: UserCitySMScalarFieldEnum[]
   }
 
 
@@ -4932,7 +4892,7 @@ export namespace Prisma {
      * 
      * Filter by unique combinations of UserCitySMS.
      */
-    distinct?: UserCitySMScalarFieldEnum | UserCitySMScalarFieldEnum[]
+    distinct?: UserCitySMScalarFieldEnum[]
   }
 
 
@@ -4976,7 +4936,7 @@ export namespace Prisma {
      * Skip the first `n` UserCitySMS.
      */
     skip?: number
-    distinct?: UserCitySMScalarFieldEnum | UserCitySMScalarFieldEnum[]
+    distinct?: UserCitySMScalarFieldEnum[]
   }
 
 
@@ -5126,30 +5086,6 @@ export namespace Prisma {
    * Enums
    */
 
-  export const TransactionIsolationLevel: {
-    ReadUncommitted: 'ReadUncommitted',
-    ReadCommitted: 'ReadCommitted',
-    RepeatableRead: 'RepeatableRead',
-    Serializable: 'Serializable'
-  };
-
-  export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
-
-
-  export const UserScalarFieldEnum: {
-    telegramId: 'telegramId',
-    telegramName: 'telegramName',
-    firstName: 'firstName',
-    login: 'login',
-    password: 'password',
-    email: 'email',
-    countBonuses: 'countBonuses',
-    isBan: 'isBan'
-  };
-
-  export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
-
-
   export const AccountScalarFieldEnum: {
     accountId: 'accountId',
     email: 'email',
@@ -5182,12 +5118,12 @@ export namespace Prisma {
   export type CitySMScalarFieldEnum = (typeof CitySMScalarFieldEnum)[keyof typeof CitySMScalarFieldEnum]
 
 
-  export const UserCitySMScalarFieldEnum: {
-    cityId: 'cityId',
-    userId: 'userId'
+  export const QueryMode: {
+    default: 'default',
+    insensitive: 'insensitive'
   };
 
-  export type UserCitySMScalarFieldEnum = (typeof UserCitySMScalarFieldEnum)[keyof typeof UserCitySMScalarFieldEnum]
+  export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode]
 
 
   export const SortOrder: {
@@ -5198,74 +5134,38 @@ export namespace Prisma {
   export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
 
 
-  export const QueryMode: {
-    default: 'default',
-    insensitive: 'insensitive'
+  export const TransactionIsolationLevel: {
+    ReadUncommitted: 'ReadUncommitted',
+    ReadCommitted: 'ReadCommitted',
+    RepeatableRead: 'RepeatableRead',
+    Serializable: 'Serializable'
   };
 
-  export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode]
+  export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
 
 
-  export const NullsOrder: {
-    first: 'first',
-    last: 'last'
+  export const UserCitySMScalarFieldEnum: {
+    cityId: 'cityId',
+    userId: 'userId'
   };
 
-  export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
+  export type UserCitySMScalarFieldEnum = (typeof UserCitySMScalarFieldEnum)[keyof typeof UserCitySMScalarFieldEnum]
 
 
-  /**
-   * Field references 
-   */
+  export const UserScalarFieldEnum: {
+    telegramId: 'telegramId',
+    telegramName: 'telegramName',
+    firstName: 'firstName',
+    login: 'login',
+    password: 'password',
+    email: 'email',
+    countBonuses: 'countBonuses',
+    isBan: 'isBan'
+  };
+
+  export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
 
 
-  /**
-   * Reference to a field of type 'String'
-   */
-  export type StringFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'String'>
-    
-
-
-  /**
-   * Reference to a field of type 'String[]'
-   */
-  export type ListStringFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'String[]'>
-    
-
-
-  /**
-   * Reference to a field of type 'Int'
-   */
-  export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
-    
-
-
-  /**
-   * Reference to a field of type 'Int[]'
-   */
-  export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
-    
-
-
-  /**
-   * Reference to a field of type 'Boolean'
-   */
-  export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
-    
-
-
-  /**
-   * Reference to a field of type 'Float'
-   */
-  export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
-    
-
-
-  /**
-   * Reference to a field of type 'Float[]'
-   */
-  export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
-    
   /**
    * Deep Input Types
    */
@@ -5275,14 +5175,14 @@ export namespace Prisma {
     AND?: UserWhereInput | UserWhereInput[]
     OR?: UserWhereInput[]
     NOT?: UserWhereInput | UserWhereInput[]
-    telegramId?: StringFilter<"User"> | string
-    telegramName?: StringFilter<"User"> | string
-    firstName?: StringNullableFilter<"User"> | string | null
-    login?: StringNullableFilter<"User"> | string | null
-    password?: StringNullableFilter<"User"> | string | null
-    email?: StringNullableFilter<"User"> | string | null
-    countBonuses?: IntFilter<"User"> | number
-    isBan?: BoolFilter<"User"> | boolean
+    telegramId?: StringFilter | string
+    telegramName?: StringFilter | string
+    firstName?: StringNullableFilter | string | null
+    login?: StringNullableFilter | string | null
+    password?: StringNullableFilter | string | null
+    email?: StringNullableFilter | string | null
+    countBonuses?: IntFilter | number
+    isBan?: BoolFilter | boolean
     accounts?: AccountListRelationFilter
     userCities?: UserCitySMListRelationFilter
   }
@@ -5290,39 +5190,27 @@ export namespace Prisma {
   export type UserOrderByWithRelationInput = {
     telegramId?: SortOrder
     telegramName?: SortOrder
-    firstName?: SortOrderInput | SortOrder
-    login?: SortOrderInput | SortOrder
-    password?: SortOrderInput | SortOrder
-    email?: SortOrderInput | SortOrder
+    firstName?: SortOrder
+    login?: SortOrder
+    password?: SortOrder
+    email?: SortOrder
     countBonuses?: SortOrder
     isBan?: SortOrder
     accounts?: AccountOrderByRelationAggregateInput
     userCities?: UserCitySMOrderByRelationAggregateInput
   }
 
-  export type UserWhereUniqueInput = Prisma.AtLeast<{
+  export type UserWhereUniqueInput = {
     telegramId?: string
-    AND?: UserWhereInput | UserWhereInput[]
-    OR?: UserWhereInput[]
-    NOT?: UserWhereInput | UserWhereInput[]
-    telegramName?: StringFilter<"User"> | string
-    firstName?: StringNullableFilter<"User"> | string | null
-    login?: StringNullableFilter<"User"> | string | null
-    password?: StringNullableFilter<"User"> | string | null
-    email?: StringNullableFilter<"User"> | string | null
-    countBonuses?: IntFilter<"User"> | number
-    isBan?: BoolFilter<"User"> | boolean
-    accounts?: AccountListRelationFilter
-    userCities?: UserCitySMListRelationFilter
-  }, "telegramId" | "telegramId">
+  }
 
   export type UserOrderByWithAggregationInput = {
     telegramId?: SortOrder
     telegramName?: SortOrder
-    firstName?: SortOrderInput | SortOrder
-    login?: SortOrderInput | SortOrder
-    password?: SortOrderInput | SortOrder
-    email?: SortOrderInput | SortOrder
+    firstName?: SortOrder
+    login?: SortOrder
+    password?: SortOrder
+    email?: SortOrder
     countBonuses?: SortOrder
     isBan?: SortOrder
     _count?: UserCountOrderByAggregateInput
@@ -5336,38 +5224,38 @@ export namespace Prisma {
     AND?: UserScalarWhereWithAggregatesInput | UserScalarWhereWithAggregatesInput[]
     OR?: UserScalarWhereWithAggregatesInput[]
     NOT?: UserScalarWhereWithAggregatesInput | UserScalarWhereWithAggregatesInput[]
-    telegramId?: StringWithAggregatesFilter<"User"> | string
-    telegramName?: StringWithAggregatesFilter<"User"> | string
-    firstName?: StringNullableWithAggregatesFilter<"User"> | string | null
-    login?: StringNullableWithAggregatesFilter<"User"> | string | null
-    password?: StringNullableWithAggregatesFilter<"User"> | string | null
-    email?: StringNullableWithAggregatesFilter<"User"> | string | null
-    countBonuses?: IntWithAggregatesFilter<"User"> | number
-    isBan?: BoolWithAggregatesFilter<"User"> | boolean
+    telegramId?: StringWithAggregatesFilter | string
+    telegramName?: StringWithAggregatesFilter | string
+    firstName?: StringNullableWithAggregatesFilter | string | null
+    login?: StringNullableWithAggregatesFilter | string | null
+    password?: StringNullableWithAggregatesFilter | string | null
+    email?: StringNullableWithAggregatesFilter | string | null
+    countBonuses?: IntWithAggregatesFilter | number
+    isBan?: BoolWithAggregatesFilter | boolean
   }
 
   export type AccountWhereInput = {
     AND?: AccountWhereInput | AccountWhereInput[]
     OR?: AccountWhereInput[]
     NOT?: AccountWhereInput | AccountWhereInput[]
-    accountId?: StringFilter<"Account"> | string
-    email?: StringFilter<"Account"> | string
-    passImap?: StringFilter<"Account"> | string
-    passEmail?: StringFilter<"Account"> | string
-    cookie?: StringFilter<"Account"> | string
-    accessToken?: StringFilter<"Account"> | string
-    refreshToken?: StringFilter<"Account"> | string
-    xUserId?: StringFilter<"Account"> | string
-    deviceId?: StringFilter<"Account"> | string
-    installationId?: StringFilter<"Account"> | string
-    expiresIn?: IntFilter<"Account"> | number
-    isAccessMp?: BoolFilter<"Account"> | boolean
-    isAccessCookie?: BoolFilter<"Account"> | boolean
-    isOnlyAccessOrder?: BoolFilter<"Account"> | boolean
-    bonusCount?: StringFilter<"Account"> | string
-    isUpdateBonus?: BoolFilter<"Account"> | boolean
-    userOwnerId?: StringNullableFilter<"Account"> | string | null
-    userOwner?: XOR<UserNullableRelationFilter, UserWhereInput> | null
+    accountId?: StringFilter | string
+    email?: StringFilter | string
+    passImap?: StringFilter | string
+    passEmail?: StringFilter | string
+    cookie?: StringFilter | string
+    accessToken?: StringFilter | string
+    refreshToken?: StringFilter | string
+    xUserId?: StringFilter | string
+    deviceId?: StringFilter | string
+    installationId?: StringFilter | string
+    expiresIn?: IntFilter | number
+    isAccessMp?: BoolFilter | boolean
+    isAccessCookie?: BoolFilter | boolean
+    isOnlyAccessOrder?: BoolFilter | boolean
+    bonusCount?: StringFilter | string
+    isUpdateBonus?: BoolFilter | boolean
+    userOwnerId?: StringNullableFilter | string | null
+    userOwner?: XOR<UserRelationFilter, UserWhereInput> | null
   }
 
   export type AccountOrderByWithRelationInput = {
@@ -5387,33 +5275,13 @@ export namespace Prisma {
     isOnlyAccessOrder?: SortOrder
     bonusCount?: SortOrder
     isUpdateBonus?: SortOrder
-    userOwnerId?: SortOrderInput | SortOrder
+    userOwnerId?: SortOrder
     userOwner?: UserOrderByWithRelationInput
   }
 
-  export type AccountWhereUniqueInput = Prisma.AtLeast<{
+  export type AccountWhereUniqueInput = {
     accountId?: string
-    AND?: AccountWhereInput | AccountWhereInput[]
-    OR?: AccountWhereInput[]
-    NOT?: AccountWhereInput | AccountWhereInput[]
-    email?: StringFilter<"Account"> | string
-    passImap?: StringFilter<"Account"> | string
-    passEmail?: StringFilter<"Account"> | string
-    cookie?: StringFilter<"Account"> | string
-    accessToken?: StringFilter<"Account"> | string
-    refreshToken?: StringFilter<"Account"> | string
-    xUserId?: StringFilter<"Account"> | string
-    deviceId?: StringFilter<"Account"> | string
-    installationId?: StringFilter<"Account"> | string
-    expiresIn?: IntFilter<"Account"> | number
-    isAccessMp?: BoolFilter<"Account"> | boolean
-    isAccessCookie?: BoolFilter<"Account"> | boolean
-    isOnlyAccessOrder?: BoolFilter<"Account"> | boolean
-    bonusCount?: StringFilter<"Account"> | string
-    isUpdateBonus?: BoolFilter<"Account"> | boolean
-    userOwnerId?: StringNullableFilter<"Account"> | string | null
-    userOwner?: XOR<UserNullableRelationFilter, UserWhereInput> | null
-  }, "accountId">
+  }
 
   export type AccountOrderByWithAggregationInput = {
     accountId?: SortOrder
@@ -5432,7 +5300,7 @@ export namespace Prisma {
     isOnlyAccessOrder?: SortOrder
     bonusCount?: SortOrder
     isUpdateBonus?: SortOrder
-    userOwnerId?: SortOrderInput | SortOrder
+    userOwnerId?: SortOrder
     _count?: AccountCountOrderByAggregateInput
     _avg?: AccountAvgOrderByAggregateInput
     _max?: AccountMaxOrderByAggregateInput
@@ -5444,32 +5312,32 @@ export namespace Prisma {
     AND?: AccountScalarWhereWithAggregatesInput | AccountScalarWhereWithAggregatesInput[]
     OR?: AccountScalarWhereWithAggregatesInput[]
     NOT?: AccountScalarWhereWithAggregatesInput | AccountScalarWhereWithAggregatesInput[]
-    accountId?: StringWithAggregatesFilter<"Account"> | string
-    email?: StringWithAggregatesFilter<"Account"> | string
-    passImap?: StringWithAggregatesFilter<"Account"> | string
-    passEmail?: StringWithAggregatesFilter<"Account"> | string
-    cookie?: StringWithAggregatesFilter<"Account"> | string
-    accessToken?: StringWithAggregatesFilter<"Account"> | string
-    refreshToken?: StringWithAggregatesFilter<"Account"> | string
-    xUserId?: StringWithAggregatesFilter<"Account"> | string
-    deviceId?: StringWithAggregatesFilter<"Account"> | string
-    installationId?: StringWithAggregatesFilter<"Account"> | string
-    expiresIn?: IntWithAggregatesFilter<"Account"> | number
-    isAccessMp?: BoolWithAggregatesFilter<"Account"> | boolean
-    isAccessCookie?: BoolWithAggregatesFilter<"Account"> | boolean
-    isOnlyAccessOrder?: BoolWithAggregatesFilter<"Account"> | boolean
-    bonusCount?: StringWithAggregatesFilter<"Account"> | string
-    isUpdateBonus?: BoolWithAggregatesFilter<"Account"> | boolean
-    userOwnerId?: StringNullableWithAggregatesFilter<"Account"> | string | null
+    accountId?: StringWithAggregatesFilter | string
+    email?: StringWithAggregatesFilter | string
+    passImap?: StringWithAggregatesFilter | string
+    passEmail?: StringWithAggregatesFilter | string
+    cookie?: StringWithAggregatesFilter | string
+    accessToken?: StringWithAggregatesFilter | string
+    refreshToken?: StringWithAggregatesFilter | string
+    xUserId?: StringWithAggregatesFilter | string
+    deviceId?: StringWithAggregatesFilter | string
+    installationId?: StringWithAggregatesFilter | string
+    expiresIn?: IntWithAggregatesFilter | number
+    isAccessMp?: BoolWithAggregatesFilter | boolean
+    isAccessCookie?: BoolWithAggregatesFilter | boolean
+    isOnlyAccessOrder?: BoolWithAggregatesFilter | boolean
+    bonusCount?: StringWithAggregatesFilter | string
+    isUpdateBonus?: BoolWithAggregatesFilter | boolean
+    userOwnerId?: StringNullableWithAggregatesFilter | string | null
   }
 
   export type CitySMWhereInput = {
     AND?: CitySMWhereInput | CitySMWhereInput[]
     OR?: CitySMWhereInput[]
     NOT?: CitySMWhereInput | CitySMWhereInput[]
-    cityId?: StringFilter<"CitySM"> | string
-    name?: StringFilter<"CitySM"> | string
-    fullName?: StringFilter<"CitySM"> | string
+    cityId?: StringFilter | string
+    name?: StringFilter | string
+    fullName?: StringFilter | string
     cityUsers?: UserCitySMListRelationFilter
   }
 
@@ -5480,15 +5348,9 @@ export namespace Prisma {
     cityUsers?: UserCitySMOrderByRelationAggregateInput
   }
 
-  export type CitySMWhereUniqueInput = Prisma.AtLeast<{
+  export type CitySMWhereUniqueInput = {
     cityId?: string
-    AND?: CitySMWhereInput | CitySMWhereInput[]
-    OR?: CitySMWhereInput[]
-    NOT?: CitySMWhereInput | CitySMWhereInput[]
-    name?: StringFilter<"CitySM"> | string
-    fullName?: StringFilter<"CitySM"> | string
-    cityUsers?: UserCitySMListRelationFilter
-  }, "cityId">
+  }
 
   export type CitySMOrderByWithAggregationInput = {
     cityId?: SortOrder
@@ -5503,17 +5365,17 @@ export namespace Prisma {
     AND?: CitySMScalarWhereWithAggregatesInput | CitySMScalarWhereWithAggregatesInput[]
     OR?: CitySMScalarWhereWithAggregatesInput[]
     NOT?: CitySMScalarWhereWithAggregatesInput | CitySMScalarWhereWithAggregatesInput[]
-    cityId?: StringWithAggregatesFilter<"CitySM"> | string
-    name?: StringWithAggregatesFilter<"CitySM"> | string
-    fullName?: StringWithAggregatesFilter<"CitySM"> | string
+    cityId?: StringWithAggregatesFilter | string
+    name?: StringWithAggregatesFilter | string
+    fullName?: StringWithAggregatesFilter | string
   }
 
   export type UserCitySMWhereInput = {
     AND?: UserCitySMWhereInput | UserCitySMWhereInput[]
     OR?: UserCitySMWhereInput[]
     NOT?: UserCitySMWhereInput | UserCitySMWhereInput[]
-    cityId?: StringFilter<"UserCitySM"> | string
-    userId?: StringFilter<"UserCitySM"> | string
+    cityId?: StringFilter | string
+    userId?: StringFilter | string
     user?: XOR<UserRelationFilter, UserWhereInput>
     city?: XOR<CitySMRelationFilter, CitySMWhereInput>
   }
@@ -5525,16 +5387,9 @@ export namespace Prisma {
     city?: CitySMOrderByWithRelationInput
   }
 
-  export type UserCitySMWhereUniqueInput = Prisma.AtLeast<{
+  export type UserCitySMWhereUniqueInput = {
     cityId_userId?: UserCitySMCityIdUserIdCompoundUniqueInput
-    AND?: UserCitySMWhereInput | UserCitySMWhereInput[]
-    OR?: UserCitySMWhereInput[]
-    NOT?: UserCitySMWhereInput | UserCitySMWhereInput[]
-    cityId?: StringFilter<"UserCitySM"> | string
-    userId?: StringFilter<"UserCitySM"> | string
-    user?: XOR<UserRelationFilter, UserWhereInput>
-    city?: XOR<CitySMRelationFilter, CitySMWhereInput>
-  }, "cityId_userId">
+  }
 
   export type UserCitySMOrderByWithAggregationInput = {
     cityId?: SortOrder
@@ -5548,8 +5403,8 @@ export namespace Prisma {
     AND?: UserCitySMScalarWhereWithAggregatesInput | UserCitySMScalarWhereWithAggregatesInput[]
     OR?: UserCitySMScalarWhereWithAggregatesInput[]
     NOT?: UserCitySMScalarWhereWithAggregatesInput | UserCitySMScalarWhereWithAggregatesInput[]
-    cityId?: StringWithAggregatesFilter<"UserCitySM"> | string
-    userId?: StringWithAggregatesFilter<"UserCitySM"> | string
+    cityId?: StringWithAggregatesFilter | string
+    userId?: StringWithAggregatesFilter | string
   }
 
   export type UserCreateInput = {
@@ -5856,50 +5711,50 @@ export namespace Prisma {
     userId?: StringFieldUpdateOperationsInput | string
   }
 
-  export type StringFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel>
-    in?: string[] | ListStringFieldRefInput<$PrismaModel>
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel>
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
+  export type StringFilter = {
+    equals?: string
+    in?: string[]
+    notIn?: string[]
+    lt?: string
+    lte?: string
+    gt?: string
+    gte?: string
+    contains?: string
+    startsWith?: string
+    endsWith?: string
     mode?: QueryMode
-    not?: NestedStringFilter<$PrismaModel> | string
+    not?: NestedStringFilter | string
   }
 
-  export type StringNullableFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
+  export type StringNullableFilter = {
+    equals?: string | null
+    in?: string[] | null
+    notIn?: string[] | null
+    lt?: string
+    lte?: string
+    gt?: string
+    gte?: string
+    contains?: string
+    startsWith?: string
+    endsWith?: string
     mode?: QueryMode
-    not?: NestedStringNullableFilter<$PrismaModel> | string | null
+    not?: NestedStringNullableFilter | string | null
   }
 
-  export type IntFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[] | ListIntFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntFilter<$PrismaModel> | number
+  export type IntFilter = {
+    equals?: number
+    in?: number[]
+    notIn?: number[]
+    lt?: number
+    lte?: number
+    gt?: number
+    gte?: number
+    not?: NestedIntFilter | number
   }
 
-  export type BoolFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolFilter<$PrismaModel> | boolean
+  export type BoolFilter = {
+    equals?: boolean
+    not?: NestedBoolFilter | boolean
   }
 
   export type AccountListRelationFilter = {
@@ -5912,11 +5767,6 @@ export namespace Prisma {
     every?: UserCitySMWhereInput
     some?: UserCitySMWhereInput
     none?: UserCitySMWhereInput
-  }
-
-  export type SortOrderInput = {
-    sort: SortOrder
-    nulls?: NullsOrder
   }
 
   export type AccountOrderByRelationAggregateInput = {
@@ -5968,69 +5818,69 @@ export namespace Prisma {
     countBonuses?: SortOrder
   }
 
-  export type StringWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel>
-    in?: string[] | ListStringFieldRefInput<$PrismaModel>
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel>
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
+  export type StringWithAggregatesFilter = {
+    equals?: string
+    in?: string[]
+    notIn?: string[]
+    lt?: string
+    lte?: string
+    gt?: string
+    gte?: string
+    contains?: string
+    startsWith?: string
+    endsWith?: string
     mode?: QueryMode
-    not?: NestedStringWithAggregatesFilter<$PrismaModel> | string
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedStringFilter<$PrismaModel>
-    _max?: NestedStringFilter<$PrismaModel>
+    not?: NestedStringWithAggregatesFilter | string
+    _count?: NestedIntFilter
+    _min?: NestedStringFilter
+    _max?: NestedStringFilter
   }
 
-  export type StringNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
+  export type StringNullableWithAggregatesFilter = {
+    equals?: string | null
+    in?: string[] | null
+    notIn?: string[] | null
+    lt?: string
+    lte?: string
+    gt?: string
+    gte?: string
+    contains?: string
+    startsWith?: string
+    endsWith?: string
     mode?: QueryMode
-    not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedStringNullableFilter<$PrismaModel>
-    _max?: NestedStringNullableFilter<$PrismaModel>
+    not?: NestedStringNullableWithAggregatesFilter | string | null
+    _count?: NestedIntNullableFilter
+    _min?: NestedStringNullableFilter
+    _max?: NestedStringNullableFilter
   }
 
-  export type IntWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[] | ListIntFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
-    _count?: NestedIntFilter<$PrismaModel>
-    _avg?: NestedFloatFilter<$PrismaModel>
-    _sum?: NestedIntFilter<$PrismaModel>
-    _min?: NestedIntFilter<$PrismaModel>
-    _max?: NestedIntFilter<$PrismaModel>
+  export type IntWithAggregatesFilter = {
+    equals?: number
+    in?: number[]
+    notIn?: number[]
+    lt?: number
+    lte?: number
+    gt?: number
+    gte?: number
+    not?: NestedIntWithAggregatesFilter | number
+    _count?: NestedIntFilter
+    _avg?: NestedFloatFilter
+    _sum?: NestedIntFilter
+    _min?: NestedIntFilter
+    _max?: NestedIntFilter
   }
 
-  export type BoolWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedBoolFilter<$PrismaModel>
-    _max?: NestedBoolFilter<$PrismaModel>
+  export type BoolWithAggregatesFilter = {
+    equals?: boolean
+    not?: NestedBoolWithAggregatesFilter | boolean
+    _count?: NestedIntFilter
+    _min?: NestedBoolFilter
+    _max?: NestedBoolFilter
   }
 
-  export type UserNullableRelationFilter = {
-    is?: UserWhereInput | null
-    isNot?: UserWhereInput | null
+  export type UserRelationFilter = {
+    is?: UserWhereInput
+    isNot?: UserWhereInput
   }
 
   export type AccountCountOrderByAggregateInput = {
@@ -6117,11 +5967,6 @@ export namespace Prisma {
     cityId?: SortOrder
     name?: SortOrder
     fullName?: SortOrder
-  }
-
-  export type UserRelationFilter = {
-    is?: UserWhereInput
-    isNot?: UserWhereInput
   }
 
   export type CitySMRelationFilter = {
@@ -6263,10 +6108,10 @@ export namespace Prisma {
     create?: XOR<UserCreateWithoutAccountsInput, UserUncheckedCreateWithoutAccountsInput>
     connectOrCreate?: UserCreateOrConnectWithoutAccountsInput
     upsert?: UserUpsertWithoutAccountsInput
-    disconnect?: UserWhereInput | boolean
-    delete?: UserWhereInput | boolean
+    disconnect?: boolean
+    delete?: boolean
     connect?: UserWhereUniqueInput
-    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutAccountsInput, UserUpdateWithoutAccountsInput>, UserUncheckedUpdateWithoutAccountsInput>
+    update?: XOR<UserUpdateWithoutAccountsInput, UserUncheckedUpdateWithoutAccountsInput>
   }
 
   export type UserCitySMCreateNestedManyWithoutCityInput = {
@@ -6328,7 +6173,7 @@ export namespace Prisma {
     connectOrCreate?: UserCreateOrConnectWithoutUserCitiesInput
     upsert?: UserUpsertWithoutUserCitiesInput
     connect?: UserWhereUniqueInput
-    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutUserCitiesInput, UserUpdateWithoutUserCitiesInput>, UserUncheckedUpdateWithoutUserCitiesInput>
+    update?: XOR<UserUpdateWithoutUserCitiesInput, UserUncheckedUpdateWithoutUserCitiesInput>
   }
 
   export type CitySMUpdateOneRequiredWithoutCityUsersNestedInput = {
@@ -6336,131 +6181,131 @@ export namespace Prisma {
     connectOrCreate?: CitySMCreateOrConnectWithoutCityUsersInput
     upsert?: CitySMUpsertWithoutCityUsersInput
     connect?: CitySMWhereUniqueInput
-    update?: XOR<XOR<CitySMUpdateToOneWithWhereWithoutCityUsersInput, CitySMUpdateWithoutCityUsersInput>, CitySMUncheckedUpdateWithoutCityUsersInput>
+    update?: XOR<CitySMUpdateWithoutCityUsersInput, CitySMUncheckedUpdateWithoutCityUsersInput>
   }
 
-  export type NestedStringFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel>
-    in?: string[] | ListStringFieldRefInput<$PrismaModel>
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel>
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
-    not?: NestedStringFilter<$PrismaModel> | string
+  export type NestedStringFilter = {
+    equals?: string
+    in?: string[]
+    notIn?: string[]
+    lt?: string
+    lte?: string
+    gt?: string
+    gte?: string
+    contains?: string
+    startsWith?: string
+    endsWith?: string
+    not?: NestedStringFilter | string
   }
 
-  export type NestedStringNullableFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
-    not?: NestedStringNullableFilter<$PrismaModel> | string | null
+  export type NestedStringNullableFilter = {
+    equals?: string | null
+    in?: string[] | null
+    notIn?: string[] | null
+    lt?: string
+    lte?: string
+    gt?: string
+    gte?: string
+    contains?: string
+    startsWith?: string
+    endsWith?: string
+    not?: NestedStringNullableFilter | string | null
   }
 
-  export type NestedIntFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[] | ListIntFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntFilter<$PrismaModel> | number
+  export type NestedIntFilter = {
+    equals?: number
+    in?: number[]
+    notIn?: number[]
+    lt?: number
+    lte?: number
+    gt?: number
+    gte?: number
+    not?: NestedIntFilter | number
   }
 
-  export type NestedBoolFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolFilter<$PrismaModel> | boolean
+  export type NestedBoolFilter = {
+    equals?: boolean
+    not?: NestedBoolFilter | boolean
   }
 
-  export type NestedStringWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel>
-    in?: string[] | ListStringFieldRefInput<$PrismaModel>
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel>
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
-    not?: NestedStringWithAggregatesFilter<$PrismaModel> | string
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedStringFilter<$PrismaModel>
-    _max?: NestedStringFilter<$PrismaModel>
+  export type NestedStringWithAggregatesFilter = {
+    equals?: string
+    in?: string[]
+    notIn?: string[]
+    lt?: string
+    lte?: string
+    gt?: string
+    gte?: string
+    contains?: string
+    startsWith?: string
+    endsWith?: string
+    not?: NestedStringWithAggregatesFilter | string
+    _count?: NestedIntFilter
+    _min?: NestedStringFilter
+    _max?: NestedStringFilter
   }
 
-  export type NestedStringNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
-    not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedStringNullableFilter<$PrismaModel>
-    _max?: NestedStringNullableFilter<$PrismaModel>
+  export type NestedStringNullableWithAggregatesFilter = {
+    equals?: string | null
+    in?: string[] | null
+    notIn?: string[] | null
+    lt?: string
+    lte?: string
+    gt?: string
+    gte?: string
+    contains?: string
+    startsWith?: string
+    endsWith?: string
+    not?: NestedStringNullableWithAggregatesFilter | string | null
+    _count?: NestedIntNullableFilter
+    _min?: NestedStringNullableFilter
+    _max?: NestedStringNullableFilter
   }
 
-  export type NestedIntNullableFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntNullableFilter<$PrismaModel> | number | null
+  export type NestedIntNullableFilter = {
+    equals?: number | null
+    in?: number[] | null
+    notIn?: number[] | null
+    lt?: number
+    lte?: number
+    gt?: number
+    gte?: number
+    not?: NestedIntNullableFilter | number | null
   }
 
-  export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[] | ListIntFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
-    _count?: NestedIntFilter<$PrismaModel>
-    _avg?: NestedFloatFilter<$PrismaModel>
-    _sum?: NestedIntFilter<$PrismaModel>
-    _min?: NestedIntFilter<$PrismaModel>
-    _max?: NestedIntFilter<$PrismaModel>
+  export type NestedIntWithAggregatesFilter = {
+    equals?: number
+    in?: number[]
+    notIn?: number[]
+    lt?: number
+    lte?: number
+    gt?: number
+    gte?: number
+    not?: NestedIntWithAggregatesFilter | number
+    _count?: NestedIntFilter
+    _avg?: NestedFloatFilter
+    _sum?: NestedIntFilter
+    _min?: NestedIntFilter
+    _max?: NestedIntFilter
   }
 
-  export type NestedFloatFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel>
-    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatFilter<$PrismaModel> | number
+  export type NestedFloatFilter = {
+    equals?: number
+    in?: number[]
+    notIn?: number[]
+    lt?: number
+    lte?: number
+    gt?: number
+    gte?: number
+    not?: NestedFloatFilter | number
   }
 
-  export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedBoolFilter<$PrismaModel>
-    _max?: NestedBoolFilter<$PrismaModel>
+  export type NestedBoolWithAggregatesFilter = {
+    equals?: boolean
+    not?: NestedBoolWithAggregatesFilter | boolean
+    _count?: NestedIntFilter
+    _min?: NestedBoolFilter
+    _max?: NestedBoolFilter
   }
 
   export type AccountCreateWithoutUserOwnerInput = {
@@ -6542,30 +6387,30 @@ export namespace Prisma {
 
   export type AccountUpdateManyWithWhereWithoutUserOwnerInput = {
     where: AccountScalarWhereInput
-    data: XOR<AccountUpdateManyMutationInput, AccountUncheckedUpdateManyWithoutUserOwnerInput>
+    data: XOR<AccountUpdateManyMutationInput, AccountUncheckedUpdateManyWithoutAccountsInput>
   }
 
   export type AccountScalarWhereInput = {
     AND?: AccountScalarWhereInput | AccountScalarWhereInput[]
     OR?: AccountScalarWhereInput[]
     NOT?: AccountScalarWhereInput | AccountScalarWhereInput[]
-    accountId?: StringFilter<"Account"> | string
-    email?: StringFilter<"Account"> | string
-    passImap?: StringFilter<"Account"> | string
-    passEmail?: StringFilter<"Account"> | string
-    cookie?: StringFilter<"Account"> | string
-    accessToken?: StringFilter<"Account"> | string
-    refreshToken?: StringFilter<"Account"> | string
-    xUserId?: StringFilter<"Account"> | string
-    deviceId?: StringFilter<"Account"> | string
-    installationId?: StringFilter<"Account"> | string
-    expiresIn?: IntFilter<"Account"> | number
-    isAccessMp?: BoolFilter<"Account"> | boolean
-    isAccessCookie?: BoolFilter<"Account"> | boolean
-    isOnlyAccessOrder?: BoolFilter<"Account"> | boolean
-    bonusCount?: StringFilter<"Account"> | string
-    isUpdateBonus?: BoolFilter<"Account"> | boolean
-    userOwnerId?: StringNullableFilter<"Account"> | string | null
+    accountId?: StringFilter | string
+    email?: StringFilter | string
+    passImap?: StringFilter | string
+    passEmail?: StringFilter | string
+    cookie?: StringFilter | string
+    accessToken?: StringFilter | string
+    refreshToken?: StringFilter | string
+    xUserId?: StringFilter | string
+    deviceId?: StringFilter | string
+    installationId?: StringFilter | string
+    expiresIn?: IntFilter | number
+    isAccessMp?: BoolFilter | boolean
+    isAccessCookie?: BoolFilter | boolean
+    isOnlyAccessOrder?: BoolFilter | boolean
+    bonusCount?: StringFilter | string
+    isUpdateBonus?: BoolFilter | boolean
+    userOwnerId?: StringNullableFilter | string | null
   }
 
   export type UserCitySMUpsertWithWhereUniqueWithoutUserInput = {
@@ -6581,15 +6426,15 @@ export namespace Prisma {
 
   export type UserCitySMUpdateManyWithWhereWithoutUserInput = {
     where: UserCitySMScalarWhereInput
-    data: XOR<UserCitySMUpdateManyMutationInput, UserCitySMUncheckedUpdateManyWithoutUserInput>
+    data: XOR<UserCitySMUpdateManyMutationInput, UserCitySMUncheckedUpdateManyWithoutUserCitiesInput>
   }
 
   export type UserCitySMScalarWhereInput = {
     AND?: UserCitySMScalarWhereInput | UserCitySMScalarWhereInput[]
     OR?: UserCitySMScalarWhereInput[]
     NOT?: UserCitySMScalarWhereInput | UserCitySMScalarWhereInput[]
-    cityId?: StringFilter<"UserCitySM"> | string
-    userId?: StringFilter<"UserCitySM"> | string
+    cityId?: StringFilter | string
+    userId?: StringFilter | string
   }
 
   export type UserCreateWithoutAccountsInput = {
@@ -6624,12 +6469,6 @@ export namespace Prisma {
   export type UserUpsertWithoutAccountsInput = {
     update: XOR<UserUpdateWithoutAccountsInput, UserUncheckedUpdateWithoutAccountsInput>
     create: XOR<UserCreateWithoutAccountsInput, UserUncheckedCreateWithoutAccountsInput>
-    where?: UserWhereInput
-  }
-
-  export type UserUpdateToOneWithWhereWithoutAccountsInput = {
-    where?: UserWhereInput
-    data: XOR<UserUpdateWithoutAccountsInput, UserUncheckedUpdateWithoutAccountsInput>
   }
 
   export type UserUpdateWithoutAccountsInput = {
@@ -6687,7 +6526,7 @@ export namespace Prisma {
 
   export type UserCitySMUpdateManyWithWhereWithoutCityInput = {
     where: UserCitySMScalarWhereInput
-    data: XOR<UserCitySMUpdateManyMutationInput, UserCitySMUncheckedUpdateManyWithoutCityInput>
+    data: XOR<UserCitySMUpdateManyMutationInput, UserCitySMUncheckedUpdateManyWithoutCityUsersInput>
   }
 
   export type UserCreateWithoutUserCitiesInput = {
@@ -6739,12 +6578,6 @@ export namespace Prisma {
   export type UserUpsertWithoutUserCitiesInput = {
     update: XOR<UserUpdateWithoutUserCitiesInput, UserUncheckedUpdateWithoutUserCitiesInput>
     create: XOR<UserCreateWithoutUserCitiesInput, UserUncheckedCreateWithoutUserCitiesInput>
-    where?: UserWhereInput
-  }
-
-  export type UserUpdateToOneWithWhereWithoutUserCitiesInput = {
-    where?: UserWhereInput
-    data: XOR<UserUpdateWithoutUserCitiesInput, UserUncheckedUpdateWithoutUserCitiesInput>
   }
 
   export type UserUpdateWithoutUserCitiesInput = {
@@ -6774,12 +6607,6 @@ export namespace Prisma {
   export type CitySMUpsertWithoutCityUsersInput = {
     update: XOR<CitySMUpdateWithoutCityUsersInput, CitySMUncheckedUpdateWithoutCityUsersInput>
     create: XOR<CitySMCreateWithoutCityUsersInput, CitySMUncheckedCreateWithoutCityUsersInput>
-    where?: CitySMWhereInput
-  }
-
-  export type CitySMUpdateToOneWithWhereWithoutCityUsersInput = {
-    where?: CitySMWhereInput
-    data: XOR<CitySMUpdateWithoutCityUsersInput, CitySMUncheckedUpdateWithoutCityUsersInput>
   }
 
   export type CitySMUpdateWithoutCityUsersInput = {
@@ -6855,7 +6682,7 @@ export namespace Prisma {
     isUpdateBonus?: BoolFieldUpdateOperationsInput | boolean
   }
 
-  export type AccountUncheckedUpdateManyWithoutUserOwnerInput = {
+  export type AccountUncheckedUpdateManyWithoutAccountsInput = {
     accountId?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     passImap?: StringFieldUpdateOperationsInput | string
@@ -6882,7 +6709,7 @@ export namespace Prisma {
     cityId?: StringFieldUpdateOperationsInput | string
   }
 
-  export type UserCitySMUncheckedUpdateManyWithoutUserInput = {
+  export type UserCitySMUncheckedUpdateManyWithoutUserCitiesInput = {
     cityId?: StringFieldUpdateOperationsInput | string
   }
 
@@ -6898,7 +6725,7 @@ export namespace Prisma {
     userId?: StringFieldUpdateOperationsInput | string
   }
 
-  export type UserCitySMUncheckedUpdateManyWithoutCityInput = {
+  export type UserCitySMUncheckedUpdateManyWithoutCityUsersInput = {
     userId?: StringFieldUpdateOperationsInput | string
   }
 

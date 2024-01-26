@@ -17,11 +17,11 @@ exports.$Enums = {}
 
 /**
  * Prisma Client JS version: 5.7.1
- * Query Engine version: ac9d7041ed77bcc8a8dbd2ab6616b39013829574
+ * Query Engine version: 1e7af066ee9cb95cf3a403c78d9aab3e6b04f37a
  */
 Prisma.prismaVersion = {
   client: "5.7.1",
-  engine: "ac9d7041ed77bcc8a8dbd2ab6616b39013829574"
+  engine: "1e7af066ee9cb95cf3a403c78d9aab3e6b04f37a"
 }
 
 Prisma.PrismaClientKnownRequestError = () => {
@@ -100,24 +100,6 @@ Prisma.NullTypes = {
  * Enums
  */
 
-exports.Prisma.TransactionIsolationLevel = makeStrictEnum({
-  ReadUncommitted: 'ReadUncommitted',
-  ReadCommitted: 'ReadCommitted',
-  RepeatableRead: 'RepeatableRead',
-  Serializable: 'Serializable'
-});
-
-exports.Prisma.UserScalarFieldEnum = {
-  telegramId: 'telegramId',
-  telegramName: 'telegramName',
-  firstName: 'firstName',
-  login: 'login',
-  password: 'password',
-  email: 'email',
-  countBonuses: 'countBonuses',
-  isBan: 'isBan'
-};
-
 exports.Prisma.AccountScalarFieldEnum = {
   accountId: 'accountId',
   email: 'email',
@@ -144,9 +126,9 @@ exports.Prisma.CitySMScalarFieldEnum = {
   fullName: 'fullName'
 };
 
-exports.Prisma.UserCitySMScalarFieldEnum = {
-  cityId: 'cityId',
-  userId: 'userId'
+exports.Prisma.QueryMode = {
+  default: 'default',
+  insensitive: 'insensitive'
 };
 
 exports.Prisma.SortOrder = {
@@ -154,14 +136,27 @@ exports.Prisma.SortOrder = {
   desc: 'desc'
 };
 
-exports.Prisma.QueryMode = {
-  default: 'default',
-  insensitive: 'insensitive'
+exports.Prisma.TransactionIsolationLevel = makeStrictEnum({
+  ReadUncommitted: 'ReadUncommitted',
+  ReadCommitted: 'ReadCommitted',
+  RepeatableRead: 'RepeatableRead',
+  Serializable: 'Serializable'
+});
+
+exports.Prisma.UserCitySMScalarFieldEnum = {
+  cityId: 'cityId',
+  userId: 'userId'
 };
 
-exports.Prisma.NullsOrder = {
-  first: 'first',
-  last: 'last'
+exports.Prisma.UserScalarFieldEnum = {
+  telegramId: 'telegramId',
+  telegramName: 'telegramName',
+  firstName: 'firstName',
+  login: 'login',
+  password: 'password',
+  email: 'email',
+  countBonuses: 'countBonuses',
+  isBan: 'isBan'
 };
 
 
